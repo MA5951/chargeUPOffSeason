@@ -17,5 +17,10 @@ public class PortMap {
         public static final int rightBackAbsoluteEncoder = 24; // TODO
         public static final int rightBackDriveID = 8; // TODO
         public static final int rightBackTurningID = 9; // TODO
-      }
+    }
+
+    public static class Elevator {
+      public static final int masterMotorID = 0; //TODO
+      public static final int slaveMotorID = 0;  //TODO
+    }
 }

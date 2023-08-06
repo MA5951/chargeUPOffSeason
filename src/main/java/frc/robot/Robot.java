@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.swerve.DriveSwerveCommand;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 /**
@@ -30,6 +33,10 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    CommandScheduler.getInstance().setDefaultCommand(
+      Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
+        Elevator.getInstance(), Elevator.getInstance()::getFeed));
   }
 
   /**
@@ -79,6 +86,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    CommandScheduler.getInstance().setDefaultCommand(
+      SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
+        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
+        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
+        RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
+    );
   }
 
   /** This function is called periodically during operator control. */
@@ -91,13 +105,6 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-
-    CommandScheduler.getInstance().setDefaultCommand(
-      SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
-        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
-        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
-        RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
-    );
   }
 
   /** This function is called periodically during test mode. */
