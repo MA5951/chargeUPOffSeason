@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
+    
     CommandScheduler.getInstance().setDefaultCommand(
       SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
         RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
