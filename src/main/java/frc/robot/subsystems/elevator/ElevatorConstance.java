@@ -7,8 +7,8 @@ public class ElevatorConstance {
     public static final double kI = 0; // TODO
     public static final double kD = 0; // TODO
 
-    public static final double kV = 473;
-    public static final double kT = 1d / (60 / (2 * Math.PI * kV));
+    public static final double kV = 473; // RPM/V
+    public static final double kT = (60 / (2 * Math.PI * kV)); // n*m/A
 
     public static final double mass = 0; // TODO
     public static final double gear = 0; // TODO
