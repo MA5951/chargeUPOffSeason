@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
@@ -37,6 +38,10 @@ public class Elevator extends SubsystemBase implements
     encoder.setPositionConversionFactor(
       ElevatorConstance.positionConversionFactor
     );
+
+    master.setIdleMode(IdleMode.kCoast);
+    slave.setIdleMode(IdleMode.kCoast);
+
     pidController = master.getPIDController();
     pidController.setFeedbackDevice(encoder);
     pidController.setP(ElevatorConstance.kP);
