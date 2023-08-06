@@ -79,6 +79,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
+    CommandScheduler.getInstance().setDefaultCommand(
+      SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
+        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
+        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
+        RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
+    );
   }
 
   /** This function is called periodically during operator control. */
@@ -91,13 +98,6 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-
-    CommandScheduler.getInstance().setDefaultCommand(
-      SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
-        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
-        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
-        RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
-    );
   }
 
   /** This function is called periodically during test mode. */
