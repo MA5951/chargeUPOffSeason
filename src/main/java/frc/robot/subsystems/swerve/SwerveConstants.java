@@ -95,7 +95,7 @@ public class SwerveConstants {
     public final static double THATA_KD = 0;
 
     // swerve theta PROFILED_PID_CONTROLLER radians
-    public final static double PROFILED_THATA_KP = 3; // TODo
+    public final static double PROFILED_THATA_KP = 3; // TODO
     public final static double PROFILED_THATA_KI = 0.003; // TODO
     public final static double PROFILED_THATA_KD = 0; // TODO
     public final static double MAX_ANGULAR_ACCELERATION = 15; // TODO
