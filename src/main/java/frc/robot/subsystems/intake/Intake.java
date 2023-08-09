@@ -55,11 +55,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public boolean isPieceInIntake() {
         return getLimitSwitch() || isConeIn();
     }
-
-    public void setPower(double power){
-        intakeMotor.set(power);
-    }
-
+    
     @Override
     public boolean canMove() {
         return true;
