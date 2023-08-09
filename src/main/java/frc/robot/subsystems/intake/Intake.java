@@ -39,12 +39,6 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     }
 
     public boolean isConeIn() {
-        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold) {
-            coneInIntake = true;
-        } else {
-            coneInIntake = false;
-        }
-
         return coneInIntake;
     }
     
@@ -55,7 +49,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public boolean isPieceInIntake() {
         return getLimitSwitch() || isConeIn();
     }
-    
+
     @Override
     public boolean canMove() {
         return true;
@@ -76,5 +70,11 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     @Override
     public void periodic() {
         board.addBoolean("Is Piece in Intake", isPieceInIntake());
+
+        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold) {
+            coneInIntake = true;
+        } else {
+            coneInIntake = false;
+        }
     }
 }
