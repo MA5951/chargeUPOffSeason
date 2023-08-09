@@ -23,4 +23,9 @@ public class PortMap {
       public static final int masterMotorID = 0; //TODO
       public static final int slaveMotorID = 0;  //TODO
     }
+
+    public static class Intake {
+      public static final int intakeMotorID = 0; //TODO
+      public static final int intakeLimitSwitchID = 0; //TODO
+    }
 }
