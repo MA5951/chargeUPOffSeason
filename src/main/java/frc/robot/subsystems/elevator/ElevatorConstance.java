@@ -15,8 +15,8 @@ public class ElevatorConstance {
     public static final double raduis = 0; //TODO
     public static final double angle = 0; // TODO radians
 
-    public static final double kG = (mass * RobotConstants.KGRAVITY_ACCELERATION
-        * Math.sin(angle) * raduis) / (kT * gear); // TODO need to check
+    public static final double kG = ((mass * RobotConstants.KGRAVITY_ACCELERATION
+        * Math.sin(angle) * raduis) / (kT * gear)) / 12; // TODO need to check
 
     public static final double positionConversionFactor = 0; // TODO
 

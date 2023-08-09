@@ -68,7 +68,7 @@ public class Elevator extends SubsystemBase implements
   @Override
   public boolean atPoint() {
     return Math.abs(encoder.getPosition() - setPoint) <=
-     ElevatorConstance.positionConversionFactor;
+     ElevatorConstance.tolerance;
   }
 
   @Override
