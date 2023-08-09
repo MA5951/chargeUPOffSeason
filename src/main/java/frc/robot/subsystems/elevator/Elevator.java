@@ -56,11 +56,7 @@ public class Elevator extends SubsystemBase implements
   }
 
   public double getFeed() {
-    if (master.getOutputCurrent() == 0) {
-      return (ElevatorConstance.kG * (master.getBusVoltage() / (10e-11))) / 12d;
-    }
-    return (ElevatorConstance.kG * 
-      (master.getBusVoltage() / master.getOutputCurrent())) / 12d;
+    return ElevatorConstance.kG;
   }
 
   @Override
