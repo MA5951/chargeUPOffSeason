@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ma5951.utils.PhotonVision;
+import com.ma5951.utils.commands.MotorCommand;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -21,6 +22,7 @@ import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
+import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -77,12 +79,37 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // r1 = cube intake, l1 = cone intake, squere = no timer eject, l2 = timer eject, r2 = no timer eject
-    DRIVER_PS4_CONTROLLER.R1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
+    DRIVER_PS4_CONTROLLER.R1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone));
 
-    DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone));
+    DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
 
-    DRIVER_PS4_CONTROLLER.R2().whileTrue(new EjectAutomation())
+    DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
       .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
+
+    DRIVER_PS4_CONTROLLER.square().whileTrue(
+      new MotorCommand(
+        Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0)
+    );
+
+    DRIVER_PS4_CONTROLLER.triangle().whileTrue(
+      new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset())
+    );
+
+    DRIVER_PS4_CONTROLLER.R2().whileTrue(
+      new InstantCommand(
+        () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(0.4))
+    ).whileFalse(
+      new InstantCommand(
+        () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
+    );
+
+    DRIVER_PS4_CONTROLLER.L2().whileTrue(
+      new InstantCommand(
+        () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(0.1))
+    ).whileFalse(
+      new InstantCommand(
+        () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
+    );
   }
 
   /**

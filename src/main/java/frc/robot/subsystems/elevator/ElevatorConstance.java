@@ -21,7 +21,7 @@ public class ElevatorConstance {
         * Math.sin(angle) * raduis) / (kT * gear)) * resistance) / 12d;
         // TODO need to check
 
-    public static final double positionConversionFactor = 0; // TODO
+    public static final double positionConversionFactor = 2 * Math.PI * raduis;
 
     public static final double tolerance = 0; // TODO
 
