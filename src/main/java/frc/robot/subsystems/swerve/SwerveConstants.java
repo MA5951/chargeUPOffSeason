@@ -99,4 +99,12 @@ public class SwerveConstants {
     public final static double PROFILED_THATA_KI = 0.003; // TODO
     public final static double PROFILED_THATA_KD = 0; // TODO
     public final static double MAX_ANGULAR_ACCELERATION = 15; // TODO
+
+    // auto balance constants
+    public final static double AUTO_BALANCE_KP = 0; // TODO
+    public final static double AUTO_BALANCE_KI = 0; // TODO
+    public final static double AUTO_BALANCE_KD = 0; // TODO
+    public final static double BALANCE_POSITION_TOLERANCE = 0; // TODO
+    public final static double BALANCE_DELAY = 0; // TODO
+    public final static double BALANCE_SETPOINT = 0; // TODO
 }
