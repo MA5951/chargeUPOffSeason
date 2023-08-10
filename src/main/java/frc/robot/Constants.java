@@ -38,18 +38,17 @@ public final class Constants {
         public static final double FIELD_LENGTH_METERS = 16.54;
         public static final double TO_2 = 0.56 + 0.1;
         public static final double TO_3 = 1.08 + 0.1;
-        private static final double BLUE_X = 0.95 + Robot.WIDTH / 2;
-        private static final double RED_X = FIELD_LENGTH_METERS - 1.5 - Robot.WIDTH / 2;
-        private static final double A1Y = Robot.LENGTH / 2.0 + 0.1;
-        private static final double A2Y = Robot.LENGTH / 2.0 + TO_2;
-        private static final double A3Y = Robot.LENGTH / 2.0 + TO_3;
-        private static final double DISTANCE_FROM_GRIDS = A3Y - A2Y + 0.04;
-        private static final double B1Y = A3Y + DISTANCE_FROM_GRIDS;
-        private static final double B2Y = B1Y + DISTANCE_FROM_GRIDS;
-        private static final double B3Y = B2Y + DISTANCE_FROM_GRIDS;
-        private static final double C1Y = B3Y + DISTANCE_FROM_GRIDS;
-        private static final double C2Y = C1Y + DISTANCE_FROM_GRIDS;
-        private static final double C3Y = C2Y + DISTANCE_FROM_GRIDS;
+        private static final double BLUE_X = 0.143 + Robot.LENGTH / 2d;
+        private static final double RED_X = FieldConstants.FIELD_WIDTH_METERS - BLUE_X;
+        private static final double A1Y = 0.51;
+        private static final double A2Y = 1.06;
+        private static final double A3Y = 1.63;
+        private static final double B1Y = 2.19;
+        private static final double B2Y = 2.74;
+        private static final double B3Y = 3.31;
+        private static final double C1Y = 3.87;
+        private static final double C2Y = 4.42;
+        private static final double C3Y = 4.98;
         public static final Translation2d[] ScoringPoses = {
             new Translation2d(
                 BLUE_X, C3Y),

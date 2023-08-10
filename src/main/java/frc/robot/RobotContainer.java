@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
+import frc.robot.commands.swerve.AutoAdjustForScore;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
@@ -86,10 +87,11 @@ public class RobotContainer {
     DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
       .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
 
+    DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
+    
     DRIVER_PS4_CONTROLLER.square().whileTrue(
-      new MotorCommand(
-        Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0)
-    );
+      new MotorCommand(Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0))
+          .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
 
     DRIVER_PS4_CONTROLLER.triangle().whileTrue(
       new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset())
