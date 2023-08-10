@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ControlCommandProfiledPID extends CommandBase {
   private ControllableSubsystem subsystem;
   private Supplier<TrapezoidProfile.State> goal;
-  private ProfiledPIDController  ProfiledPID;
+  private ProfiledPIDController ProfiledPID;
   private SimpleMotorFeedforward feedforward;
   private double lastTime;
   private double lastSpeed;

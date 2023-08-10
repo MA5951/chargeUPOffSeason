@@ -7,13 +7,13 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 
 public class EjectAutomation extends SequentialCommandGroup{
-    private static double setPower() {
+    private static double getPower() {
         return Intake.getInstance().isCubeInIntake() ? IntakeConstance.EjectPowerForCube
             : IntakeConstance.EjectPowerForCone;
     }
     public EjectAutomation() {
         addCommands(
-            new MotorCommand(Intake.getInstance(), EjectAutomation::setPower , 0)
+            new MotorCommand(Intake.getInstance(), EjectAutomation::getPower , 0)
         );
     }
 }
