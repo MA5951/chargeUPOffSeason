@@ -12,10 +12,15 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
+import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstance;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -71,6 +76,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // r1 = cube intake, l1 = cone intake, squere = no timer eject, l2 = timer eject, r2 = no timer eject
+    DRIVER_PS4_CONTROLLER.R1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
+
+    DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone));
+
+    DRIVER_PS4_CONTROLLER.R2().whileTrue(new EjectAutomation())
+      .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
   }
 
   /**

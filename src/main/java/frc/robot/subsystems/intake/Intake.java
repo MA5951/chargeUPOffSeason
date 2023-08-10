@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import com.ma5951.utils.MAShuffleboard;
@@ -22,16 +23,22 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
 
     private boolean coneInIntake = false;
 
+    private boolean ignoreCurrent = false;
+
+    private boolean cubeInIntake = false;
+
     private Intake() {
         intakeMotor = new CANSparkMax(PortMap.Intake.intakeMotorID, MotorType.kBrushless);
 
         limitSwitch = new DigitalInput(PortMap.Intake.intakeLimitSwitchID);
 
         board = new MAShuffleboard("Intake");
+
+        intakeMotor.setIdleMode(IdleMode.kBrake);
     }
 
     public boolean getLimitSwitch() {
-        return limitSwitch.get();
+        return !limitSwitch.get();
     }
 
     public double getMotorCurrent() {
@@ -46,8 +53,21 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         coneInIntake = state;
     }
 
+    public void setCubeState(boolean state) {
+        cubeInIntake = state;
+    }
+
+    public void removeGamePieces() {
+        cubeInIntake = false;
+        coneInIntake = false;
+    }
+
+    public boolean isCubeInIntake() {
+        return cubeInIntake;
+    }
+
     public boolean isPieceInIntake() {
-        return getLimitSwitch() || isConeIn();
+        return isCubeInIntake() || isConeIn();
     }
 
     @Override
@@ -57,7 +77,11 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
 
     @Override
     public void setVoltage(double voltage) {
-        intakeMotor.set(voltage);
+        intakeMotor.set(voltage / 12);
+    }
+
+    public void setIgnoreCurrent(boolean ignoreCurrent) {
+        this.ignoreCurrent = ignoreCurrent;
     }
 
     public static Intake getInstance() {
@@ -70,11 +94,16 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     @Override
     public void periodic() {
         board.addBoolean("Is Piece in Intake", isPieceInIntake());
-
-        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold) {
+        board.addBoolean("Is Cone in Intake", isConeIn());
+        board.addBoolean("is Cube In intake", cubeInIntake);
+        board.addNum("Intake Current", getMotorCurrent());
+        
+        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent) {
             coneInIntake = true;
-        } else {
-            coneInIntake = false;
+        }
+
+        if (getLimitSwitch()){
+            cubeInIntake = true;
         }
     }
 }
