@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
 
@@ -30,6 +31,9 @@ public class Elevator extends SubsystemBase implements
   private pidControllerGainSupplier pidSupplier;
   private double setPoint;
   private static Elevator instance;
+  private DigitalInput uppdeHalleffect;
+  private DigitalInput lowerHalleffect;
+
 
   private Elevator() {
     master = new CANSparkMax(PortMap.Elevator.masterMotorID, MotorType.kBrushless);
@@ -53,6 +57,10 @@ public class Elevator extends SubsystemBase implements
     board = new MAShuffleboard("Elevator");
     pidSupplier = board.getPidControllerGainSupplier(
       ElevatorConstance.kP, ElevatorConstance.kI, ElevatorConstance.kD);
+
+
+      uppdeHalleffect = new DigitalInput(frc.robot.PortMap.Elevator.upperHalleffectID);
+      lowerHalleffect = new DigitalInput(frc.robot.PortMap.Elevator.lowerHalleffectID);
   }
 
   public double getFeed() {
@@ -99,11 +107,30 @@ public class Elevator extends SubsystemBase implements
     return instance;
   }
 
+  private boolean getUppderHalleffect(){
+    return uppdeHalleffect.get();
+  }
+
+  private boolean getLowerHalleffect(){
+    return lowerHalleffect.get();
+  }
+
+  private void AutoReset() {
+    if (getLowerHalleffect()) {
+      encoder.setPosition(ElevatorConstance.minPose);
+    } else if (getUppderHalleffect()) {
+      encoder.setPosition(ElevatorConstance.maxPose);
+    }
+  }
+
+
   @Override
   public void periodic() {
     board.addNum("pose", encoder.getPosition());
     pidController.setP(pidSupplier.getKP());
     pidController.setI(pidController.getI());
     pidController.setD(pidSupplier.getKD());
+    AutoReset();
+    
   }
 }
