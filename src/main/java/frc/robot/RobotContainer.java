@@ -18,9 +18,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
+import frc.robot.commands.Automations.TeleopAutomations.ShelfIntakeAutomation;
 import frc.robot.commands.swerve.AutoAdjustForScore;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
@@ -85,7 +89,8 @@ public class RobotContainer {
     DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
 
     DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
-      .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
+      .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
+      .andThen(new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))));
 
     DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
     
@@ -111,6 +116,42 @@ public class RobotContainer {
     ).whileFalse(
       new InstantCommand(
         () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
+    );
+  
+    DRIVER_PS4_CONTROLLER.povUp().whileTrue(
+      new SetElvator(ElevatorConstance.maxPose)
+    );
+
+    DRIVER_PS4_CONTROLLER.povDown().whileTrue(
+      new SetElvator(ElevatorConstance.minPose)
+    );
+
+    OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
+      new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)
+    ).whileFalse(
+      new SetElvator(ElevatorConstance.minPose)
+    );
+
+    OPERATOR_PS4_CONTROLLER.povDown().whileTrue(
+      new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)
+    ).whileFalse(
+      new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
+    );
+
+    OPERATOR_PS4_CONTROLLER.square().whileTrue(
+      new SetElvator(ElevatorConstance.highPose)
+    );
+  
+    OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
+      new SetElvator(ElevatorConstance.lowPose)
+    );
+  
+    OPERATOR_PS4_CONTROLLER.cross().whileTrue(
+      new SetElvator(ElevatorConstance.ConeMidPose)
+    );
+
+    OPERATOR_PS4_CONTROLLER.circle().whileTrue(
+      new SetElvator(ElevatorConstance.CubeMidPose)
     );
   }
 

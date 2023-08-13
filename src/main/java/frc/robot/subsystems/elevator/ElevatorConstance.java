@@ -28,5 +28,11 @@ public class ElevatorConstance {
     public static final double maxPose = 0; // TODO
     public static final double minPose = 0; // TODO
 
+    public static final double lowPose = 0; // TODO
+    public static final double highPose = 0; //TODO
+    public static final double ConeMidPose = 0; //TODO
+    public static final double CubeMidPose = 0; //TODO
+
+    public static final double ShelfPose = 0; // TODO
     public static final int kCPR = 4096;
 }

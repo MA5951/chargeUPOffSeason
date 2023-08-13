@@ -86,8 +86,8 @@ public class Elevator extends SubsystemBase implements
 
   @Override
   public boolean canMove() {
-    return setPoint > ElevatorConstance.minPose
-      && setPoint < ElevatorConstance.maxPose;
+    return setPoint >= ElevatorConstance.minPose
+      && setPoint <= ElevatorConstance.maxPose;
   }
 
   @Override
