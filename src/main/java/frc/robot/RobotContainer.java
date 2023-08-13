@@ -122,7 +122,7 @@ public class RobotContainer {
     );
 
     DRIVER_PS4_CONTROLLER.povDown().whileTrue(
-      new SetElvator(ElevatorConstance.lowPose)
+      new SetElvator(ElevatorConstance.minPose)
     );
 
 
@@ -131,7 +131,7 @@ public class RobotContainer {
     );
   
     OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
-      new SetElvator(ElevatorConstance.minPose)
+      new SetElvator(ElevatorConstance.lowPose)
     );
   
     OPERATOR_PS4_CONTROLLER.cross().whileTrue(
