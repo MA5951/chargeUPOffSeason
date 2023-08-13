@@ -21,6 +21,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
+import frc.robot.commands.Automations.TeleopAutomations.ShelfIntakeAutomation;
 import frc.robot.commands.swerve.AutoAdjustForScore;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
@@ -125,6 +126,17 @@ public class RobotContainer {
       new SetElvator(ElevatorConstance.minPose)
     );
 
+    OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
+      new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)
+    ).whileFalse(
+      new SetElvator(ElevatorConstance.minPose)
+    );
+
+    OPERATOR_PS4_CONTROLLER.povDown().whileTrue(
+      new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)
+    ).whileFalse(
+      new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
+    );
 
     OPERATOR_PS4_CONTROLLER.square().whileTrue(
       new SetElvator(ElevatorConstance.highPose)
@@ -135,11 +147,11 @@ public class RobotContainer {
     );
   
     OPERATOR_PS4_CONTROLLER.cross().whileTrue(
-      new SetElvator(ElevatorConstance.ConemidPose)
+      new SetElvator(ElevatorConstance.ConeMidPose)
     );
 
     OPERATOR_PS4_CONTROLLER.circle().whileTrue(
-      new SetElvator(ElevatorConstance.CubemidPose)
+      new SetElvator(ElevatorConstance.CubeMidPose)
     );
   }
 
