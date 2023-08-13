@@ -7,10 +7,14 @@ package frc.robot;
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.led.SetGamePieceLeds;
 import frc.robot.commands.swerve.DriveSwerveCommand;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.led.LedConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 /**
@@ -23,6 +27,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private SendableChooser<Command> coneCubeChooser;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -37,6 +43,14 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().setDefaultCommand(
       Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
         Elevator.getInstance(), Elevator.getInstance()::getFeed));
+
+    coneCubeChooser = new SendableChooser<Command>();
+
+    coneCubeChooser.addOption("CUBE", new SetGamePieceLeds(LedConstance.CUBE_PURPLE));
+    coneCubeChooser.addOption("CONE", new SetGamePieceLeds(LedConstance.CONE_YELLOW));
+
+    Shuffleboard.getTab("Match").add("ConeCubeChooser", coneCubeChooser)
+        .withPosition(3, 1).withSize(2, 2);
   }
 
   /**
@@ -79,6 +93,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+
+    coneCubeChooser.getSelected().schedule();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

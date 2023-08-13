@@ -25,6 +25,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -65,6 +66,7 @@ public class RobotContainer {
        )),
       aprilTagFieldLayout
        );
+
 
     configureBindings();
   }
