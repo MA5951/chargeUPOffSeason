@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
+import frc.robot.commands.Automations.IntakeAutomations.TeleopEject;
 import frc.robot.commands.swerve.AutoAdjustForScore;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
@@ -84,7 +85,7 @@ public class RobotContainer {
 
     DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
 
-    DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
+    DRIVER_PS4_CONTROLLER.circle().whileTrue(new TeleopEject())
       .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
 
     DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
@@ -111,7 +112,10 @@ public class RobotContainer {
     ).whileFalse(
       new InstantCommand(
         () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
-    );
+    
+    
+    
+        );
   }
 
   /**
