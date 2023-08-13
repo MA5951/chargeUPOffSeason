@@ -88,12 +88,14 @@ public class RobotContainer {
 
     DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
       .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
+      new SetElvator(ElevatorConstance.minPose);
 
     DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
     
     DRIVER_PS4_CONTROLLER.square().whileTrue(
       new MotorCommand(Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0))
           .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
+      new SetElvator(ElevatorConstance.minPose);
 
     DRIVER_PS4_CONTROLLER.triangle().whileTrue(
       new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset())
@@ -120,7 +122,7 @@ public class RobotContainer {
     );
 
     DRIVER_PS4_CONTROLLER.povDown().whileTrue(
-      new SetElvator(ElevatorConstance.minPose)
+      new SetElvator(ElevatorConstance.lowPose)
     );
 
 
