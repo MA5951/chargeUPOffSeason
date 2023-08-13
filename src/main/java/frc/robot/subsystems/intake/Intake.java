@@ -58,8 +58,8 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     }
 
     public void removeGamePieces() {
-        cubeInIntake = false;
-        coneInIntake = false;
+        setConeState(false);
+        setCubeState(false);
     }
 
     public boolean isCubeInIntake() {
@@ -99,11 +99,11 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         board.addNum("Intake Current", getMotorCurrent());
         
         if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent) {
-            coneInIntake = true;
+            setConeState(false);
         }
 
         if (getLimitSwitch()){
-            cubeInIntake = true;
+            setCubeState(true);
         }
     }
 }
