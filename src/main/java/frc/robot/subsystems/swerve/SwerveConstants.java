@@ -107,4 +107,8 @@ public class SwerveConstants {
     public final static double BALANCE_POSITION_TOLERANCE = 0; // TODO
     public final static double BALANCE_DELAY = 0; // TODO
     public final static double BALANCE_SETPOINT = 0; // TODO
+
+    // center to climb automation constants
+    public final static double ANGLE_BEFORE_CLIMB = 30; // TODO
+    public final static double TIME_TO_CLIMB = 5; // TODO
 }
