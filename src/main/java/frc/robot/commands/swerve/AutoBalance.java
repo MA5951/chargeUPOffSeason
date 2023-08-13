@@ -22,11 +22,12 @@ public class AutoBalance extends CommandBase {
         SwerveConstants.AUTO_BALANCE_KD
     );
     pid.setTolerance(SwerveConstants.BALANCE_POSITION_TOLERANCE);
+
+    pid.setSetpoint(SwerveConstants.BALANCE_SETPOINT);
   }
 
   @Override
   public void initialize() {
-    pid.setSetpoint(SwerveConstants.BALANCE_SETPOINT);
     lastTimeNotAtSetpoint = 0.0;
   }
 
