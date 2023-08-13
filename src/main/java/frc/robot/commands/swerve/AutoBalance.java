@@ -10,7 +10,7 @@ public class AutoBalance extends CommandBase {
 
   private final SwerveDrivetrainSubsystem swerve;
   private final PIDController pid;
-  private double lastTimeAtSetpoint;
+  private double lastTimeNotAtSetpoint;
 
   public AutoBalance() {
     swerve = SwerveDrivetrainSubsystem.getInstance();
@@ -27,7 +27,7 @@ public class AutoBalance extends CommandBase {
   @Override
   public void initialize() {
     pid.setSetpoint(SwerveConstants.BALANCE_SETPOINT);
-    lastTimeAtSetpoint = 0.0;
+    lastTimeNotAtSetpoint = 0.0;
   }
 
   @Override
@@ -38,7 +38,7 @@ public class AutoBalance extends CommandBase {
 
     // Check if the PID controller reached the setpoint
     if (!pid.atSetpoint()) {
-      lastTimeAtSetpoint = Timer.getFPGATimestamp();
+      lastTimeNotAtSetpoint = Timer.getFPGATimestamp();
     }
   }
 
@@ -51,6 +51,6 @@ public class AutoBalance extends CommandBase {
   @Override
   public boolean isFinished() {
     // Finish the command if the setpoint was reached and the delay has passed
-    return pid.atSetpoint() && Timer.getFPGATimestamp() - lastTimeAtSetpoint > SwerveConstants.BALANCE_DELAY;
+    return pid.atSetpoint() && Timer.getFPGATimestamp() - lastTimeNotAtSetpoint > SwerveConstants.BALANCE_DELAY;
   }
 }
