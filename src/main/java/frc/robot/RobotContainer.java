@@ -39,32 +39,32 @@ public class RobotContainer {
   public static final CommandPS4Controller OPERATOR_PS4_CONTROLLER =
     new CommandPS4Controller(OperatorConstants.OPERATOR_CONTROLLER_PORT);   
 
-  public static PhotonVision photonVision;
-  private static AprilTagFieldLayout aprilTagFieldLayout;
+  // public static PhotonVision photonVision;
+  // private static AprilTagFieldLayout aprilTagFieldLayout;
 
   public RobotContainer() {
     // Configure the trigger bindings
-    try {
-      aprilTagFieldLayout = 
-        AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-    } catch (Exception e) {
-      System.err.println(e);
-    }
+    // try {
+    //   aprilTagFieldLayout = 
+    //     AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+    // } catch (Exception e) {
+    //   System.err.println(e);
+    // }
 
-    photonVision  = new PhotonVision(
-      "ma5951",
-      new Transform3d(
-       new Translation3d(
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z
-       ), new Rotation3d(
-        Constants.Camera.CAMERA_ROLL,
-        Constants.Camera.CAMERA_PITCH,
-        Constants.Camera.CAMERA_YAW
-       )),
-      aprilTagFieldLayout
-       );
+    // photonVision  = new PhotonVision(
+    //   "ma5951",
+    //   new Transform3d(
+    //    new Translation3d(
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z
+    //    ), new Rotation3d(
+    //     Constants.Camera.CAMERA_ROLL,
+    //     Constants.Camera.CAMERA_PITCH,
+    //     Constants.Camera.CAMERA_YAW
+    //    )),
+    //   aprilTagFieldLayout
+    //    );
 
     configureBindings();
   }
@@ -79,15 +79,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // r1 = cube intake, l1 = cone intake, squere = no timer eject, l2 = timer eject, r2 = no timer eject
-    DRIVER_PS4_CONTROLLER.R1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone));
+    DRIVER_PS4_CONTROLLER.R1().whileTrue(
+      new InstantCommand(() -> Intake.getInstance()
+      .setCurrentAmpThreshold(IntakeConstance.currentAmpThresholdCone)).andThen(
+      new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)));
 
-    DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
+    DRIVER_PS4_CONTROLLER.L1().whileTrue(
+      new InstantCommand(() -> Intake.getInstance()
+      .setCurrentAmpThreshold(IntakeConstance.currentAmpThresholdCude)).andThen(
+      new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
 
     DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
       .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
 
-    DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
+    // DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
     
     DRIVER_PS4_CONTROLLER.square().whileTrue(
       new MotorCommand(Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0))

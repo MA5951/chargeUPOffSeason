@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ma5951.utils.MAShuffleboard;
 import com.ma5951.utils.subsystem.MotorSubsystem;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.PortMap;
@@ -17,57 +16,55 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     private static Intake intake;
 
     private CANSparkMax intakeMotor;
-    private DigitalInput limitSwitch;
 
     private MAShuffleboard board;
 
-    private boolean coneInIntake = false;
-
     private boolean ignoreCurrent = false;
 
-    private boolean cubeInIntake = false;
+    private boolean isGamePiceIn = false;
+    private boolean isConeIn = false;
+
+    private double currentAmpThreshold = IntakeConstance.currentAmpThresholdCude;
 
     private Intake() {
         intakeMotor = new CANSparkMax(PortMap.Intake.intakeMotorID, MotorType.kBrushless);
-
-        limitSwitch = new DigitalInput(PortMap.Intake.intakeLimitSwitchID);
 
         board = new MAShuffleboard("Intake");
 
         intakeMotor.setIdleMode(IdleMode.kBrake);
     }
 
-    public boolean getLimitSwitch() {
-        return !limitSwitch.get();
+    public void setCurrentAmpThreshold (double currentAmpThreshold) {
+        this.currentAmpThreshold = currentAmpThreshold;
     }
 
     public double getMotorCurrent() {
         return intakeMotor.getOutputCurrent();
     }
 
-    public boolean isConeIn() {
-        return coneInIntake;
-    }
-    
-    public void setConeState(boolean state) {
-        coneInIntake = state;
-    }
-
-    public void setCubeState(boolean state) {
-        cubeInIntake = state;
+    public void setIsGamePiceIn(boolean isGamePiceIn) {
+        this.isGamePiceIn = isGamePiceIn;
     }
 
     public void removeGamePieces() {
-        cubeInIntake = false;
-        coneInIntake = false;
+        setIsGamePiceIn(false);
+        setIsConeIn(false);
     }
 
-    public boolean isCubeInIntake() {
-        return cubeInIntake;
+    public boolean isConeIn() {
+        return isConeIn;
+    }
+
+    public void setIsConeIn(boolean isConeIn) {
+        this.isConeIn = isConeIn;
+    }
+
+    public boolean isCubeIn() {
+        return isGamePiceIn && !isConeIn;
     }
 
     public boolean isPieceInIntake() {
-        return isCubeInIntake() || isConeIn();
+        return isGamePiceIn;
     }
 
     @Override
@@ -95,15 +92,16 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void periodic() {
         board.addBoolean("Is Piece in Intake", isPieceInIntake());
         board.addBoolean("Is Cone in Intake", isConeIn());
-        board.addBoolean("is Cube In intake", cubeInIntake);
+        board.addBoolean("is Cube In intake", isCubeIn());
         board.addNum("Intake Current", getMotorCurrent());
         
-        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent) {
-            coneInIntake = true;
-        }
-
-        if (getLimitSwitch()){
-            cubeInIntake = true;
+        if (getMotorCurrent() > currentAmpThreshold && !ignoreCurrent) {
+            setIsGamePiceIn(true);
+            if (currentAmpThreshold == IntakeConstance.currentAmpThresholdCone) {
+                setIsConeIn(true);
+            } else {
+                setIsConeIn(false);
+            }
         }
     }
 }

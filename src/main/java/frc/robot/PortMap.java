@@ -3,7 +3,7 @@ package frc.robot;
 public class PortMap {
     public static class Swerve {
         public static final int leftFrontAbsoluteEncoder = 22;
-        public static final int leftFrontDriveID = 10;
+        public static final int leftFrontDriveID = 4;
         public static final int leftFrontTurningID = 5;
 
         public static final int leftBackAbsoluteEncoder = 24;
@@ -25,7 +25,7 @@ public class PortMap {
     }
 
     public static class Intake {
-      public static final int intakeMotorID = 4; //TODO
+      public static final int intakeMotorID = 10; //TODO
       public static final int intakeLimitSwitchID = 0; //TODO
     }
 }

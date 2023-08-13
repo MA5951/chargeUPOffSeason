@@ -22,29 +22,29 @@ public class SwerveConstants {
         (ENCODER_RESOLUTION * TURNING_GEAR_RATIO);
      
     // front left module
-    public final static double FRONT_LEFT_MODULE_OFFSET_ENCODER = 85;
+    public final static double FRONT_LEFT_MODULE_OFFSET_ENCODER = 360 - 85;
     public final static boolean FRONT_LEFT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = true;
-    public final static boolean FRONT_LEFT_MODULES_IS_TURNING_MOTOR_REVERSED = false;
-    public final static boolean FRONF_LEFT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = true;
+    public final static boolean FRONT_LEFT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
+    public final static boolean FRONF_LEFT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
  
     // front right module
-    public final static double FRONT_RIGHT_MODULE_OFFSET_ENCODER = 213;
+    public final static double FRONT_RIGHT_MODULE_OFFSET_ENCODER = 360 - 213;
     public final static boolean FRONT_RIGHT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = false;
-    public final static boolean FRONT_RIGHT_MODULES_IS_TURNING_MOTOR_REVERSED = false;
-    public final static boolean FRONF_RIGHT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = true;
+    public final static boolean FRONT_RIGHT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
+    public final static boolean FRONF_RIGHT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
  
     // rear left module
-    public final static double REAR_LEFT_MODULE_OFFSET_ENCODER = 164;
+    public final static double REAR_LEFT_MODULE_OFFSET_ENCODER = 360 - 164;
     public final static boolean REAR_LEFT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = true;
-    public final static boolean REAR_LEFT_MODULES_IS_TURNING_MOTOR_REVERSED = false;
-    public final static boolean REAR_LEFT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = true;
+    public final static boolean REAR_LEFT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
+    public final static boolean REAR_LEFT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
 
  
     // rear right module
-    public final static double REAR_RIGHT_MODULE_OFFSET_ENCODER = 347;
+    public final static double REAR_RIGHT_MODULE_OFFSET_ENCODER = 360 - 347;
     public final static boolean REAR_RIGHT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = false;
-    public final static boolean REAR_RIGHT_MODULES_IS_TURNING_MOTOR_REVERSED = false;
-    public final static boolean REAR_RIGHT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = true;
+    public final static boolean REAR_RIGHT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
+    public final static boolean REAR_RIGHT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
 
 
     // Modules turning config
@@ -66,7 +66,7 @@ public class SwerveConstants {
     public final static double DRIVE_PID_KP = 0.06;
     public final static double DRIVE_PID_KI = 0;
     public final static double DRIVE_PID_KD = 0;
-    public final static double DRIVE_KS = 0; // TODO
+    public final static double DRIVE_KS = 0.05;
     public final static double DRIVE_KV = 0.206;
     // Current Limit
     public final static int DRIVE_CONTINUOS_CURRENT_LIMIT = 35;
