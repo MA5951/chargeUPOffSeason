@@ -22,6 +22,7 @@ import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.swerve.AutoAdjustForScore;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
@@ -87,15 +88,14 @@ public class RobotContainer {
     DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
 
     DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
-      .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
-      new SetElvator(ElevatorConstance.minPose);
+      .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
+      .andThen(new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))));
 
     DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
     
     DRIVER_PS4_CONTROLLER.square().whileTrue(
       new MotorCommand(Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0))
           .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
-      new SetElvator(ElevatorConstance.minPose);
 
     DRIVER_PS4_CONTROLLER.triangle().whileTrue(
       new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset())
