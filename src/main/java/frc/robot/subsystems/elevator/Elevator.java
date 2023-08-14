@@ -37,6 +37,7 @@ public class Elevator extends SubsystemBase implements
 
   private Elevator() {
     master = new CANSparkMax(PortMap.Elevator.masterMotorID, MotorType.kBrushless);
+    slave = new CANSparkMax(PortMap.Elevator.slaveMotorID, MotorType.kBrushless);
     encoder = master.getAlternateEncoder(
       SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
     encoder.setPositionConversionFactor(
