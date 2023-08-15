@@ -34,9 +34,9 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    CommandScheduler.getInstance().setDefaultCommand(
-      Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
-        Elevator.getInstance(), Elevator.getInstance()::getFeed));
+    // CommandScheduler.getInstance().setDefaultCommand(
+    //   Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
+    //     Elevator.getInstance(), Elevator.getInstance()::getFeed));
   }
 
   /**
@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    //SwerveDrivetrainSubsystem.getInstance().updateOdometry();
   }
 
   @Override

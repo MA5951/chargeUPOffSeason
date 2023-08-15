@@ -24,6 +24,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     private boolean coneInIntake = false;
 
     private boolean ignoreCurrent = false;
+    private boolean ignoreSensor = false;
 
     private boolean cubeInIntake = false;
 
@@ -60,6 +61,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void removeGamePieces() {
         setConeState(false);
         setCubeState(false);
+        setIgnoreSensor(false);
     }
 
     public boolean isCubeInIntake() {
@@ -84,6 +86,10 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         this.ignoreCurrent = ignoreCurrent;
     }
 
+    public void setIgnoreSensor(boolean ignoreSensor) {
+        this.ignoreSensor = ignoreSensor;
+    }
+
     public static Intake getInstance() {
         if (intake == null) {
             intake = new Intake();  
@@ -95,14 +101,14 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void periodic() {
         board.addBoolean("Is Piece in Intake", isPieceInIntake());
         board.addBoolean("Is Cone in Intake", isConeIn());
-        board.addBoolean("is Cube In intake", cubeInIntake);
+        board.addBoolean("is CLimitSwitch", getLimitSwitch());
         board.addNum("Intake Current", getMotorCurrent());
         
         if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent) {
-            setConeState(false);
+            setConeState(true);
         }
 
-        if (getLimitSwitch()){
+        if (getLimitSwitch() && !ignoreSensor){
             setCubeState(true);
         }
     }
