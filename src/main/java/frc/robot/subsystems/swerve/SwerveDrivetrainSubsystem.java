@@ -381,16 +381,16 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     return getAutonomousPathCommand(pathName, false);
   }
 
-  // public void updateOdometry() {
-  //   Optional<EstimatedRobotPose> result = 
-  //     RobotContainer.photonVision.getEstimatedRobotPose(getPose());
+  public void updateOdometry() {
+    Optional<EstimatedRobotPose> result = 
+      RobotContainer.photonVision.getEstimatedRobotPose(getPose());
 
-  //   if (result.isPresent()) {
-  //     EstimatedRobotPose camPose = result.get();
-  //     odometry.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
-  //     camPose.timestampSeconds);
-  //   }
-  // }
+    if (result.isPresent()) {
+      EstimatedRobotPose camPose = result.get();
+      odometry.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
+      camPose.timestampSeconds);
+    }
+  }
 
   // public void fixOdometry() {
   //   if (DriverStation.getAlliance() == Alliance.Red) {
