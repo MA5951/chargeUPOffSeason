@@ -163,6 +163,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   private SwerveDrivetrainSubsystem() {
 
     resetNavx();
+    navx.calibrate();;
    
     this.board = new MAShuffleboard("swerve");
 

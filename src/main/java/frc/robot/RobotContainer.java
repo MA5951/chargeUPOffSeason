@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
-import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.TeleopEject;
 import frc.robot.commands.Automations.TeleopAutomations.ShelfIntakeAutomation;
@@ -85,12 +84,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // r1 = cube intake, l1 = cone intake, squere = no timer eject, l2 = timer eject, r2 = no timer eject
-    DRIVER_PS4_CONTROLLER.R1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone));
+    DRIVER_PS4_CONTROLLER.R1().whileTrue(
+      new InstantCommand(
+        () -> Intake.getInstance().setIgnoreSensor(true)).andThen(
+      new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)));
 
     DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
 
 
-    DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
+    DRIVER_PS4_CONTROLLER.circle().whileTrue(new TeleopEject())
       .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
       .andThen(new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))));
 

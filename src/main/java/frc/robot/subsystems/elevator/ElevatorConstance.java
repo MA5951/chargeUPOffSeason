@@ -10,10 +10,10 @@ public class ElevatorConstance {
     public static final double kV = 473;
     public static final double kT = (60 / (2 * Math.PI * kV));
 
-    public static final double mass = 0; // TODO
-    public static final double gear = 0; // TODO
-    public static final double raduis = 0; //TODO
-    public static final double angle = 0; // TODO radians
+    public static final double mass = 10;
+    public static final double gear = 8;
+    public static final double raduis = 0.21;
+    public static final double angle = Math.toRadians(46.28);
 
     public static final double resistance = 0; // TODO voltage / current *Need to check once*
 
@@ -25,11 +25,11 @@ public class ElevatorConstance {
 
     public static final double tolerance = 0; // TODO
 
-    public static final double maxPose = 0; // TODO
-    public static final double minPose = 0; // TODO
+    public static final double maxPose = 1.6;
+    public static final double minPose = 0;
 
     public static final double lowPose = 0; // TODO
-    public static final double highPose = 0; //TODO
+    public static final double highPose = 1.6;
     public static final double ConeMidPose = 0; //TODO
     public static final double CubeMidPose = 0; //TODO
 
