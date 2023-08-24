@@ -66,6 +66,10 @@ public class Elevator extends SubsystemBase implements
     //   ElevatorConstance.kP, ElevatorConstance.kI, ElevatorConstance.kD);
   }
 
+  public void resetPose(double pose) {
+    encoder.setPosition(pose);
+  }
+
   public double getExtension() {
     return encoder.getPosition();
   }
@@ -111,12 +115,8 @@ public class Elevator extends SubsystemBase implements
     return instance;
   }
 
-  public boolean getUppderHalleffect() {
-    return false; //uppdeHalleffect.get();
-  }
-
-  public boolean getLowerHalleffect() {
-    return false; //lowerHalleffect.get();
+  public double getCurrent() {
+    return master.getOutputCurrent();
   }
 
   @Override

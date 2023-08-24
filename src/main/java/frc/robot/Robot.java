@@ -88,20 +88,20 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    SwerveDrivetrainSubsystem.getInstance().fixOdometry();
+    // SwerveDrivetrainSubsystem.getInstance().fixOdometry();
     
-    CommandScheduler.getInstance().setDefaultCommand(
-      SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
-        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
-        RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
-        RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
-    );
+    // CommandScheduler.getInstance().setDefaultCommand(
+    //   SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
+    //     RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
+    //     RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
+    //     RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
+    // );
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    // SwerveDrivetrainSubsystem.getInstance().updateOdometry();
   }
 
   @Override
