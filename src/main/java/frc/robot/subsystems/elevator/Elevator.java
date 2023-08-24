@@ -5,20 +5,18 @@
 package frc.robot.subsystems.elevator;
 
 import com.ma5951.utils.MAShuffleboard;
-import com.ma5951.utils.MAShuffleboard.pidControllerGainSupplier;
 import com.ma5951.utils.subsystem.DefaultInternallyControlledSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 public class Elevator extends SubsystemBase implements 
   DefaultInternallyControlledSubsystem{
@@ -28,24 +26,32 @@ public class Elevator extends SubsystemBase implements
   private SparkMaxPIDController pidController;
   private RelativeEncoder encoder;
   private MAShuffleboard board;
-  private pidControllerGainSupplier pidSupplier;
-  private double setPoint;
+ // private pidControllerGainSupplier pidSupplier;
+  private double setPoint = 0;
   private static Elevator instance;
-  private DigitalInput uppdeHalleffect;
-  private DigitalInput lowerHalleffect;
+  // private DigitalInput uppdeHalleffect;
+  // private DigitalInput lowerHalleffect;
 
 
   private Elevator() {
     master = new CANSparkMax(PortMap.Elevator.masterMotorID, MotorType.kBrushless);
     slave = new CANSparkMax(PortMap.Elevator.slaveMotorID, MotorType.kBrushless);
-    encoder = master.getAlternateEncoder(
-      SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
+
+    master.setIdleMode(IdleMode.kBrake);
+    slave.setIdleMode(IdleMode.kBrake);
+
+    encoder = master.getEncoder();
+      //SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
     encoder.setPositionConversionFactor(
       ElevatorConstance.positionConversionFactor
     );
+    encoder.setVelocityConversionFactor(
+      ElevatorConstance.positionConversionFactor / 60
+    );
+    encoder.setPosition(0);
 
-    master.setIdleMode(IdleMode.kCoast);
-    slave.setIdleMode(IdleMode.kCoast);
+    master.setClosedLoopRampRate(ElevatorConstance.closedLoopRampRate);
+    master.setOpenLoopRampRate(0);
 
     pidController = master.getPIDController();
     pidController.setFeedbackDevice(encoder);
@@ -53,30 +59,25 @@ public class Elevator extends SubsystemBase implements
     pidController.setI(ElevatorConstance.kI);
     pidController.setD(ElevatorConstance.kD);
 
-    slave.follow(master);
+    slave.follow(master, true);
 
     board = new MAShuffleboard("Elevator");
-    pidSupplier = board.getPidControllerGainSupplier(
-      ElevatorConstance.kP, ElevatorConstance.kI, ElevatorConstance.kD);
-
-
-      uppdeHalleffect = new DigitalInput(frc.robot.PortMap.Elevator.upperHalleffectID);
-      lowerHalleffect = new DigitalInput(frc.robot.PortMap.Elevator.lowerHalleffectID);
+    // pidSupplier = board.getPidControllerGainSupplier(
+    //   ElevatorConstance.kP, ElevatorConstance.kI, ElevatorConstance.kD);
   }
 
-  public double getFeed() {
-    return ElevatorConstance.kG;
+  public double getExtension() {
+    return encoder.getPosition();
   }
 
   @Override
   public void calculate(double setPoint) {
-    pidController.setReference(setPoint, ControlType.kPosition,
-      0, getFeed(), ArbFFUnits.kPercentOut);
+    pidController.setReference(setPoint, ControlType.kPosition);
   }
 
   @Override
   public boolean atPoint() {
-    return Math.abs(encoder.getPosition() - setPoint) <=
+    return Math.abs(getExtension() - setPoint) <=
      ElevatorConstance.tolerance;
   }
 
@@ -88,7 +89,9 @@ public class Elevator extends SubsystemBase implements
   @Override
   public boolean canMove() {
     return setPoint >= ElevatorConstance.minPose
-      && setPoint <= ElevatorConstance.maxPose;
+      && setPoint <= ElevatorConstance.maxPose
+      && SwerveDrivetrainSubsystem.getInstance().getAccelerationX()
+      <= SwerveConstants.maxAccelerationForOpenElevator;
   }
 
   @Override
@@ -108,30 +111,20 @@ public class Elevator extends SubsystemBase implements
     return instance;
   }
 
-  private boolean getUppderHalleffect(){
-    return uppdeHalleffect.get();
+  public boolean getUppderHalleffect() {
+    return false; //uppdeHalleffect.get();
   }
 
-  private boolean getLowerHalleffect(){
-    return lowerHalleffect.get();
+  public boolean getLowerHalleffect() {
+    return false; //lowerHalleffect.get();
   }
-
-  private void AutoReset() {
-    if (getLowerHalleffect()) {
-      encoder.setPosition(ElevatorConstance.minPose);
-    } else if (getUppderHalleffect()) {
-      encoder.setPosition(ElevatorConstance.maxPose);
-    }
-  }
-
 
   @Override
   public void periodic() {
-    board.addNum("pose", encoder.getPosition());
-    pidController.setP(pidSupplier.getKP());
-    pidController.setI(pidController.getI());
-    pidController.setD(pidSupplier.getKD());
-    AutoReset();
-    
+    board.addNum("pose", getExtension());
+    board.addNum("v", master.getBusVoltage());
+    board.addNum("A", master.getOutputCurrent());
+    board.addNum("setpoint", setPoint);
+    board.addBoolean("can move", canMove());    
   }
 }

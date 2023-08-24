@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -95,8 +97,6 @@ public class RobotContainer {
     DRIVER_PS4_CONTROLLER.circle().whileTrue(new TeleopEject())
       .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
       .andThen(new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))));
-
-    DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
     
     DRIVER_PS4_CONTROLLER.square().whileTrue(
       new MotorCommand(Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0))
@@ -121,14 +121,28 @@ public class RobotContainer {
       new InstantCommand(
         () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
     );
-  
-    DRIVER_PS4_CONTROLLER.povUp().whileTrue(
-      new SetElvator(ElevatorConstance.maxPose)
-    );
 
-    DRIVER_PS4_CONTROLLER.povDown().whileTrue(
-      new SetElvator(ElevatorConstance.minPose)
-    );
+    DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
+  
+    // DRIVER_PS4_CONTROLLER.povUp().whileTrue(
+    //   new ParallelDeadlineGroup(
+    //     new WaitUntilCommand(Elevator.getInstance()::getUppderHalleffect),
+    //     new MotorCommand(Elevator.getInstance(), ElevatorConstance.upperPower, 0) 
+    //   ).andThen(
+    //     new InstantCommand(
+    //       () -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
+    //   )
+    // );
+
+    // DRIVER_PS4_CONTROLLER.povDown().whileTrue(
+    //   new ParallelDeadlineGroup(
+    //     new WaitUntilCommand(Elevator.getInstance()::getLowerHalleffect),
+    //     new MotorCommand(Elevator.getInstance(), ElevatorConstance.lowerPower, 0) 
+    //   ).andThen(
+    //     new InstantCommand(
+    //       () -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
+    //   )
+    // );
 
     OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
       new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)

@@ -72,7 +72,7 @@ public class PhotonVision {
      * with the lowest reprojection error.
      */
     public Transform3d getBestCameraToTarget() {
-        return target.getAlternateCameraToTarget();
+        return target.getBestCameraToTarget();
     }
 
     /**
