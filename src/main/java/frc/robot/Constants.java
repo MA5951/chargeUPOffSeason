@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -15,13 +16,26 @@ import edu.wpi.first.math.geometry.Translation2d;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final Alliance alliance = Alliance.Blue;
+
     public static class Camera {
-        public static final double CAMERA_DISTANCE_FROM_CENTER_IN_X = 0; //TODO
-        public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Y = 0; //TODO
-        public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Z = 0; //TODO
-        public static final double CAMERA_ROLL = 0; //TODO
-        public static final double CAMERA_PITCH = 0; //TODO
-        public static final double CAMERA_YAW = 0; //TODO
+        public static final double CAMERA_DISTANCE_FROM_CENTER_IN_X = 
+            alliance == Alliance.Blue ? 0 : 0; //TODO
+            
+        public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Y =
+            alliance == Alliance.Blue ? 0 : 0; //TODO
+
+        public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Z =
+            alliance == Alliance.Blue ? 0 : 0; //TODO
+
+        public static final double CAMERA_ROLL =
+            alliance == Alliance.Blue ? 0 : 0; //TODO
+
+        public static final double CAMERA_PITCH =
+            alliance == Alliance.Blue ? 0 : 0; //TODO
+
+        public static final double CAMERA_YAW = 
+            alliance == Alliance.Blue ? 0 : 0; //TODO
     }
     public static class OperatorConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
@@ -36,8 +50,6 @@ public final class Constants {
     public static final class FieldConstants {
         public static final double FIELD_WIDTH_METERS = 8.02;
         public static final double FIELD_LENGTH_METERS = 16.54;
-        public static final double TO_2 = 0.56 + 0.1;
-        public static final double TO_3 = 1.08 + 0.1;
         private static final double BLUE_X = 0.143 + Robot.LENGTH / 2d;
         private static final double RED_X = FieldConstants.FIELD_WIDTH_METERS - BLUE_X;
         private static final double A1Y = 0.51;

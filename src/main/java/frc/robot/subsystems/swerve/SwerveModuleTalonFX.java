@@ -86,6 +86,10 @@ public class SwerveModuleTalonFX extends SwerveModule{
 
         driveMotor.configAllSettings(driveConfiguration);
     }
+        
+    public void setAccelerationLimit(double limit) {
+        driveMotor.configClosedloopRamp(limit);
+    }
 
     public void setNeutralMode(NeutralMode mode) {
         turningMotor.setNeutralMode(mode);

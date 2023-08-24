@@ -4,8 +4,6 @@
 
 package com.ma5951.utils.commands;
 
-import java.util.function.Supplier;
-
 import com.ma5951.utils.subsystem.DefaultInternallyControlledSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,27 +11,28 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DefaultRunInternallyControlledSubsystem extends CommandBase {
   /** Creates a new DefultControlCommandInSubsystemControl. */
   private DefaultInternallyControlledSubsystem subsystem;
-  private Supplier<Double> powerWhenCantMove;
+  private double oldSetPoint;
 
   public DefaultRunInternallyControlledSubsystem(
-    DefaultInternallyControlledSubsystem subsystem,
-    Supplier<Double> powerWhenCantMove) {
+    DefaultInternallyControlledSubsystem subsystem) {
       this.subsystem = subsystem;
-      this.powerWhenCantMove = powerWhenCantMove;
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    oldSetPoint = subsystem.getSetPoint();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (subsystem.canMove()) {
+      oldSetPoint = subsystem.getSetPoint();
       subsystem.calculate(subsystem.getSetPoint());
     } else {
-      subsystem.setPower(powerWhenCantMove.get());
+      subsystem.calculate(oldSetPoint);
     }
   }
 

@@ -31,6 +31,8 @@ public abstract class SwerveModule {
 
     public abstract void setInvertedTurning(Boolean mode);
 
+    public abstract void setAccelerationLimit(double limit);
+
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
             getDrivePosition(), new Rotation2d(Math.toRadians(getTurningPosition()))
