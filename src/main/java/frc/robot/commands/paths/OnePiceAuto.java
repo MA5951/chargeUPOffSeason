@@ -5,6 +5,7 @@
 package frc.robot.commands.paths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
@@ -18,7 +19,8 @@ public class OnePiceAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new EjectAutomationAuto(ElevatorConstance.maxPose, true),
+      new ResetElevator(),
+      new EjectAutomationAuto(ElevatorConstance.maxPose),
       SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("One game pcs 1", true)
     );
   }

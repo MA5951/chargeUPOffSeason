@@ -36,6 +36,7 @@ public class RunElevatorByCurrent extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     Elevator.getInstance().resetPose(0);
+    Elevator.getInstance().setSetPoint(ElevatorConstance.minPose);
     command.end(interrupted);
   }
 

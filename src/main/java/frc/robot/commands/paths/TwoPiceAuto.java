@@ -6,6 +6,7 @@ package frc.robot.commands.paths;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.subsystems.elevator.ElevatorConstance;
@@ -21,13 +22,14 @@ public class TwoPiceAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new EjectAutomationAuto(ElevatorConstance.maxPose, true),
+      new ResetElevator(),
+      new EjectAutomationAuto(ElevatorConstance.maxPose),
       new ParallelCommandGroup(
         SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1"),
         new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)
       ),
       SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2"),
-      new EjectAutomationAuto(ElevatorConstance.maxPose, true)
+      new EjectAutomationAuto(ElevatorConstance.maxPose)
     );
   }
 }

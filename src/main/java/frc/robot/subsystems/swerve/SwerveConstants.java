@@ -112,8 +112,8 @@ public class SwerveConstants {
     public final static double ANGLE_BEFORE_CLIMB = 30; // TODO
     public final static double TIME_TO_CLIMB = 5; // TODO
 
-    public final static double Tstop = 0; // TODO
-    public final static double maxAccelerationForOpenElevator = 0; // TODO
+    public final static double Tstop = 0.4; // TODO
+    public final static double maxAccelerationForOpenElevator = 3; // TODO
     public final static double accelerationLimitForOpenElevator = 
         MAX_VELOCITY / maxAccelerationForOpenElevator;
 }

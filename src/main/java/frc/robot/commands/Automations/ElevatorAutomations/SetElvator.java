@@ -22,7 +22,7 @@ public class SetElvator extends SequentialCommandGroup {
   /** Creates a new SetElvator. */
   
   private static double getPower() {
-    return Intake.getInstance().isCubeInIntake() ? 0
+    return Intake.getInstance().isCubeIn() ? 0
         : IntakeConstance.HoldConePower;
 }
   

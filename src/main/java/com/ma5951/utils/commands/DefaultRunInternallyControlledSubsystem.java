@@ -11,28 +11,27 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DefaultRunInternallyControlledSubsystem extends CommandBase {
   /** Creates a new DefultControlCommandInSubsystemControl. */
   private DefaultInternallyControlledSubsystem subsystem;
-  private double oldSetPoint;
+  private double setPointWhenCantMove;
 
   public DefaultRunInternallyControlledSubsystem(
-    DefaultInternallyControlledSubsystem subsystem) {
+    DefaultInternallyControlledSubsystem subsystem, double setPointWhenCantMove) {
       this.subsystem = subsystem;
+      this.setPointWhenCantMove = setPointWhenCantMove;
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    oldSetPoint = subsystem.getSetPoint();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (subsystem.canMove()) {
-      oldSetPoint = subsystem.getSetPoint();
       subsystem.calculate(subsystem.getSetPoint());
     } else {
-      subsystem.calculate(oldSetPoint);
+      subsystem.calculate(setPointWhenCantMove);
     }
   }
 

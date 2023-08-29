@@ -15,18 +15,19 @@ public class ElevatorConstance {
 
     public static final double tolerance = 0.03;
 
-    public static final double maxPose = 1.6;
-    public static final double minPose = -0.01;
+    public static final double maxPose = 1.71;
+    public static final double minPose = 0.04;
 
-    public static final double lowPose = 0; // TODO
-    public static final double highPose = 1.6;
-    public static final double ConeMidPose = 0; //TODO
-    public static final double CubeMidPose = 0; //TODO
+    public static final double lowPose = 0.21011974811554;
+    public static final double highPoseCone = 1.508018612861633;
+    public static final double highPoseCube = 1.568018612861633;
+    public static final double ConeMidPose = 0.995889067649841;
+    public static final double CubeMidPose = 1.075783133506775;
 
-    public static final double ShelfPose = 0; // TODO
+    public static final double ShelfPose = 1.4;
     public static final int kCPR = 4096;
 
-    public static final double lowerPower = -0.3; // TODO
-    public static final double currentAmpThreshold = 25; // TODO
+    public static final double lowerPower = -0.3;
+    public static final double currentAmpThreshold = 25;
 
 }

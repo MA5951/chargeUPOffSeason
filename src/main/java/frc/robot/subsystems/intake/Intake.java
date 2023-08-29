@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     private Intake() {
         intakeMotor = new CANSparkMax(PortMap.Intake.intakeMotorID, MotorType.kBrushless);
 
-        sensor = new DigitalInput(PortMap.Intake.intakeLimitSwitchID);
+        sensor = new DigitalInput(PortMap.Intake.sensorID);
 
         board = new MAShuffleboard("Intake");
 
@@ -64,12 +64,12 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         setIgnoreSensor(false);
     }
 
-    public boolean isCubeInIntake() {
+    public boolean isCubeIn() {
         return cubeInIntake;
     }
 
     public boolean isPieceInIntake() {
-        return isCubeInIntake() || isConeIn();
+        return isCubeIn() || isConeIn();
     }
 
     @Override
@@ -101,6 +101,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void periodic() {
         board.addBoolean("Is Piece in Intake", isPieceInIntake());
         board.addBoolean("Is Cone in Intake", isConeIn());
+        board.addBoolean("Is cube in Intake", isCubeIn());
         board.addBoolean("is CLimitSwitch", getSensor());
         board.addNum("Intake Current", getMotorCurrent());
         

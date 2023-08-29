@@ -9,11 +9,11 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 
 public class EjectAutomationByTimer extends SequentialCommandGroup{
-    public EjectAutomationByTimer(double power) {
+    public EjectAutomationByTimer() {
         addCommands(
             new ParallelDeadlineGroup(
                 new WaitCommand(IntakeConstance.ejectTime),
-                new EjectAutomation(() -> power)),
+                new EjectAutomation()),
             new InstantCommand(Intake.getInstance()::removeGamePieces)
         );
     }
