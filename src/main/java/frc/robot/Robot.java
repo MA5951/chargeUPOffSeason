@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
+import com.ma5951.utils.led.LedConstance;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -14,7 +15,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.led.SetGamePieceLeds;
 import frc.robot.commands.swerve.DriveSwerveCommand;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.led.LedConstance;
+import com.ma5951.utils.led.LED;
+import frc.robot.subsystems.led.LED2;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 /**
@@ -43,6 +45,9 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().setDefaultCommand(
       Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
         Elevator.getInstance(), Elevator.getInstance()::getFeed));
+
+    LED.getInstance();
+    LED2.getInstance();
 
     coneCubeChooser = new SendableChooser<Command>();
 

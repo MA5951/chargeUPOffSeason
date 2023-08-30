@@ -9,12 +9,13 @@ import com.ma5951.utils.led.BlinkingColorPattern;
 import com.ma5951.utils.led.BreathingColorPattern;
 import com.ma5951.utils.led.BreathingTripleColorPattern;
 import com.ma5951.utils.led.EvenOddColorPattern;
+import com.ma5951.utils.led.LedConstance;
 import com.ma5951.utils.led.RainbowColorPatterSimultaneously;
 import com.ma5951.utils.led.RainbowColorPattern;
-import com.ma5951.utils.led.SolidColorPattern;
-import com.ma5951.utils.led.WaveBlinkColorPattern;
 import com.ma5951.utils.led.SmoothColorTransitionPattern;
 import com.ma5951.utils.led.SmoothWaveColorPattern;
+import com.ma5951.utils.led.SolidColorPattern;
+import com.ma5951.utils.led.WaveBlinkColorPattern;
 import com.ma5951.utils.led.WavePattern;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,11 +26,11 @@ import frc.robot.PortMap;
 
 
 
-public class LED extends SubsystemBase {
+public class LED2 extends SubsystemBase {
 
 
   /** Creates a new LEDSubsystem. */
-  private static LED led;
+  private static LED2 led;
   AddressableLEDController ledController;
   SolidColorPattern solidColorPattern;
   RainbowColorPattern rainbowColorPattern;
@@ -45,8 +46,8 @@ public class LED extends SubsystemBase {
 
   Color gamePieceColor = LedConstance.WHITE;
 
-  public LED() {
-    ledController = new AddressableLEDController(PortMap.ledPort, 300);
+  public LED2() {
+    ledController = new AddressableLEDController(PortMap.ledPort2, 150);
     solidColorPattern = new SolidColorPattern(Color.kRed);
     rainbowColorPattern = new RainbowColorPattern();
     blinkingColorPattern = new BlinkingColorPattern(Color.kRed, Color.kRed,0);
@@ -136,9 +137,9 @@ public class LED extends SubsystemBase {
     }
   }
 
-  public static LED getInstance() {
+  public static LED2 getInstance() {
     if (led == null) {
-      led = new LED();
+      led = new LED2();
     }
     return led;
   }
