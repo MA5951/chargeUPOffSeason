@@ -1,7 +1,7 @@
 package frc.robot.subsystems.intake;
 
 public class IntakeConstance {    
-    public static final double currentAmpThreshold = 23;
+    public static final double currentAmpThreshold = 30;
 
     public static final double IntakePowerForCube = -0.5;
     public static final double IntakePowerForCone = 0.8;

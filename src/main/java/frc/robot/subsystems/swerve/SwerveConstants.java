@@ -8,6 +8,8 @@ public class SwerveConstants {
         Math.pow(WIDTH, 2) + Math.pow(LENGTH, 2)
     ) / 2;
 
+    public final static double WEIGHT = 47.0;// KILOGRAM
+
     // Modules constants
     private final static double TURNING_GEAR_RATIO = 150d / 7;
     private final static double DRIVE_GEAR_RATIO = 6.75;

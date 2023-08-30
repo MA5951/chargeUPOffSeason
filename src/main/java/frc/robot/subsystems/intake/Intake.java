@@ -36,6 +36,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         board = new MAShuffleboard("Intake");
 
         intakeMotor.setIdleMode(IdleMode.kBrake);
+        intakeMotor.setInverted(true);
     }
 
     public boolean getSensor() {
@@ -61,7 +62,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void removeGamePieces() {
         setConeState(false);
         setCubeState(false);
-        setIgnoreSensor(false);
+        setIgnoreSensor(true);
     }
 
     public boolean isCubeIn() {
@@ -105,11 +106,13 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         board.addBoolean("is CLimitSwitch", getSensor());
         board.addNum("Intake Current", getMotorCurrent());
         
-        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent) {
+        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent && ignoreSensor) {
             setConeState(true);
         }
 
-        if (getSensor() && !ignoreSensor){
+        if ((getSensor() || 
+            (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent)) 
+            && !ignoreSensor) {
             setCubeState(true);
         }
     }
