@@ -61,8 +61,8 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   private double offsetAngle = 0;
 
-  private double accX = 0;
-  private double lastVelocityX = 0;
+  private double acc = 0;
+  private double lastVelocity = 0;
 
   private boolean accelerationUpdated = true;
 
@@ -408,8 +408,8 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     rearRightModule.setAccelerationLimit(limit);
   }
 
-  public double getAccelerationX() {
-    return accX;
+  public double getAcceleration() {
+    return acc;
   }
 
   public void fixOdometry() {
@@ -438,10 +438,11 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    accX = (
-      kinematics.toChassisSpeeds(getSwerveModuleStates()).vxMetersPerSecond
-       - lastVelocityX) / RobotConstants.KDELTA_TIME;
+    acc = (
+      frontLeftModule.getDriveVelocity() - lastVelocity) / RobotConstants.KDELTA_TIME;
     odometry.update(getRotation2d(), getSwerveModulePositions());
+
+    lastVelocity = frontLeftModule.getDriveVelocity();
 
     field.setRobotPose(getPose());
 
