@@ -29,6 +29,8 @@ public class PortMap {
       public static final int intakeLimitSwitchID = 0; //TODO
     }
 
-    public static final int ledPort = 2; //TODO
-    public static final int ledPort2 = 7; //TODO
+    public static class Led {
+      public static final int ledPort = 2; //TODO
+      public static final int ledPort2 = 7; //TODO
+    }
 }
