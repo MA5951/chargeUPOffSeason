@@ -47,7 +47,7 @@ public class LED2 extends SubsystemBase {
   Color gamePieceColor = LedConstance.WHITE;
 
   public LED2() {
-    ledController = new AddressableLEDController(PortMap.ledPort2, 150);
+    ledController = new AddressableLEDController(PortMap.Led.ledPort2, 150);
     solidColorPattern = new SolidColorPattern(Color.kRed);
     rainbowColorPattern = new RainbowColorPattern();
     blinkingColorPattern = new BlinkingColorPattern(Color.kRed, Color.kRed,0);
