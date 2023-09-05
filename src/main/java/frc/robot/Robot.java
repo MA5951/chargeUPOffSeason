@@ -35,10 +35,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
-    CommandScheduler.getInstance().setDefaultCommand(
-      Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
-        Elevator.getInstance(), ElevatorConstance.minPose));
+    // CommandScheduler.getInstance().setDefaultCommand(
+    //   Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
+    //     Elevator.getInstance(), ElevatorConstance.minPose));
   }
 
   /**
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -89,7 +91,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    // SwerveDrivetrainSubsystem.getInstance().fixOdometry();
+    SwerveDrivetrainSubsystem.getInstance().fixOdometry();
     
     CommandScheduler.getInstance().setDefaultCommand(
       SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
@@ -102,7 +104,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    SwerveDrivetrainSubsystem.getInstance().updateOdometry();
   }
 
   @Override

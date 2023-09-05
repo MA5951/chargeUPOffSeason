@@ -172,8 +172,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   private SwerveDrivetrainSubsystem() {
 
     resetNavx();
-    navx.calibrate();;
-   
+
     this.board = new MAShuffleboard("swerve");
 
     CONTROLLER_X = new PIDController(
@@ -250,6 +249,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   public void resetNavx() {
     navx.reset();
+    navx.zeroYaw();
   }
 
   public Pose2d getPose() {
@@ -317,6 +317,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
           Math.toRadians(angle)
         )
       );
+      System.out.println(closest.getX());
     return ClosestScoringPose;
   }
 
@@ -341,6 +342,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   }
 
   public void odometrySetUpForAutonomous(PathPlannerTrajectory trajectory) {
+    resetNavx();
     PathPlannerTrajectory tPathPlannerTrajectory;
     if (DriverStation.getAlliance() == Alliance.Red) {
       tPathPlannerTrajectory
@@ -396,8 +398,12 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
     if (result.isPresent()) {
       EstimatedRobotPose camPose = result.get();
-      odometry.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
-      camPose.timestampSeconds);
+      Pose2d temp = new Pose2d(
+        camPose.estimatedPose.toPose2d().getTranslation(),
+        getRotation2d()
+      );
+      odometry.addVisionMeasurement(temp,
+        camPose.timestampSeconds);
     }
   }
 
@@ -414,7 +420,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   public void fixOdometry() {
     if (DriverStation.getAlliance() == Alliance.Red) {
-      navx.setAngleAdjustment((getPose().getRotation().getDegrees()) - 180);
+      navx.setAngleAdjustment(180);
       resetOdometry(
         new Pose2d(
           new Translation2d(
@@ -450,14 +456,16 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     board.addNum("angle in degrees", getPose().getRotation().getDegrees());
     board.addNum("angle in radians", getPose().getRotation().getRadians());
     
-    board.addNum("roll", navx.getRoll());
+    board.addNum("yaw", navx.getYaw());
     
     if(Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
       if (accelerationUpdated) {
         setAccelerationLimit(SwerveConstants.accelerationLimitForOpenElevator);
       }
-      maxVelocity = 
-        SwerveConstants.maxAccelerationForOpenElevator * SwerveConstants.Tstop;
+      maxVelocity = Math.min(
+        SwerveConstants.maxAccelerationForOpenElevator * SwerveConstants.Tstop,
+        SwerveConstants.MAX_VELOCITY
+      );
       accelerationUpdated = false;
     } else if(!accelerationUpdated) {
       setAccelerationLimit(0);

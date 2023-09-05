@@ -16,17 +16,17 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final Alliance alliance = Alliance.Blue;
+    public static final Alliance alliance = Alliance.Red;
 
     public static class Camera {
         public static final double CAMERA_DISTANCE_FROM_CENTER_IN_X = 
-            alliance == Alliance.Blue ? 0 : 0; //TODO
+            alliance == Alliance.Blue ? 0.415 : 0.415; //TODO
             
         public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Y =
-            alliance == Alliance.Blue ? 0 : 0; //TODO
+            alliance == Alliance.Blue ? 0.3 : 0.3; //TODO
 
         public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Z =
-            alliance == Alliance.Blue ? 0 : 0; //TODO
+            alliance == Alliance.Blue ? 0.7 : 0.7; //TODO
 
         public static final double CAMERA_ROLL =
             alliance == Alliance.Blue ? 0 : 0; //TODO
@@ -51,7 +51,7 @@ public final class Constants {
         public static final double FIELD_WIDTH_METERS = 8.02;
         public static final double FIELD_LENGTH_METERS = 16.54;
         private static final double BLUE_X = 0.143 + Robot.LENGTH / 2d;
-        private static final double RED_X = FieldConstants.FIELD_WIDTH_METERS - BLUE_X;
+        private static final double RED_X = 14.5;
         private static final double A1Y = 0.51;
         private static final double A2Y = 1.06;
         private static final double A3Y = 1.63;

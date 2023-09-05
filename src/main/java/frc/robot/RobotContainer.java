@@ -124,33 +124,33 @@ public class RobotContainer {
         () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
     );
 
-    // DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
+    DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
 
     DRIVER_PS4_CONTROLLER.povDown().whileTrue(new ResetElevator());
 
-      OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
-         new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)
-       ).whileFalse(
-         new SetElvator(ElevatorConstance.minPose)
-       );
+    // OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
+    //     new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)
+    //   ).whileFalse(
+    //     new SetElvator(ElevatorConstance.minPose)
+    //   );
 
-       OPERATOR_PS4_CONTROLLER.povDown().whileTrue(
-         new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)
-       ).whileFalse(
-         new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
-       );
+    //   OPERATOR_PS4_CONTROLLER.povDown().whileTrue(
+    //     new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)
+    //   ).whileFalse(
+    //     new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
+    //   );
 
-       OPERATOR_PS4_CONTROLLER.square().whileTrue(
-         new SetElvator(Elevator.getInstance().highHight)
-       );
-    
-       OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
-         new SetElvator(ElevatorConstance.lowPose)
-       );
-    
-       OPERATOR_PS4_CONTROLLER.cross().whileTrue(
-         new SetElvator(Elevator.getInstance().midhight)
-       );
+    //   OPERATOR_PS4_CONTROLLER.square().whileTrue(
+    //     new SetElvator(Elevator.getInstance().highHight)
+    //   );
+  
+    //   OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
+    //     new SetElvator(ElevatorConstance.lowPose)
+    //   );
+  
+    //   OPERATOR_PS4_CONTROLLER.cross().whileTrue(
+    //     new SetElvator(Elevator.getInstance().midhight)
+    //   );
 
 
     DRIVER_PS4_CONTROLLER.povRight().whileTrue(
@@ -159,12 +159,6 @@ public class RobotContainer {
 
     DRIVER_PS4_CONTROLLER.povLeft().whileTrue(
       new SetElvator(Elevator.getInstance().midhight)
-    );
-
-    DRIVER_PS4_CONTROLLER.cross().whileTrue(
-      new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)
-    ).whileFalse(
-      new SetElvator(ElevatorConstance.minPose)
     );
   }
 
