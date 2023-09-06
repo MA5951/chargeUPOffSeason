@@ -6,6 +6,7 @@ package frc.robot.commands.Automations.ElevatorAutomations;
 
 import com.ma5951.utils.commands.MotorCommand;
 
+import edu.wpi.first.wpilibj.SynchronousInterrupt;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -29,8 +30,9 @@ public class SetElvator extends SequentialCommandGroup {
   public SetElvator(double setPoint) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    System.out.println("power");
     addCommands(
-      new ParallelDeadlineGroup(
+    new ParallelDeadlineGroup(
         new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
         new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)
       ),
@@ -38,6 +40,7 @@ public class SetElvator extends SequentialCommandGroup {
       new ParallelDeadlineGroup(
         new WaitUntilCommand(Elevator.getInstance()::atPoint),
         new MotorCommand(Intake.getInstance(), SetElvator::getPower, 0))
+        
     );
   }
 }

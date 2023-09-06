@@ -124,7 +124,9 @@ public class RobotContainer {
         () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
     );
 
-    DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
+    DRIVER_PS4_CONTROLLER.cross().whileTrue(
+      new ShelfIntakeAutomation(0.8
+      )).whileFalse(new SetElvator(0));
 
     DRIVER_PS4_CONTROLLER.povDown().whileTrue(new ResetElevator());
 
@@ -159,6 +161,11 @@ public class RobotContainer {
 
     DRIVER_PS4_CONTROLLER.povLeft().whileTrue(
       new SetElvator(Elevator.getInstance().midhight)
+      
+    );
+    
+    DRIVER_PS4_CONTROLLER.povUp().whileTrue(
+      new SetElvator(Elevator.getInstance().lowHight)
     );
   }
 

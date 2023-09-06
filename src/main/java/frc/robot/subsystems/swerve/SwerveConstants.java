@@ -77,7 +77,7 @@ public class SwerveConstants {
     public final static boolean DRIVE_ENBLE_CURRENT_LIMIT = true;
 
     // swerve physics
-    public final static double MAX_VELOCITY = 4.96824;
+    public final static double MAX_VELOCITY = 4.96824 ;
     public final static double MAX_ACCELERATION = Math.pow(MAX_VELOCITY, 2) / RADIUS;
     public final static double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / RADIUS; // radians
 
@@ -114,8 +114,8 @@ public class SwerveConstants {
     public final static double ANGLE_BEFORE_CLIMB = 30; // TODO
     public final static double TIME_TO_CLIMB = 5; // TODO
 
-    public final static double Tstop = 0.1; // TODO
-    public final static double maxAccelerationForOpenElevator = 5; // TODO
+    public final static double Tstop = 0.2; // TODO
+    public final static double maxAccelerationForOpenElevator = 3.5; // TODO
     public final static double accelerationLimitForOpenElevator = 
         MAX_VELOCITY / maxAccelerationForOpenElevator;
 }

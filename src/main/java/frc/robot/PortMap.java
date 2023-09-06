@@ -25,7 +25,7 @@ public class PortMap {
     }
 
     public static class Intake {
-      public static final int intakeMotorID = 12;
+      public static final int intakeMotorID = 6;
       public static final int sensorID = 0;
     }
 }
