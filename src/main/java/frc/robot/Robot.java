@@ -37,9 +37,12 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
-    CommandScheduler.getInstance().setDefaultCommand(
-      Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
-        Elevator.getInstance(), ElevatorConstance.minPose));
+    //LEDS1.getInstance();
+    // LEDS2.getInstance();
+
+    // CommandScheduler.getInstance().setDefaultCommand(
+    //   Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
+    //     Elevator.getInstance(), ElevatorConstance.minPose));
   }
 
   /**
