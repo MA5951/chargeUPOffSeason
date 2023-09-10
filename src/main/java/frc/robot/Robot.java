@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,6 +27,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  AddressableLED m_led;
+  AddressableLEDBuffer m_ledBuffer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,10 +36,28 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    
+
+    
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
+    
+    // PWM port 9
+    // Must be a PWM header, not MXP or DIO
+    m_led = new AddressableLED(7);
+
+    // Reuse buffer
+    // Default to a length of 60, start empty output
+    // Length is expensive to set, so only set it once, then just update data
+    m_ledBuffer = new AddressableLEDBuffer(76);
+    m_led.setLength(m_ledBuffer.getLength());
+
+    // Set the data
+    m_led.setData(m_ledBuffer);
+    m_led.start();
 
     //LEDS1.getInstance();
     // LEDS2.getInstance();
@@ -102,6 +124,13 @@ public class Robot extends TimedRobot {
         RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
         RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
     );
+
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      m_ledBuffer.setRGB(i, 0, 255, 255);
+    }
+   
+    m_led.setData(m_ledBuffer);
   }
 
   /** This function is called periodically during operator control. */
