@@ -104,7 +104,9 @@ public class RobotContainer {
     
     DRIVER_PS4_CONTROLLER.square().whileTrue(
       new MotorCommand(Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0))
-          .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
+          .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
+          .andThen(() -> Leds.getInstance().setGamepice("none"))
+          );
 
     DRIVER_PS4_CONTROLLER.triangle().whileTrue(
       new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset())
@@ -160,6 +162,14 @@ public class RobotContainer {
 
       OPERATOR_PS4_CONTROLLER.R1().whileTrue(
         new InstantCommand(() -> Leds.getInstance().setGamepice("cube"))
+      );
+
+      OPERATOR_PS4_CONTROLLER.R2().whileTrue(
+        new InstantCommand(() -> Intake.getInstance().setCubeState(true))
+      );
+
+      OPERATOR_PS4_CONTROLLER.L2().whileTrue(
+        new InstantCommand(() -> Intake.getInstance().setConeState(true))
       );
   }
 

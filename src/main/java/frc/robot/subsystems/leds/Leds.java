@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
-import frc.robot.PortMap.Intake;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import com.ma5951.utils.MAShuffleboard;
+import frc.robot.subsystems.intake.Intake;
 
 
 public class Leds extends SubsystemBase {
@@ -33,15 +33,17 @@ public class Leds extends SubsystemBase {
   private Color[] colors;
   private Color[] color;
   private String gamePice;
+  private MAShuffleboard board;
 
   public Leds() {
     L_led = new AddressableLED(PortMap.Led.ledPort);
-    L_ledBuffer = new AddressableLEDBuffer(80);
+    L_ledBuffer = new AddressableLEDBuffer(152);
     L_led.setLength(L_ledBuffer.getLength());
     L_led.setData(L_ledBuffer);
     L_led.start();
 
-  
+
+    board = new MAShuffleboard("Leds");
 
   }
 
@@ -129,22 +131,29 @@ public class Leds extends SubsystemBase {
 
   public void setAllianceColor() {
     if (DriverStation.isFMSAttached()) {
+      
       if (DriverStation.getAlliance() == Alliance.Red) {
-        // setSolidColor(Color.kRed);
-        SmoothWave(2, 1, 1, new Color [] {LedsConstants.RED, LedsConstants.BLACK});
+        SmoothWave(2, 0.2, 0.1, new Color [] {LedsConstants.RED, LedsConstants.BLACK});
+        updateLeds();
       } else if (DriverStation.getAlliance() == Alliance.Blue) {
-        // setSolidColor(Color.kBlue);
-        SmoothWave(2, 1, 1, new Color [] {LedsConstants.BLUE, LedsConstants.BLACK});
+        SmoothWave(2, 0.2, 0.1, new Color [] {LedsConstants.BLUE, LedsConstants.BLACK});
+        updateLeds();
       }
+    } else {
+      SmoothWave(2, 12, 0.5, new Color [] {LedsConstants.WHITE,LedsConstants.BLACK});
+      updateLeds();
+      
     }
-    else{
-      SmoothWave(2, 1, 1, new Color [] {LedsConstants.CUBE_PURPLE,LedsConstants.BLACK});
-      // setSolidColor(Color.kPurple);
-    }
+
+      
   }
 
   public void setGamepice(String gamePice){
     this.gamePice = gamePice;
+  }
+
+  public String getGamepice() {
+    return gamePice;
   }
 
   public void updateLeds() {
@@ -163,21 +172,32 @@ public class Leds extends SubsystemBase {
   public void periodic() {
     
 
-    /* 
-    if (gamePice == "cone"){
-      Leds.getInstance().blink(0.6, LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
-      Leds.getInstance().updateLeds();
-    }else if (gamePice == "cube"){
-      Leds.getInstance().blink(0.6, LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
-      Leds.getInstance().updateLeds();
-    }/*else if (frc.robot.subsystems.intake.Intake.getInstance().isPieceInIntake() == false ) {
-      Leds.getInstance().SmoothWave(2, 0.2, 0.6, new Color [] {LedsConstants.WHITE , LedsConstants.MAcolor});
-      Leds.getInstance().updateLeds();
-    }*/
+    if (DriverStation.isDisabled()) {
+      setAllianceColor();
+    } else if (DriverStation.isTeleop()) {
+      if (Intake.getInstance().isCubeIn() == true) {
+        setColor(LedsConstants.CUBE_PURPLE);
+        updateLeds();
+      } else if (Intake.getInstance().isConeIn() == true) {
+        setColor(LedsConstants.CONE_YELLOW);
+        updateLeds();
+      } else if (gamePice == "cone"){
+        blink(0.5, LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
+        updateLeds();
+      } else if (gamePice == "cube"){
+        blink(0.5, LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
+        updateLeds();
+      } else if (Intake.getInstance().isPieceInIntake() == false) {
+        setGamepice("none");
+        SmoothWave(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
+        updateLeds();
+      }
+    } else if (DriverStation.isAutonomous()) {
+      SmoothWave(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
+      updateLeds();
+    }
     
   }
-  
-  
   
   
 }

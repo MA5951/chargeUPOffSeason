@@ -16,7 +16,7 @@ import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.leds.Leds1;
+
 import frc.robot.subsystems.leds.LedsConstants;
 import edu.wpi.first.wpilibj.util.Color;
 /**
@@ -64,6 +64,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    Leds.getInstance();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -109,10 +111,8 @@ public class Robot extends TimedRobot {
     );
     
     //Leds.getInstance().blink(1, LedsConstants.MAcolor, LedsConstants.WHITE);
-    Leds.getInstance().rainbow();
-    Leds.getInstance().updateLeds();
-    Leds1.getInstance().rainbow();
-    Leds1.getInstance().updateLeds();
+    
+    
     
   }
 
