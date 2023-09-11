@@ -19,7 +19,6 @@ public class EjectAutomation extends SequentialCommandGroup{
 
     public EjectAutomation() {
         addCommands(
-            new MotorCommand(Intake.getInstance(), EjectAutomation::getPower , 0)
             new MotorCommand(Intake.getInstance(), EjectAutomation::getPower , 0),
             new InstantCommand(() -> Leds.getInstance().setGamepice("none"))
         );
