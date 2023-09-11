@@ -32,6 +32,7 @@ public class Elevator extends SubsystemBase implements
   public double midhight = ElevatorConstance.ConeMidPose;
   public double highHight = ElevatorConstance.highPoseCone;
   public double lowHight = ElevatorConstance.lowPose;
+  public double minHight = ElevatorConstance.minPose;
 
 
   private Elevator() {

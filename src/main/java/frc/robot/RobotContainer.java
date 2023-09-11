@@ -151,6 +151,10 @@ public class RobotContainer {
       OPERATOR_PS4_CONTROLLER.povRight().whileTrue(
         new SetElvator(Elevator.getInstance().midhight)
       );
+
+      OPERATOR_PS4_CONTROLLER.povLeft().whileTrue(
+        new SetElvator(Elevator.getInstance().minHight)
+      );
   }
 
   /**
