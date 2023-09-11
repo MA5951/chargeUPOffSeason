@@ -30,7 +30,6 @@ public class SetElvator extends SequentialCommandGroup {
   public SetElvator(double setPoint) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    System.out.println("power");
     addCommands(
     new ParallelDeadlineGroup(
         new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),

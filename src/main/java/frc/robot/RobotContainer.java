@@ -47,32 +47,32 @@ public class RobotContainer {
   public static final CommandPS4Controller OPERATOR_PS4_CONTROLLER =
     new CommandPS4Controller(OperatorConstants.OPERATOR_CONTROLLER_PORT);   
 
-  public static PhotonVision photonVision;
-  private static AprilTagFieldLayout aprilTagFieldLayout;
+  // public static PhotonVision photonVision;
+  // private static AprilTagFieldLayout aprilTagFieldLayout;
 
   public RobotContainer() {
     // Configure the trigger bindings
-    try {
-      aprilTagFieldLayout = 
-        AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-    } catch (Exception e) {
-      System.err.println(e);
-    }
+    // try {
+    //   aprilTagFieldLayout = 
+    //     AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+    // } catch (Exception e) {
+    //   System.err.println(e);
+    // }
 
-    photonVision  = new PhotonVision(
-      "ma5951",
-      new Transform3d(
-       new Translation3d(
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z
-       ), new Rotation3d(
-        Constants.Camera.CAMERA_ROLL,
-        Constants.Camera.CAMERA_PITCH,
-        Constants.Camera.CAMERA_YAW
-       )),
-      aprilTagFieldLayout
-       );
+    // photonVision  = new PhotonVision(
+    //   "ma5951",
+    //   new Transform3d(
+    //    new Translation3d(
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z
+    //    ), new Rotation3d(
+    //     Constants.Camera.CAMERA_ROLL,
+    //     Constants.Camera.CAMERA_PITCH,
+    //     Constants.Camera.CAMERA_YAW
+    //    )),
+    //   aprilTagFieldLayout
+    //    );
 
     configureBindings();
   }
@@ -124,18 +124,26 @@ public class RobotContainer {
         () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
     );
 
-    DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
+    DRIVER_PS4_CONTROLLER.touchpad().whileTrue(
+      new MotorCommand(Intake.getInstance(), IntakeConstance.IntakePowerForCone, 0)
+    );
+
+    // DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
+
+    DRIVER_PS4_CONTROLLER.povDown().whileTrue(new ResetElevator());
 
     OPERATOR_PS4_CONTROLLER.circle().whileTrue(new ResetElevator());
 
     OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
-        new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)
+      new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
+      .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone))
       ).whileFalse(
         new SetElvator(ElevatorConstance.minPose)
       );
 
       OPERATOR_PS4_CONTROLLER.square().whileTrue(
-        new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)
+        new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
+        .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube))
       ).whileFalse(
         new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
       );

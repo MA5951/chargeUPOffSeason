@@ -121,11 +121,6 @@ public class Elevator extends SubsystemBase implements
 
   @Override
   public void periodic() {
-    board.addNum("pose", getExtension());
-    board.addBoolean("atpoint", atPoint());
-    board.addNum("v", master.getBusVoltage());
-    board.addNum("A", master.getOutputCurrent());
-    board.addNum("setpoint", setPoint);
     board.addBoolean("can move", canMove());
     
     if(Intake.getInstance().isCubeIn()) {

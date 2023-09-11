@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         board = new MAShuffleboard("Intake");
 
         intakeMotor.setIdleMode(IdleMode.kBrake);
-        intakeMotor.setInverted(true);
+        intakeMotor.setInverted(false);
     }
 
     public boolean getSensor() {
@@ -100,11 +100,8 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
 
     @Override
     public void periodic() {
-        board.addBoolean("Is Piece in Intake", isPieceInIntake());
         board.addBoolean("Is Cone in Intake", isConeIn());
         board.addBoolean("Is cube in Intake", isCubeIn());
-        board.addBoolean("is CLimitSwitch", getSensor());
-        board.addNum("Intake Current", getMotorCurrent());
         
         if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent && ignoreSensor) {
             setConeState(true);
