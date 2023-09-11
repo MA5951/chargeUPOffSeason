@@ -31,6 +31,8 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
+import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.leds.LedsConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 /**
@@ -150,6 +152,14 @@ public class RobotContainer {
   
       OPERATOR_PS4_CONTROLLER.povRight().whileTrue(
         new SetElvator(Elevator.getInstance().midhight)
+      );
+
+      OPERATOR_PS4_CONTROLLER.L1().whileTrue(
+        new InstantCommand(() -> Leds.getInstance().setGamepice("cone"))
+      );
+
+      OPERATOR_PS4_CONTROLLER.R1().whileTrue(
+        new InstantCommand(() -> Leds.getInstance().setGamepice("cube"))
       );
   }
 

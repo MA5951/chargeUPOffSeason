@@ -20,26 +20,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 
-public class Leds extends SubsystemBase {
+public class Leds1 extends SubsystemBase {
   /** Creates a new Leds. */
-  private AddressableLED L_led;
-  private AddressableLEDBuffer L_ledBuffer;
   private AddressableLED R_led;
   private AddressableLEDBuffer R_ledBuffer;
   private int firstHue = 0;
-  private static Leds leds;
+  private static Leds1 leds1;
   private boolean on;
   private double lastChange;
   private Color[] colors;
   private Color[] color;
   private String gamePice;
 
-  public Leds() {
-    L_led = new AddressableLED(PortMap.Led.ledPort);
-    L_ledBuffer = new AddressableLEDBuffer(80);
-    L_led.setLength(L_ledBuffer.getLength());
-    L_led.setData(L_ledBuffer);
-    L_led.start();
+  public Leds1() {
+    R_led = new AddressableLED(PortMap.Led.ledPort2);
+    R_ledBuffer = new AddressableLEDBuffer(80);
+    R_led.setLength(R_ledBuffer.getLength());
+    R_led.setData(R_ledBuffer);
+    R_led.start();
 
   
 
@@ -47,31 +45,31 @@ public class Leds extends SubsystemBase {
 
   public void setColorRGB(int Red , int Green , int Blue) {
     
-    for (var i = 0; i < L_ledBuffer.getLength(); i++) {
+    for (var i = 0; i < R_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      L_ledBuffer.setRGB(i, Red, Green, Blue);
+      R_ledBuffer.setRGB(i, Red, Green, Blue);
       //R_ledBuffer.setRGB(i, Red, Green, Blue);
    }
    
-   L_led.setData(L_ledBuffer);
+   R_led.setData(R_ledBuffer);
    //R_led.setData(L_ledBuffer);
   }
 
   public void setColor(Color color) {
     
-    for (var i = 0; i < L_ledBuffer.getLength(); i++) {
+    for (var i = 0; i < R_ledBuffer.getLength(); i++) {
       
-      L_ledBuffer.setLED(i, color);
+      R_ledBuffer.setLED(i, color);
    }
-   L_led.setData(L_ledBuffer);
+   R_led.setData(R_ledBuffer);
   }
 
   public void rainbow() {
     int currentHue;
-    int length = L_ledBuffer.getLength();
+    int length = R_ledBuffer.getLength();
     for (int i = 0; i < length; i++) {
         currentHue = (firstHue + (i * 180 / length)) % 180;
-        L_ledBuffer.setHSV(i, currentHue, 255, 128);
+        R_ledBuffer.setHSV(i, currentHue, 255, 128);
     }
 
     firstHue = (firstHue + 3) % 180;
@@ -94,22 +92,22 @@ public class Leds extends SubsystemBase {
   public void Wave(int period , int numColors , Color[] colors) {
     double elapsedTime = Timer.getFPGATimestamp() % period;
     double progress = elapsedTime / period;
-    int numLeds = L_ledBuffer.getLength();
+    int numLeds = R_ledBuffer.getLength();
 
     for (int i = 0; i < numLeds; i++) {
         double position = (double)i / (double)numLeds;
         double wavePosition = (position + progress) % 1.0;
         int colorIndex = (int)(wavePosition * numColors);
         Color currentColor = colors[colorIndex];
-        L_ledBuffer.setLED(i, currentColor);
+        R_ledBuffer.setLED(i, currentColor);
 
     }
   }
 
   public void SmoothWave(int numColors, double period, double speed, Color[] colors) {
     double elapsedTime = Timer.getFPGATimestamp();
-    for (int i = 0; i < L_ledBuffer.getLength(); i++) {
-        double position = ((double) i / L_ledBuffer.getLength()) + (elapsedTime * speed / period);
+    for (int i = 0; i < R_ledBuffer.getLength(); i++) {
+        double position = ((double) i / R_ledBuffer.getLength()) + (elapsedTime * speed / period);
         double progress = position - (int) position;
 
         int startColorIndex = (int) (position % numColors);
@@ -123,7 +121,7 @@ public class Leds extends SubsystemBase {
                 startColor.blue + (endColor.blue - startColor.blue) * progress
         );
 
-        L_ledBuffer.setLED(i, currentColor);
+        R_ledBuffer.setLED(i, currentColor);
     }
 }
 
@@ -148,15 +146,15 @@ public class Leds extends SubsystemBase {
   }
 
   public void updateLeds() {
-    L_led.setData(L_ledBuffer);
+    R_led.setData(R_ledBuffer);
 
   }
 
-  public static Leds getInstance() {
-    if (leds == null) {
-        leds = new Leds();  
+  public static Leds1 getInstance() {
+    if (leds1 == null) {
+        leds1 = new Leds1();  
     }
-    return leds;
+    return leds1;
   }
 
   @Override

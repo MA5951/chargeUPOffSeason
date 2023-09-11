@@ -6,8 +6,7 @@ package frc.robot;
 
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,7 +16,9 @@ import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.subsystems.leds.Leds;
-
+import frc.robot.subsystems.leds.Leds1;
+import frc.robot.subsystems.leds.LedsConstants;
+import edu.wpi.first.wpilibj.util.Color;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -40,7 +41,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
     
-    Leds.getInstance();
+    
   //   CommandScheduler.getInstance().setDefaultCommand(
   //     Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
   //       Elevator.getInstance(), ElevatorConstance.minPose));
@@ -107,8 +108,11 @@ public class Robot extends TimedRobot {
         RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
     );
     
-    
-
+    //Leds.getInstance().blink(1, LedsConstants.MAcolor, LedsConstants.WHITE);
+    Leds.getInstance().rainbow();
+    Leds.getInstance().updateLeds();
+    Leds1.getInstance().rainbow();
+    Leds1.getInstance().updateLeds();
     
   }
 
@@ -116,6 +120,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    //Leds.getInstance().SmoothWave(2, 0.5, 0.8, new Color []{LedsConstants.MAcolor , LedsConstants.WHITE});
+
   }
 
   @Override
