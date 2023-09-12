@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.PortMap;
 
-
 public class Intake extends SubsystemBase implements MotorSubsystem{
 
     private static Intake intake;
@@ -37,7 +36,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         board = new MAShuffleboard("Intake");
 
         intakeMotor.setIdleMode(IdleMode.kBrake);
-        intakeMotor.setInverted(true);
+        intakeMotor.setInverted(false);
     }
 
     public boolean getSensor() {
@@ -64,7 +63,6 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         setConeState(false);
         setCubeState(false);
         setIgnoreSensor(true);
-        
     }
 
     public boolean isCubeIn() {
@@ -102,12 +100,11 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
 
     @Override
     public void periodic() {
-        board.addBoolean("Is Piece in Intake", isPieceInIntake());
         board.addBoolean("Is Cone in Intake", isConeIn());
         board.addBoolean("Is cube in Intake", isCubeIn());
-        board.addBoolean("is CLimitSwitch", getSensor());
-        board.addNum("Intake Current", getMotorCurrent());
-        
+        board.addBoolean("Is Pice in Intake", isPieceInIntake());
+
+
         if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent && ignoreSensor) {
             setConeState(true);
         }

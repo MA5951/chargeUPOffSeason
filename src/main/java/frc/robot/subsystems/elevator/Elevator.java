@@ -32,6 +32,7 @@ public class Elevator extends SubsystemBase implements
   public double midhight = ElevatorConstance.ConeMidPose;
   public double highHight = ElevatorConstance.highPoseCone;
   public double lowHight = ElevatorConstance.lowPose;
+  public double minHight = ElevatorConstance.minPose;
 
 
   private Elevator() {
@@ -120,11 +121,6 @@ public class Elevator extends SubsystemBase implements
 
   @Override
   public void periodic() {
-    board.addNum("pose", getExtension());
-    board.addBoolean("atpoint", atPoint());
-    board.addNum("v", master.getBusVoltage());
-    board.addNum("A", master.getOutputCurrent());
-    board.addNum("setpoint", setPoint);
     board.addBoolean("can move", canMove());
     
     if(Intake.getInstance().isCubeIn()) {

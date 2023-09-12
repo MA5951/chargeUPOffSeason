@@ -392,20 +392,20 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     return getAutonomousPathCommand(pathName, false);
   }
 
-  public void updateOdometry() {
-    Optional<EstimatedRobotPose> result = 
-      RobotContainer.photonVision.getEstimatedRobotPose(getPose());
+  // public void updateOdometry() {
+  //   Optional<EstimatedRobotPose> result = 
+  //     RobotContainer.photonVision.getEstimatedRobotPose(getPose());
 
-    if (result.isPresent()) {
-      EstimatedRobotPose camPose = result.get();
-      Pose2d temp = new Pose2d(
-        camPose.estimatedPose.toPose2d().getTranslation(),
-        getRotation2d()
-      );
-      odometry.addVisionMeasurement(temp,
-        camPose.timestampSeconds);
-    }
-  }
+  //   if (result.isPresent()) {
+  //     EstimatedRobotPose camPose = result.get();
+  //     Pose2d temp = new Pose2d(
+  //       camPose.estimatedPose.toPose2d().getTranslation(),
+  //       getRotation2d()
+  //     );
+  //     odometry.addVisionMeasurement(temp,
+  //       camPose.timestampSeconds);
+  //   }
+  // }
 
   public void setAccelerationLimit(double limit) {
     frontLeftModule.setAccelerationLimit(limit);
@@ -450,14 +450,8 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
     lastVelocity = frontLeftModule.getDriveVelocity();
 
-    field.setRobotPose(getPose());
-
-    board.addString("point", "(" + getPose().getX() + "," + getPose().getY() + ")");
     board.addNum("angle in degrees", getPose().getRotation().getDegrees());
-    board.addNum("angle in radians", getPose().getRotation().getRadians());
-    
-    board.addNum("yaw", navx.getYaw());
-    
+        
     if(Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
       if (accelerationUpdated) {
         setAccelerationLimit(SwerveConstants.accelerationLimitForOpenElevator);

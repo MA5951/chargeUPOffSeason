@@ -157,6 +157,32 @@ public class Leds extends SubsystemBase {
     this.gamePice = gamePice;
   }
 
+  public void partsPattern() {
+    for (var i = 0; i < 53; i++) {
+      
+      L_ledBuffer.setLED(i, LedsConstants.MAcolor);
+   }
+   L_led.setData(L_ledBuffer);
+  
+    for (var i = 53; i < 76; i++) {
+        
+      L_ledBuffer.setLED(i, LedsConstants.WHITE);
+  }
+  L_led.setData(L_ledBuffer);
+
+  for (var i = 76; i < 129; i++) {
+      
+    L_ledBuffer.setLED(i, LedsConstants.MAcolor);
+ }
+ L_led.setData(L_ledBuffer);
+
+  for (var i = 129; i < 152; i++) {
+      
+    L_ledBuffer.setLED(i, LedsConstants.WHITE);
+}
+L_led.setData(L_ledBuffer);
+  
+}
   public String getGamepice() {
     return gamePice;
   }
@@ -176,15 +202,19 @@ public class Leds extends SubsystemBase {
   @Override
   public void periodic() {
     
-
+    
     if (DriverStation.isDisabled()) {
-      setAllianceColor();
+      //setAllianceColor();
+      setColor(LedsConstants.RED);
+      updateLeds();
     } else if (DriverStation.isTeleop()) {
       if (Intake.getInstance().isCubeIn() == true) {
         setColor(LedsConstants.CUBE_PURPLE);
+        setGamepice("none");
         updateLeds();
       } else if (Intake.getInstance().isConeIn() == true) {
         setColor(LedsConstants.CONE_YELLOW);
+        setGamepice("none");
         updateLeds();
       } else if (gamePice == "cone"){
         blink(0.5, LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
@@ -194,7 +224,7 @@ public class Leds extends SubsystemBase {
         updateLeds();
       } else if (Intake.getInstance().isPieceInIntake() == false) {
         setGamepice("none");
-        SmoothWave(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
+        partsPattern();
         updateLeds();
       }
     } else if (DriverStation.isAutonomous()) {
