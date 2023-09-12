@@ -31,6 +31,5 @@ public class PortMap {
 
     public static class Led {
       public static final int ledPort = 0; //TODO
-      public static final int ledPort2 = 2; //TODO
     }
 }

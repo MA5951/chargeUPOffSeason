@@ -129,7 +129,7 @@ public class Leds extends SubsystemBase {
     }
 }
 
-  public void setAllianceColor() {
+  public void setAllianceColorFMS() {
     if (DriverStation.isFMSAttached()) {
       
       if (DriverStation.getAlliance() == Alliance.Red && DriverStation.isDSAttached()) {
@@ -152,6 +152,20 @@ public class Leds extends SubsystemBase {
 
       
   }
+
+  public void setAllianceColor() {
+    if (DriverStation.getAlliance() == Alliance.Red ) {
+      SmoothWave(2, 0.2, 0.1, new Color [] {LedsConstants.RED, LedsConstants.BLACK});
+      updateLeds();
+    } else if (DriverStation.getAlliance() == Alliance.Blue){
+      SmoothWave(2, 0.2, 0.1, new Color [] {LedsConstants.BLUE, LedsConstants.BLACK});
+      updateLeds();
+    }else {
+    SmoothWave(2, 7, 0.5, new Color [] {LedsConstants.PURPOLE,LedsConstants.BLACK});
+    updateLeds();
+    }
+    }
+    
 
   public void setGamepice(String gamePice){
     this.gamePice = gamePice;
@@ -183,7 +197,8 @@ public class Leds extends SubsystemBase {
 L_led.setData(L_ledBuffer);
   
 }
-  public String getGamepice() {
+  
+public String getGamepice() {
     return gamePice;
   }
 
@@ -204,8 +219,8 @@ L_led.setData(L_ledBuffer);
     
     
     if (DriverStation.isDisabled()) {
-      //setAllianceColor();
-      setColor(LedsConstants.RED);
+      //setAllianceColorFMS();
+      setAllianceColor();
       updateLeds();
     } else if (DriverStation.isTeleop()) {
       if (Intake.getInstance().isCubeIn() == true) {
