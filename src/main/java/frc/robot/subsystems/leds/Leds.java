@@ -132,17 +132,22 @@ public class Leds extends SubsystemBase {
   public void setAllianceColor() {
     if (DriverStation.isFMSAttached()) {
       
-      if (DriverStation.getAlliance() == Alliance.Red) {
+      if (DriverStation.getAlliance() == Alliance.Red && DriverStation.isDSAttached()) {
         SmoothWave(2, 0.2, 0.1, new Color [] {LedsConstants.RED, LedsConstants.BLACK});
         updateLeds();
-      } else if (DriverStation.getAlliance() == Alliance.Blue) {
+      } else if (DriverStation.getAlliance() == Alliance.Blue && DriverStation.isDSAttached()){
         SmoothWave(2, 0.2, 0.1, new Color [] {LedsConstants.BLUE, LedsConstants.BLACK});
         updateLeds();
-      }
-    } else {
-      SmoothWave(2, 12, 0.5, new Color [] {LedsConstants.WHITE,LedsConstants.BLACK});
+      }else if (DriverStation.getAlliance() == Alliance.Red){
+        blink(1, LedsConstants.RED, LedsConstants.BLACK);
+        updateLeds();
+      } else if (DriverStation.getAlliance() == Alliance.Blue) {
+        blink(1, LedsConstants.BLUE, LedsConstants.BLACK);
+        updateLeds();
+      } else {
+      SmoothWave(2, 7, 0.5, new Color [] {LedsConstants.PURPOLE,LedsConstants.BLACK});
       updateLeds();
-      
+      }
     }
 
       

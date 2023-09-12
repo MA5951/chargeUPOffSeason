@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.PortMap;
-import frc.robot.PortMap.Led;
-import frc.robot.subsystems.leds.Leds;
+
 
 public class Intake extends SubsystemBase implements MotorSubsystem{
 
