@@ -1,11 +1,14 @@
 {
   "HALProvider": {
     "Addressable LEDs": {
+<<<<<<< Updated upstream
       "0": {
         "columns": 8,
         "order": 1,
         "start": 2
       },
+=======
+>>>>>>> Stashed changes
       "window": {
         "visible": true
       }
@@ -14,6 +17,7 @@
       "window": {
         "visible": true
       }
+<<<<<<< Updated upstream
     },
     "Other Devices": {
       "SPARK MAX [10]": {
@@ -36,11 +40,14 @@
       "window": {
         "visible": true
       }
+=======
+>>>>>>> Stashed changes
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+<<<<<<< Updated upstream
       "/LiveWindow/Intake": "Subsystem",
       "/LiveWindow/SwerveDrivetrainSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
@@ -60,5 +67,9 @@
   },
   "NetworkTables View": {
     "visible": false
+=======
+      "/SmartDashboard/Field": "Field2d"
+    }
+>>>>>>> Stashed changes
   }
 }

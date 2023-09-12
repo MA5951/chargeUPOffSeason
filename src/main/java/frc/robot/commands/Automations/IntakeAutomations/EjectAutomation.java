@@ -1,9 +1,6 @@
 package frc.robot.commands.Automations.IntakeAutomations;
 
-
-
 import com.ma5951.utils.commands.MotorCommand;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.intake.Intake;
@@ -21,6 +18,6 @@ public class EjectAutomation extends SequentialCommandGroup{
         addCommands(
             new MotorCommand(Intake.getInstance(), EjectAutomation::getPower , 0),
             new InstantCommand(() -> Leds.getInstance().setGamepice("none"))
-        );     
+        );
     }
 }
