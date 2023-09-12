@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.leds.Leds.GamePiece;
 
 
 public class EjectAutomation extends SequentialCommandGroup{
@@ -17,7 +18,7 @@ public class EjectAutomation extends SequentialCommandGroup{
     public EjectAutomation() {
         addCommands(
             new MotorCommand(Intake.getInstance(), EjectAutomation::getPower , 0),
-            new InstantCommand(() -> Leds.getInstance().setGamepice("none"))
+            new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.NONE))
         );
     }
 }
