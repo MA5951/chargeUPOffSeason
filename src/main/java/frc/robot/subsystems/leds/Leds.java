@@ -136,24 +136,24 @@ public class Leds extends SubsystemBase {
     }
   }
 
-  public void partsPattern() {
+  public void partsPattern(Color color1 , Color color2) {
     for (var i = 0; i < 53; i++) {
-      ledBuffer.setLED(i, LedsConstants.MAcolor);
+      ledBuffer.setLED(i, color1);
     }
     led.setData(ledBuffer);
   
     for (var i = 53; i < 76; i++) { 
-      ledBuffer.setLED(i, LedsConstants.WHITE);
+      ledBuffer.setLED(i, color2);
     }
     led.setData(ledBuffer);
 
     for (var i = 76; i < 129; i++) {
-      ledBuffer.setLED(i, LedsConstants.MAcolor);
+      ledBuffer.setLED(i, color1);
     }
     led.setData(ledBuffer);
 
     for (var i = 129; i < 152; i++) {   
-      ledBuffer.setLED(i, LedsConstants.WHITE);
+      ledBuffer.setLED(i, color2);
     }
     led.setData(ledBuffer);
   }
@@ -176,11 +176,11 @@ public class Leds extends SubsystemBase {
       setAllianceColor();
       updateLeds();
     } else if (DriverStation.isTeleop()) {
-      if (Intake.getInstance().isCubeIn() == true) {
+      if (Intake.getInstance().isCubeIn()) {
         setSingleColor(LedsConstants.CUBE_PURPLE);
         setGamePiece(GamePiece.NONE);
         updateLeds();
-      } else if (Intake.getInstance().isConeIn() == true) {
+      } else if (Intake.getInstance().isConeIn()) {
         setSingleColor(LedsConstants.CONE_YELLOW);
         setGamePiece(GamePiece.NONE);
         updateLeds();
@@ -192,7 +192,7 @@ public class Leds extends SubsystemBase {
         updateLeds();
       } else if (Intake.getInstance().isPieceInIntake() == false) {
         setGamePiece(GamePiece.NONE);
-        partsPattern();
+        partsPattern( LedsConstants.MAcolor , LedsConstants.WHITE);
         updateLeds();
       }
     } else if (DriverStation.isAutonomous()) {
