@@ -9,14 +9,20 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
-
-
+import frc.robot.subsystems.intake.Intake;
 
 public class LED extends SubsystemBase {
-
-
   /** Creates a new LEDSubsystem. */
+  public enum GamePiece {
+    CUBE,
+    CONE,
+    NONE
+  }
+
   private static LED led;
+  public GamePiece gamePiece;
+
+  // import led patterns
   AddressableLEDController ledController;
   SolidColorPattern solidColorPattern;
   RainbowColorPattern rainbowColorPattern;
@@ -30,10 +36,10 @@ public class LED extends SubsystemBase {
   WaveBlinkColorPattern waveBlinkColorPattern;
   EvenOddColorPattern evenOddColorPattern;
 
-  Color gamePieceColor = LedConstance.WHITE;
-
   public LED() {
-    ledController = new AddressableLEDController(PortMap.Led.ledPort, 150);
+    ledController = new AddressableLEDController(PortMap.Led.ledPort, LedConstance.LED_LENGTH);
+
+    // constuct led patterns
     solidColorPattern = new SolidColorPattern(Color.kRed);
     rainbowColorPattern = new RainbowColorPattern();
     blinkingColorPattern = new BlinkingColorPattern(Color.kRed, Color.kRed,0);
@@ -45,6 +51,10 @@ public class LED extends SubsystemBase {
     smoothWaveColorPattern = new SmoothWaveColorPattern(2, 5, 1, new Color [] {Color.kRed, Color.kBlue});
     waveBlinkColorPattern = new WaveBlinkColorPattern(Color.kRed, Color.kBlue, 0);
     evenOddColorPattern = new EvenOddColorPattern(Color.kRed, Color.kBlue, 0);
+  }
+
+  public void setGamePiece(GamePiece gamePiece) {
+    this.gamePiece = gamePiece;
   }
 
   public void setSolidColor(Color color) {
@@ -103,23 +113,13 @@ public class LED extends SubsystemBase {
     ledController.setAddressableLEDPattern(breathingTripleColorPattern);
   }
 
-  public void setgamePiece(Color gamePieceColor){
-    this.gamePieceColor = gamePieceColor;
-  }
-
   public void setAllianceColor() {
-    if (DriverStation.isFMSAttached()) {
-      if (DriverStation.getAlliance() == Alliance.Red) {
-        // setSolidColor(Color.kRed);
-        setSmoothWave(2, 1, 1, new Color [] {LedConstance.RED, LedConstance.BLACK});
-      } else if (DriverStation.getAlliance() == Alliance.Blue) {
-        // setSolidColor(Color.kBlue);
-        setSmoothWave(2, 1, 1, new Color [] {LedConstance.BLUE, LedConstance.BLACK});
-      }
-    }
-    else{
-      setSmoothWave(2, 1, 1, new Color [] {LedConstance.CUBE_PURPLE,LedConstance.BLACK});
-      // setSolidColor(Color.kPurple);
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      setSmoothWave(2, 0.2, 0.1, new Color [] {LedConstance.RED, LedConstance.BLACK});
+    } else if (DriverStation.getAlliance() == Alliance.Blue){
+      setSmoothWave(2, 0.2, 0.1, new Color [] {LedConstance.BLUE, LedConstance.BLACK});
+    } else {
+      setSmoothWave(2, 7, 0.5, new Color [] {LedConstance.PURPLE,LedConstance.BLACK});
     }
   }
 
@@ -132,20 +132,26 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     if (DriverStation.isDisabled()) {
       setAllianceColor();
-    }
-    else if (DriverStation.isEStopped()){
-      setWaveBlink(LedConstance.RED, LedConstance.WHITE, 2);
-    }
-    else if (DriverStation.isAutonomous()) {
+    } else if (DriverStation.isTeleop()) {
+      setWave(2, 1, 1, new Color[] {LedConstance.MAcolor, LedConstance.WHITE});
+      if (Intake.getInstance().isCubeIn() == true) {
+        setSolidColor(LedConstance.CUBE_PURPLE);
+        setGamePiece(GamePiece.NONE);
+      } else if (Intake.getInstance().isConeIn() == true) {
+        setSolidColor(LedConstance.CONE_YELLOW);
+        setGamePiece(GamePiece.NONE);
+      } else if (gamePiece == GamePiece.CONE){
+        setBlinking(LedConstance.BLACK, LedConstance.CONE_YELLOW , 0.5);
+      } else if (gamePiece == GamePiece.CUBE){
+        setBlinking(LedConstance.BLACK, LedConstance.CUBE_PURPLE , 0.5);
+      } else if (Intake.getInstance().isPieceInIntake() == false) {
+        setGamePiece(GamePiece.NONE);
+      }
+    } else if (DriverStation.isAutonomous()) {
       setSmoothWave(3, 1, 1, new Color [] {LedConstance.CONE_YELLOW, LedConstance.CUBE_PURPLE, LedConstance.CYAN});
-    }
-    else if (DriverStation.isTeleop() && !DriverStation.isJoystickConnected(0)){
-      setBlinking(LedConstance.RED, LedConstance.WHITE, 0.5);
-    }
-    else if(gamePieceColor == LedConstance.CONE_YELLOW || gamePieceColor == LedConstance.CUBE_PURPLE){
-      setSolidColor(gamePieceColor);
     }
   }
 }
