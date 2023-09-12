@@ -14,17 +14,26 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
+import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
+import frc.robot.commands.Automations.TeleopAutomations.ShelfIntakeAutomation;
+import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.commands.swerve.AutoAdjustForScore;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
-
+import com.ma5951.utils.led.LED;
+import com.ma5951.utils.led.LED.GamePiece;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,33 +49,32 @@ public class RobotContainer {
   public static final CommandPS4Controller OPERATOR_PS4_CONTROLLER =
     new CommandPS4Controller(OperatorConstants.OPERATOR_CONTROLLER_PORT);   
 
-  public static PhotonVision photonVision;
-  private static AprilTagFieldLayout aprilTagFieldLayout;
+  // public static PhotonVision photonVision;
+  // private static AprilTagFieldLayout aprilTagFieldLayout;
 
   public RobotContainer() {
     // Configure the trigger bindings
-    try {
-      aprilTagFieldLayout = 
-        AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-    } catch (Exception e) {
-      System.err.println(e);
-    }
+    // try {
+    //   aprilTagFieldLayout = 
+    //     AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+    // } catch (Exception e) {
+    //   System.err.println(e);
+    // }
 
-    photonVision  = new PhotonVision(
-      "ma5951",
-      new Transform3d(
-       new Translation3d(
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
-        Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z
-       ), new Rotation3d(
-        Constants.Camera.CAMERA_ROLL,
-        Constants.Camera.CAMERA_PITCH,
-        Constants.Camera.CAMERA_YAW
-       )),
-      aprilTagFieldLayout
-       );
-
+    // photonVision  = new PhotonVision(
+    //   "ma5951",
+    //   new Transform3d(
+    //    new Translation3d(
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
+    //     Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z
+    //    ), new Rotation3d(
+    //     Constants.Camera.CAMERA_ROLL,
+    //     Constants.Camera.CAMERA_PITCH,
+    //     Constants.Camera.CAMERA_YAW
+    //    )),
+    //   aprilTagFieldLayout
+    //    );
 
     configureBindings();
   }
@@ -82,14 +90,17 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // r1 = cube intake, l1 = cone intake, squere = no timer eject, l2 = timer eject, r2 = no timer eject
-    DRIVER_PS4_CONTROLLER.R1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone));
+    DRIVER_PS4_CONTROLLER.R1().whileTrue(
+      new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
+      .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)));
 
-    DRIVER_PS4_CONTROLLER.L1().whileTrue(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube));
+    DRIVER_PS4_CONTROLLER.L1().whileTrue(
+      new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
+      .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
 
     DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
-      .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces));
-
-    DRIVER_PS4_CONTROLLER.L2().whileTrue(new AutoAdjustForScore());
+      .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
+      .andThen(new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))));
     
     DRIVER_PS4_CONTROLLER.square().whileTrue(
       new MotorCommand(Intake.getInstance(), IntakeConstance.EjectPowerForCubeForLow, 0))
@@ -114,6 +125,54 @@ public class RobotContainer {
       new InstantCommand(
         () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1))
     );
+
+    DRIVER_PS4_CONTROLLER.touchpad().whileTrue(
+      new MotorCommand(Intake.getInstance(), IntakeConstance.IntakePowerForCone, 0)
+    );
+
+    // DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
+
+    DRIVER_PS4_CONTROLLER.povDown().whileTrue(new ResetElevator());
+
+    OPERATOR_PS4_CONTROLLER.circle().whileTrue(new ResetElevator());
+
+    OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
+      new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
+      .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone))
+      ).whileFalse(
+        new SetElvator(ElevatorConstance.minPose)
+      );
+
+      OPERATOR_PS4_CONTROLLER.square().whileTrue(
+        new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
+        .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube))
+      ).whileFalse(
+        new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))
+      );
+
+      OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
+        new SetElvator(Elevator.getInstance().highHight)
+      );
+  
+      OPERATOR_PS4_CONTROLLER.povDown().whileTrue(
+        new SetElvator(ElevatorConstance.lowPose)
+      );
+  
+      OPERATOR_PS4_CONTROLLER.povRight().whileTrue(
+        new SetElvator(Elevator.getInstance().midhight)
+      );
+
+      OPERATOR_PS4_CONTROLLER.povLeft().whileTrue(
+        new SetElvator(Elevator.getInstance().minHight)
+      );
+
+      OPERATOR_PS4_CONTROLLER.L1().onTrue(
+        new InstantCommand(() -> LED.getInstance().setGamePiece(GamePiece.CONE))
+      );
+
+      OPERATOR_PS4_CONTROLLER.R1().onTrue(
+        new InstantCommand(() -> LED.getInstance().setGamePiece(GamePiece.CUBE))
+      );
   }
 
   /**

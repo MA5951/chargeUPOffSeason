@@ -12,6 +12,7 @@ import org.photonvision.EstimatedRobotPose;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 import com.ma5951.utils.MAShuffleboard;
+import com.ma5951.utils.RobotConstants;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -44,18 +45,26 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.PortMap;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstance;
 
 public class SwerveDrivetrainSubsystem extends SubsystemBase {
   private static SwerveDrivetrainSubsystem swerve;
 
-  public PIDController CONTROLLER_X;
-  public PIDController CONTROLLER_Y;
-  public PIDController thetaPID;
+  private PIDController CONTROLLER_X;
+  private PIDController CONTROLLER_Y;
+  private PIDController thetaPID;
 
   public boolean isXReversed = true;
   public boolean isYReversed = true;
   public boolean isXYReversed = true;
-  public double offsetAngle = 0;
+
+  private double offsetAngle = 0;
+
+  private double acc = 0;
+  private double lastVelocity = 0;
+
+  private boolean accelerationUpdated = true;
 
   public double maxVelocity = SwerveConstants.MAX_VELOCITY;
   public double maxAngularVelocity = SwerveConstants.MAX_ANGULAR_VELOCITY;
@@ -163,7 +172,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   private SwerveDrivetrainSubsystem() {
 
     resetNavx();
-   
+
     this.board = new MAShuffleboard("swerve");
 
     CONTROLLER_X = new PIDController(
@@ -240,6 +249,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   public void resetNavx() {
     navx.reset();
+    navx.zeroYaw();
   }
 
   public Pose2d getPose() {
@@ -307,6 +317,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
           Math.toRadians(angle)
         )
       );
+      System.out.println(closest.getX());
     return ClosestScoringPose;
   }
 
@@ -331,6 +342,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   }
 
   public void odometrySetUpForAutonomous(PathPlannerTrajectory trajectory) {
+    resetNavx();
     PathPlannerTrajectory tPathPlannerTrajectory;
     if (DriverStation.getAlliance() == Alliance.Red) {
       tPathPlannerTrajectory
@@ -380,33 +392,47 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     return getAutonomousPathCommand(pathName, false);
   }
 
-  public void updateOdometry() {
-    Optional<EstimatedRobotPose> result = 
-      RobotContainer.photonVision.getEstimatedRobotPose(getPose());
+  // public void updateOdometry() {
+  //   Optional<EstimatedRobotPose> result = 
+  //     RobotContainer.photonVision.getEstimatedRobotPose(getPose());
 
-    if (result.isPresent()) {
-      EstimatedRobotPose camPose = result.get();
-      odometry.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
-      camPose.timestampSeconds);
-    }
-  }
-
-  // public void fixOdometry() {
-  //   if (DriverStation.getAlliance() == Alliance.Red) {
-  //     navx.setAngleAdjustment((getPose().getRotation().getDegrees()) - 180);
-  //     resetNavx();
-  //     resetOdometry(
-  //       new Pose2d(
-  //         new Translation2d(
-  //           Constants.FieldConstants.FIELD_LENGTH_METERS - getPose().getX(),
-  //           Constants.FieldConstants.FIELD_WIDTH_METERS - getPose().getY()
-  //         ),
-  //         getRotation2d()
-  //       )
+  //   if (result.isPresent()) {
+  //     EstimatedRobotPose camPose = result.get();
+  //     Pose2d temp = new Pose2d(
+  //       camPose.estimatedPose.toPose2d().getTranslation(),
+  //       getRotation2d()
   //     );
-  //     offsetAngle += 180;
+  //     odometry.addVisionMeasurement(temp,
+  //       camPose.timestampSeconds);
   //   }
   // }
+
+  public void setAccelerationLimit(double limit) {
+    frontLeftModule.setAccelerationLimit(limit);
+    frontRightModule.setAccelerationLimit(limit);
+    rearLeftModule.setAccelerationLimit(limit);
+    rearRightModule.setAccelerationLimit(limit);
+  }
+
+  public double getAcceleration() {
+    return acc;
+  }
+
+  public void fixOdometry() {
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      navx.setAngleAdjustment(180);
+      resetOdometry(
+        new Pose2d(
+          new Translation2d(
+            Constants.FieldConstants.FIELD_LENGTH_METERS - getPose().getX(),
+            Constants.FieldConstants.FIELD_WIDTH_METERS - getPose().getY()
+          ),
+          getRotation2d()
+        )
+      );
+      offsetAngle += 180;
+    }
+  }
 
   public static SwerveDrivetrainSubsystem getInstance() {
     if (swerve == null) {
@@ -418,14 +444,27 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    acc = (
+      frontLeftModule.getDriveVelocity() - lastVelocity) / RobotConstants.KDELTA_TIME;
     odometry.update(getRotation2d(), getSwerveModulePositions());
 
-    field.setRobotPose(getPose());
+    lastVelocity = frontLeftModule.getDriveVelocity();
 
-    board.addString("point", "(" + getPose().getX() + "," + getPose().getY() + ")");
     board.addNum("angle in degrees", getPose().getRotation().getDegrees());
-    board.addNum("angle in radians", getPose().getRotation().getRadians());
-    
-    board.addNum("roll", navx.getRoll());
+        
+    if(Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
+      if (accelerationUpdated) {
+        setAccelerationLimit(SwerveConstants.accelerationLimitForOpenElevator);
+      }
+      maxVelocity = Math.min(
+        SwerveConstants.maxAccelerationForOpenElevator * SwerveConstants.Tstop,
+        SwerveConstants.MAX_VELOCITY
+      );
+      accelerationUpdated = false;
+    } else if(!accelerationUpdated) {
+      setAccelerationLimit(0);
+      maxVelocity = SwerveConstants.MAX_VELOCITY;
+      accelerationUpdated = true;
+    }
   }
 }

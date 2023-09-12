@@ -1,32 +1,37 @@
 package frc.robot.subsystems.elevator;
 
-import com.ma5951.utils.RobotConstants;
-
 public class ElevatorConstance {    
-    public static final double kP = 0; // TODO
-    public static final double kI = 0; // TODO
-    public static final double kD = 0; // TODO
+    public static final double kP = 3.3;
+    public static final double kI = 0;
+    public static final double kD = 6;
 
-    public static final double kV = 473;
-    public static final double kT = (60 / (2 * Math.PI * kV));
+    public static final double closedLoopRampRate = 0.25;
 
-    public static final double mass = 0; // TODO
-    public static final double gear = 0; // TODO
-    public static final double raduis = 0; //TODO
-    public static final double angle = 0; // TODO radians
+    public static final double gear = 70d / 9d;
+    public static final double raduis = 0.021;
 
-    public static final double resistance = 0; // TODO voltage / current *Need to check once*
+    public static final double positionConversionFactor = ((2 * Math.PI * raduis)
+     / gear) * 1.11111111111111111111;
 
-    public static final double kG = (((mass * RobotConstants.KGRAVITY_ACCELERATION
-        * Math.sin(angle) * raduis) / (kT * gear)) * resistance) / 12d;
-        // TODO need to check
+    public static final double tolerance = 0.03;
 
-    public static final double positionConversionFactor = 2 * Math.PI * raduis;
+    public static final double offset = 0.1;
+    public static final double maxPose = 1.61 + offset;
+    public static final double minPose = offset;
 
-    public static final double tolerance = 0; // TODO
 
-    public static final double maxPose = 0; // TODO
-    public static final double minPose = 0; // TODO
+    public static final double lowPose = 0.21011974811554 + offset;
+    public static final double highPoseCone = 1.508018612861633 + offset;
+    public static final double highPoseCube = 1.568018612861633 + offset;
+    public static final double ConeMidPose = 0.995889067649841 + offset;
+    public static final double CubeMidPose = 1.075783133506775 + offset;
 
+    public static final double ShelfPose = 1.36 + offset;
     public static final int kCPR = 4096;
+
+    public static final double lowerPower = -0.3;
+    public static final double currentAmpThreshold = 25;
+
+    
+
 }

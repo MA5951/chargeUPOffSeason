@@ -5,19 +5,19 @@
 package frc.robot.subsystems.elevator;
 
 import com.ma5951.utils.MAShuffleboard;
-import com.ma5951.utils.MAShuffleboard.pidControllerGainSupplier;
 import com.ma5951.utils.subsystem.DefaultInternallyControlledSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 public class Elevator extends SubsystemBase implements 
   DefaultInternallyControlledSubsystem{
@@ -27,20 +27,33 @@ public class Elevator extends SubsystemBase implements
   private SparkMaxPIDController pidController;
   private RelativeEncoder encoder;
   private MAShuffleboard board;
-  private pidControllerGainSupplier pidSupplier;
-  private double setPoint;
+  private double setPoint = 0;
   private static Elevator instance;
+  public double midhight = ElevatorConstance.ConeMidPose;
+  public double highHight = ElevatorConstance.highPoseCone;
+  public double lowHight = ElevatorConstance.lowPose;
+  public double minHight = ElevatorConstance.minPose;
+
 
   private Elevator() {
     master = new CANSparkMax(PortMap.Elevator.masterMotorID, MotorType.kBrushless);
-    encoder = master.getAlternateEncoder(
-      SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
+    slave = new CANSparkMax(PortMap.Elevator.slaveMotorID, MotorType.kBrushless);
+
+    master.setIdleMode(IdleMode.kBrake);
+    slave.setIdleMode(IdleMode.kBrake);
+
+    encoder = master.getEncoder();
+      //SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
     encoder.setPositionConversionFactor(
       ElevatorConstance.positionConversionFactor
     );
+    encoder.setVelocityConversionFactor(
+      ElevatorConstance.positionConversionFactor / 60
+    );
+    encoder.setPosition(0);
 
-    master.setIdleMode(IdleMode.kCoast);
-    slave.setIdleMode(IdleMode.kCoast);
+    master.setClosedLoopRampRate(ElevatorConstance.closedLoopRampRate);
+    master.setOpenLoopRampRate(0);
 
     pidController = master.getPIDController();
     pidController.setFeedbackDevice(encoder);
@@ -48,26 +61,27 @@ public class Elevator extends SubsystemBase implements
     pidController.setI(ElevatorConstance.kI);
     pidController.setD(ElevatorConstance.kD);
 
-    slave.follow(master);
+    slave.follow(master, true);
 
     board = new MAShuffleboard("Elevator");
-    pidSupplier = board.getPidControllerGainSupplier(
-      ElevatorConstance.kP, ElevatorConstance.kI, ElevatorConstance.kD);
   }
 
-  public double getFeed() {
-    return ElevatorConstance.kG;
+  public void resetPose(double pose) {
+    encoder.setPosition(pose);
+  }
+
+  public double getExtension() {
+    return encoder.getPosition();
   }
 
   @Override
   public void calculate(double setPoint) {
-    pidController.setReference(setPoint, ControlType.kPosition,
-      0, getFeed(), ArbFFUnits.kPercentOut);
+    pidController.setReference(setPoint, ControlType.kPosition);
   }
 
   @Override
   public boolean atPoint() {
-    return Math.abs(encoder.getPosition() - setPoint) <=
+    return Math.abs(getExtension() - setPoint) <=
      ElevatorConstance.tolerance;
   }
 
@@ -78,18 +92,24 @@ public class Elevator extends SubsystemBase implements
 
   @Override
   public boolean canMove() {
-    return setPoint > ElevatorConstance.minPose
-      && setPoint < ElevatorConstance.maxPose;
+    return setPoint >= ElevatorConstance.minPose
+      && setPoint <= ElevatorConstance.maxPose
+      && SwerveDrivetrainSubsystem.getInstance().getAcceleration()
+      <= SwerveConstants.maxAccelerationForOpenElevator;
   }
 
   @Override
   public void setSetPoint(double setPoint) {
-    this.setPoint = setPoint;
+    this.setPoint = setPoint;    
   }
 
   @Override
   public double getSetPoint() {
     return setPoint;
+  }
+
+  public double getCurrent() {
+    return master.getOutputCurrent();
   }
 
   public static Elevator getInstance() {
@@ -101,9 +121,14 @@ public class Elevator extends SubsystemBase implements
 
   @Override
   public void periodic() {
-    board.addNum("pose", encoder.getPosition());
-    pidController.setP(pidSupplier.getKP());
-    pidController.setI(pidController.getI());
-    pidController.setD(pidSupplier.getKD());
+    board.addBoolean("can move", canMove());
+    
+    if(Intake.getInstance().isCubeIn()) {
+      midhight = ElevatorConstance.CubeMidPose;
+      highHight = ElevatorConstance.highPoseCube;
+    } else{
+      highHight = ElevatorConstance.ConeMidPose;
+      highHight = ElevatorConstance.highPoseCone;
+    }
   }
 }

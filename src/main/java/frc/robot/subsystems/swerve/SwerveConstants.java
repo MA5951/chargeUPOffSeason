@@ -8,6 +8,8 @@ public class SwerveConstants {
         Math.pow(WIDTH, 2) + Math.pow(LENGTH, 2)
     ) / 2;
 
+    public final static double WEIGHT = 47.0;// KILOGRAM
+
     // Modules constants
     private final static double TURNING_GEAR_RATIO = 150d / 7;
     private final static double DRIVE_GEAR_RATIO = 6.75;
@@ -22,26 +24,26 @@ public class SwerveConstants {
         (ENCODER_RESOLUTION * TURNING_GEAR_RATIO);
      
     // front left module
-    public final static double FRONT_LEFT_MODULE_OFFSET_ENCODER = 349; // TODO
+    public final static double FRONT_LEFT_MODULE_OFFSET_ENCODER = 360 - 85;
     public final static boolean FRONT_LEFT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = true;
     public final static boolean FRONT_LEFT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
     public final static boolean FRONF_LEFT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
  
     // front right module
-    public final static double FRONT_RIGHT_MODULE_OFFSET_ENCODER = 147; // TODO
+    public final static double FRONT_RIGHT_MODULE_OFFSET_ENCODER = 360 - 213;
     public final static boolean FRONT_RIGHT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = false;
     public final static boolean FRONT_RIGHT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
     public final static boolean FRONF_RIGHT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
  
     // rear left module
-    public final static double REAR_LEFT_MODULE_OFFSET_ENCODER = 178; // TODO
+    public final static double REAR_LEFT_MODULE_OFFSET_ENCODER = 360 - 164;
     public final static boolean REAR_LEFT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = true;
     public final static boolean REAR_LEFT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
     public final static boolean REAR_LEFT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
 
  
     // rear right module
-    public final static double REAR_RIGHT_MODULE_OFFSET_ENCODER = 302; // TODO
+    public final static double REAR_RIGHT_MODULE_OFFSET_ENCODER = 360 - 347;
     public final static boolean REAR_RIGHT_MOUDLE_IS_DRIVE_MOTOR_REVERSED = false;
     public final static boolean REAR_RIGHT_MODULES_IS_TURNING_MOTOR_REVERSED = true;
     public final static boolean REAR_RIGHT_MODULE_IS_ABSOLUTE_ENCODER_REVERSED = false;
@@ -66,7 +68,7 @@ public class SwerveConstants {
     public final static double DRIVE_PID_KP = 0.06;
     public final static double DRIVE_PID_KI = 0;
     public final static double DRIVE_PID_KD = 0;
-    public final static double DRIVE_KS = 0; // TODO
+    public final static double DRIVE_KS = 0.05;
     public final static double DRIVE_KV = 0.206;
     // Current Limit
     public final static int DRIVE_CONTINUOS_CURRENT_LIMIT = 35;
@@ -75,7 +77,7 @@ public class SwerveConstants {
     public final static boolean DRIVE_ENBLE_CURRENT_LIMIT = true;
 
     // swerve physics
-    public final static double MAX_VELOCITY = 4.96824;
+    public final static double MAX_VELOCITY = 4.96824 ;
     public final static double MAX_ACCELERATION = Math.pow(MAX_VELOCITY, 2) / RADIUS;
     public final static double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / RADIUS; // radians
 
@@ -99,4 +101,21 @@ public class SwerveConstants {
     public final static double PROFILED_THATA_KI = 0.003; // TODO
     public final static double PROFILED_THATA_KD = 0; // TODO
     public final static double MAX_ANGULAR_ACCELERATION = 15; // TODO
+
+    // auto balance constants
+    public final static double AUTO_BALANCE_KP = 0; // TODO
+    public final static double AUTO_BALANCE_KI = 0; // TODO
+    public final static double AUTO_BALANCE_KD = 0; // TODO
+    public final static double BALANCE_POSITION_TOLERANCE = 0; // TODO
+    public final static double BALANCE_DELAY = 0; // TODO
+    public final static double BALANCE_SETPOINT = 0; // TODO
+
+    // center to climb automation constants
+    public final static double ANGLE_BEFORE_CLIMB = 30; // TODO
+    public final static double TIME_TO_CLIMB = 5; // TODO
+
+    public final static double Tstop = 0.25; // TODO
+    public final static double maxAccelerationForOpenElevator = 2.7; // TODO
+    public final static double accelerationLimitForOpenElevator = 
+        MAX_VELOCITY / maxAccelerationForOpenElevator;
 }
