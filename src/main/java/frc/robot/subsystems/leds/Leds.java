@@ -22,6 +22,11 @@ public class Leds extends SubsystemBase {
     CONE,
     NONE
   }
+
+  public enum Autostate {
+    CLIMED,
+    NONE
+  }
   
   private AddressableLED led;
   private AddressableLEDBuffer ledBuffer;
@@ -30,6 +35,7 @@ public class Leds extends SubsystemBase {
   private boolean on;
   private double lastChange;
   private GamePiece gamePiece;
+  private Autostate autostate;
 
   public Leds() {
     led = new AddressableLED(PortMap.Led.ledPort);
@@ -41,6 +47,10 @@ public class Leds extends SubsystemBase {
 
   public void setGamePiece(GamePiece gamePiece) {
     this.gamePiece = gamePiece;
+  }
+
+  public void setAutostate(Autostate autostate) {
+    this.autostate = autostate;
   }
 
   public void setSingleColorRGB(int Red , int Green , int Blue) {
@@ -172,11 +182,15 @@ public class Leds extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    
     if (DriverStation.isDisabled()) {
       setAllianceColor();
       updateLeds();
     } else if (DriverStation.isTeleop()) {
-      if (Intake.getInstance().isCubeIn()) {
+      if (DriverStation.getMatchTime() < 5) {
+        rainbowColorPattern();
+        updateLeds();
+      } else if (Intake.getInstance().isCubeIn()) {
         setSingleColor(LedsConstants.CUBE_PURPLE);
         setGamePiece(GamePiece.NONE);
         updateLeds();
@@ -195,9 +209,17 @@ public class Leds extends SubsystemBase {
         partsPattern( LedsConstants.MAcolor , LedsConstants.WHITE);
         updateLeds();
       }
+      
     } else if (DriverStation.isAutonomous()) {
-      smoothWaveColorPattern(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
-      updateLeds();
+      if (autostate == Autostate.CLIMED){
+        smoothWaveColorPattern(2, 1, 1, new Color [] {LedsConstants.GREEN, LedsConstants.BLACK});
+        updateLeds();
+      }else {
+        smoothWaveColorPattern(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
+        updateLeds();
+      }
     }
+    
   }
+  
 }

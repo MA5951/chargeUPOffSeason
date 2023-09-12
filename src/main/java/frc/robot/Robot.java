@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.subsystems.leds.Leds;
 
 import frc.robot.subsystems.leds.LedsConstants;
+import frc.robot.subsystems.leds.Leds.GamePiece;
 import edu.wpi.first.wpilibj.util.Color;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -109,7 +110,7 @@ public class Robot extends TimedRobot {
         RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
     );
     
-    //Leds.getInstance().blink(1, LedsConstants.MAcolor, LedsConstants.WHITE);
+    Leds.getInstance().setGamePiece(GamePiece.NONE);
     
     
     
