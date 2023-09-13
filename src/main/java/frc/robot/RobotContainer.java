@@ -33,6 +33,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.commands.paths.CenterToClimb;
+import frc.robot.commands.paths.OnePiceAuto;
 import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 
 /**
@@ -174,6 +175,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new ResetElevator().andThen(new CenterToClimb());
+    return new CenterToClimb();
   }
 }

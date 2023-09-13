@@ -342,7 +342,6 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   }
 
   public void odometrySetUpForAutonomous(PathPlannerTrajectory trajectory) {
-    resetNavx();
     PathPlannerTrajectory tPathPlannerTrajectory;
     if (DriverStation.getAlliance() == Alliance.Red) {
       tPathPlannerTrajectory
@@ -351,12 +350,12 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
       tPathPlannerTrajectory = trajectory;
     }
     resetNavx();
-    navx.setAngleAdjustment(
-      tPathPlannerTrajectory.getInitialState().holonomicRotation.getDegrees());
     Pose2d pose = new Pose2d(
       tPathPlannerTrajectory.getInitialPose().getX(),
       tPathPlannerTrajectory.getInitialPose().getY(),
-      tPathPlannerTrajectory.getInitialState().holonomicRotation
+      Rotation2d.fromDegrees(
+        tPathPlannerTrajectory.getInitialState().holonomicRotation.getDegrees()
+      )
     ); 
     resetOdometry(pose);
   }
@@ -447,6 +446,8 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     lastVelocity = frontLeftModule.getDriveVelocity();
 
     board.addNum("angle in degrees", getPose().getRotation().getDegrees());
+    board.addNum("roll", getRoll());
+    board.addNum("pitch", getPitch());
         
     if(Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
       if (accelerationUpdated) {

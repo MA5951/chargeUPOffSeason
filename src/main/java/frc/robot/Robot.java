@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +41,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().setDefaultCommand(
       Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
         Elevator.getInstance(), ElevatorConstance.minPose));
+
+    PathPlannerServer.startServer(5811);
   }
 
   /**
@@ -69,7 +72,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

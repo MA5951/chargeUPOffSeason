@@ -122,6 +122,7 @@ public class Elevator extends SubsystemBase implements
   @Override
   public void periodic() {
     board.addBoolean("can move", canMove());
+    board.addNum("pose", getExtension());
     
     if(Intake.getInstance().isCubeIn()) {
       midhight = ElevatorConstance.CubeMidPose;
