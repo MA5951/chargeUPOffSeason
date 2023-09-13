@@ -23,17 +23,16 @@ public class CenterToClimb extends SequentialCommandGroup{
     public CenterToClimb() {
         
         addCommands(
-            new ResetElevator(),
-            new EjectAutomationAuto(ElevatorConstance.highPoseCube),
-            new ParallelDeadlineGroup(
-                new WaitUntilCommand(CenterToClimb::isAtClimbAngle),
-                swerve.getAutonomousPathCommand("from B1 to climb", false)
-            ),
-            new ParallelDeadlineGroup(
-                new WaitCommand(SwerveConstants.TIME_TO_CLIMB),
-                new AutoBalance()
-            ),
-            new LockModules()
+            new EjectAutomationAuto(ElevatorConstance.highPoseCone)
+            // new ParallelDeadlineGroup(
+            //     new WaitUntilCommand(CenterToClimb::isAtClimbAngle),
+            //     swerve.getAutonomousPathCommand("from B1 to climb", false)
+            // ),
+            // new ParallelDeadlineGroup(
+            //     new WaitCommand(SwerveConstants.TIME_TO_CLIMB),
+            //     new AutoBalance()
+            // ),
+            // new LockModules()
         );
     }
 }

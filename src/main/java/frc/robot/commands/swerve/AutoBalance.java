@@ -34,7 +34,7 @@ public class AutoBalance extends CommandBase {
   @Override
   public void execute() {
     // Calculate the output of the PID controller based on the pitch
-    double output = pid.calculate(swerve.getPitch());
+    double output = pid.calculate(swerve.getRoll());
     swerve.drive(output, 0, 0, false);
 
     // Check if the PID controller reached the setpoint

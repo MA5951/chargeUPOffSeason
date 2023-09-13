@@ -32,6 +32,8 @@ import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
+import frc.robot.commands.paths.CenterToClimb;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -172,6 +174,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new ResetElevator().andThen(new CenterToClimb());
   }
 }
