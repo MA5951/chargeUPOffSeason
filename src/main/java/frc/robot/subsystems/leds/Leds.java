@@ -111,6 +111,8 @@ public class Leds extends SubsystemBase {
     }
   }
 
+  
+
   public void smoothWaveColorPattern(int numColors, double period, double speed, Color[] colors) {
     double elapsedTime = Timer.getFPGATimestamp();
 
@@ -146,7 +148,7 @@ public class Leds extends SubsystemBase {
     }
   }
 
-  public void partsPattern(Color color1 , Color color2) {
+  public void cahrgedPattern(Color color1 , Color color2) {
     for (var i = 0; i < 53; i++) {
       ledBuffer.setLED(i, color1);
     }
@@ -187,10 +189,7 @@ public class Leds extends SubsystemBase {
       setAllianceColor();
       updateLeds();
     } else if (DriverStation.isTeleop()) {
-      if (DriverStation.getMatchTime() < 5) {
-        rainbowColorPattern();
-        updateLeds();
-      } else if (Intake.getInstance().isCubeIn()) {
+      if (Intake.getInstance().isCubeIn()) {
         setSingleColor(LedsConstants.CUBE_PURPLE);
         setGamePiece(GamePiece.NONE);
         updateLeds();
@@ -206,7 +205,7 @@ public class Leds extends SubsystemBase {
         updateLeds();
       } else if (Intake.getInstance().isPieceInIntake() == false) {
         setGamePiece(GamePiece.NONE);
-        partsPattern( LedsConstants.MAcolor , LedsConstants.WHITE);
+        cahrgedPattern( LedsConstants.MAcolor , LedsConstants.WHITE);
         updateLeds();
       }
       
@@ -219,6 +218,7 @@ public class Leds extends SubsystemBase {
         updateLeds();
       }
     }
+    
     
   }
   
