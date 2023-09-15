@@ -5,7 +5,6 @@
 package frc.robot.commands.paths;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
@@ -17,20 +16,16 @@ import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class OnePiceAuto extends SequentialCommandGroup {
+public class TwoPiceAutoRight extends SequentialCommandGroup {
   /** Creates a new OnePiceAuto. */
-  public OnePiceAuto() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+  public TwoPiceAutoRight() {
     addCommands(
-      new ResetElevator(),
-      new EjectAutomationAuto(ElevatorConstance.highPoseCone),
-      new ParallelCommandGroup(
-        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("One game pcs 1", true),
-        new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)
-      ),
-      SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("one game pcs 2", false),
-      new EjectAutomationAuto(ElevatorConstance.highPoseCone)
-    );
+        new ResetElevator(),
+        new EjectAutomationAuto(ElevatorConstance.highPoseCone),
+        new ParallelCommandGroup(
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1 right", true),
+            new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
+        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2 right", false),
+        new EjectAutomationAuto(ElevatorConstance.highPoseCone));
   }
 }

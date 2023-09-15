@@ -16,20 +16,16 @@ import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TwoPiceAuto extends SequentialCommandGroup {
+public class TwoPiceAutoLeft extends SequentialCommandGroup {
   /** Creates a new TwoPiceAuto. */
-  public TwoPiceAuto() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+  public TwoPiceAutoLeft() {
     addCommands(
-      new ResetElevator(),
-      new EjectAutomationAuto(ElevatorConstance.maxPose),
-      new ParallelCommandGroup(
-        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1"),
-        new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)
-      ),
-      SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2"),
-      new EjectAutomationAuto(ElevatorConstance.maxPose)
-    );
+        new ResetElevator(),
+        new EjectAutomationAuto(ElevatorConstance.highPoseCone),
+        new ParallelCommandGroup(
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1 left"),
+            new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
+        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2 left"),
+        new EjectAutomationAuto(ElevatorConstance.highPoseCone));
   }
 }

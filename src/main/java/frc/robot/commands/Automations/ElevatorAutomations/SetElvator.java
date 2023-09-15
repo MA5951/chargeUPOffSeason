@@ -6,7 +6,6 @@ package frc.robot.commands.Automations.ElevatorAutomations;
 
 import com.ma5951.utils.commands.MotorCommand;
 
-import edu.wpi.first.wpilibj.SynchronousInterrupt;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,25 +20,24 @@ import frc.robot.subsystems.intake.IntakeConstance;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetElvator extends SequentialCommandGroup {
   /** Creates a new SetElvator. */
-  
+
   private static double getPower() {
     return Intake.getInstance().isCubeIn() ? 0
         : IntakeConstance.HoldConePower;
-}
-  
+  }
+
   public SetElvator(double setPoint) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-    new ParallelDeadlineGroup(
-        new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
-        new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)
-      ),
-      new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
-      new ParallelDeadlineGroup(
-        new WaitUntilCommand(Elevator.getInstance()::atPoint),
-        new MotorCommand(Intake.getInstance(), SetElvator::getPower, 0))
-        
+        new ParallelDeadlineGroup(
+            new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
+            new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)),
+        new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
+        new ParallelDeadlineGroup(
+            new WaitUntilCommand(Elevator.getInstance()::atPoint),
+            new MotorCommand(Intake.getInstance(), SetElvator::getPower, 0))
+
     );
   }
 }
