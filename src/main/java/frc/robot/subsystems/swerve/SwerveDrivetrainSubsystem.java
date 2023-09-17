@@ -324,7 +324,6 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
         closest.getY(),
         new Rotation2d(
             Math.toRadians(angle)));
-    System.out.println(closest.getX());
     return ClosestScoringPose;
   }
 
@@ -400,7 +399,10 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
     if (result.isPresent()) {
       EstimatedRobotPose camPose = result.get();
-      odometry.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
+      Pose2d temp = new Pose2d(
+          camPose.estimatedPose.toPose2d().getTranslation(),
+          Rotation2d.fromDegrees(getFusedHeading()));
+      odometry.addVisionMeasurement(temp,
           camPose.timestampSeconds);
     }
   }
@@ -447,6 +449,8 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     board.addNum("angle in degrees", getPose().getRotation().getDegrees());
     board.addNum("roll", getRoll());
     board.addNum("pitch", getPitch());
+
+    field.setRobotPose(getPose());
 
     if (Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
       if (accelerationUpdated) {

@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -106,7 +107,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
-
     SwerveDrivetrainSubsystem.getInstance().fixOdometry();
 
     Elevator.getInstance().setSetPoint(ElevatorConstance.minPose);
@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    SwerveDrivetrainSubsystem.getInstance().updateOdometry();
   }
 
   @Override

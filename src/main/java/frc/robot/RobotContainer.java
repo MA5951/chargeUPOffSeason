@@ -32,6 +32,7 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.commands.paths.CenterToClimb;
 import frc.robot.commands.paths.TwoPiceAutoLeft;
+import frc.robot.commands.paths.TwoPiceAutoLeftTest;
 import frc.robot.commands.paths.TwoPiceAutoRight;
 import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 
@@ -149,7 +150,7 @@ public class RobotContainer {
 
         DRIVER_PS4_CONTROLLER.povLeft().whileTrue(new ResetElevator());
 
-        // DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
+        DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
 
         OPERATOR_PS4_CONTROLLER.circle().whileTrue(new ResetElevator());
 
@@ -185,6 +186,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return new TwoPiceAutoLeft();
+        return new TwoPiceAutoLeftTest();
     }
 }
