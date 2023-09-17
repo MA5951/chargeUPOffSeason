@@ -58,10 +58,10 @@ public class DriveSwerveCommand extends CommandBase {
         (SwerveDrivetrainSubsystem.getInstance().isYReversed ? -1 : 1);
     if (swerve.getAngleAlign() != null) {
       turningSpeed = swerve.getThetaPID()
-          .calculate(swerve.getRotation2d().getRadians());
+          .calculate(swerve.getPose().getRotation().getRadians(), swerve.getAngleAlign());
     } else {
       turningSpeed = turningSpeed *
-        swerve.maxAngularVelocity;
+          swerve.maxAngularVelocity;
     }
 
     swerve.drive(xSpeed, ySpeed, turningSpeed, true);

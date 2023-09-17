@@ -396,14 +396,13 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   }
 
   public void updateOdometry() {
-    // Optional<EstimatedRobotPose> result =
-    // RobotContainer.photonVision.getEstimatedRobotPose(getPose());
+    Optional<EstimatedRobotPose> result = RobotContainer.photonVision.getEstimatedRobotPose(getPose());
 
-    // if (result.isPresent()) {
-    // EstimatedRobotPose camPose = result.get();
-    // odometry.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
-    // camPose.timestampSeconds);
-    // }
+    if (result.isPresent()) {
+      EstimatedRobotPose camPose = result.get();
+      odometry.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
+          camPose.timestampSeconds);
+    }
   }
 
   public void setAccelerationLimit(double limit) {

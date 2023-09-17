@@ -105,8 +105,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
     SwerveDrivetrainSubsystem.getInstance().fixOdometry();
+
+    Elevator.getInstance().setSetPoint(ElevatorConstance.minPose);
 
     CommandScheduler.getInstance().setDefaultCommand(
         SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
