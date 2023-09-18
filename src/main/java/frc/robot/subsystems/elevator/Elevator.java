@@ -15,23 +15,24 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
-public class Elevator extends SubsystemBase implements 
-  DefaultInternallyControlledSubsystem{
+public class Elevator extends SubsystemBase implements
+    DefaultInternallyControlledSubsystem {
   /** Creates a new Elevator. */
   private CANSparkMax master;
   private CANSparkMax slave;
   private SparkMaxPIDController pidController;
   private RelativeEncoder encoder;
   private MAShuffleboard board;
- // private pidControllerGainSupplier pidSupplier;
   private double setPoint = 0;
   private static Elevator instance;
-  // private DigitalInput uppdeHalleffect;
-  // private DigitalInput lowerHalleffect;
-
+  public double midhight = ElevatorConstance.ConeMidPose;
+  public double highHight = ElevatorConstance.highPoseCone;
+  public double lowHight = ElevatorConstance.lowPose;
+  public double minHight = ElevatorConstance.minPose;
 
   private Elevator() {
     master = new CANSparkMax(PortMap.Elevator.masterMotorID, MotorType.kBrushless);
@@ -40,14 +41,14 @@ public class Elevator extends SubsystemBase implements
     master.setIdleMode(IdleMode.kBrake);
     slave.setIdleMode(IdleMode.kBrake);
 
+    master.setInverted(true);
+
     encoder = master.getEncoder();
-      //SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
+    // SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
     encoder.setPositionConversionFactor(
-      ElevatorConstance.positionConversionFactor
-    );
+        ElevatorConstance.positionConversionFactor);
     encoder.setVelocityConversionFactor(
-      ElevatorConstance.positionConversionFactor / 60
-    );
+        ElevatorConstance.positionConversionFactor / 60);
     encoder.setPosition(0);
 
     master.setClosedLoopRampRate(ElevatorConstance.closedLoopRampRate);
@@ -62,8 +63,6 @@ public class Elevator extends SubsystemBase implements
     slave.follow(master, true);
 
     board = new MAShuffleboard("Elevator");
-    // pidSupplier = board.getPidControllerGainSupplier(
-    //   ElevatorConstance.kP, ElevatorConstance.kI, ElevatorConstance.kD);
   }
 
   public void resetPose(double pose) {
@@ -81,8 +80,7 @@ public class Elevator extends SubsystemBase implements
 
   @Override
   public boolean atPoint() {
-    return Math.abs(getExtension() - setPoint) <=
-     ElevatorConstance.tolerance;
+    return Math.abs(getExtension() - setPoint) <= ElevatorConstance.tolerance;
   }
 
   @Override
@@ -93,9 +91,8 @@ public class Elevator extends SubsystemBase implements
   @Override
   public boolean canMove() {
     return setPoint >= ElevatorConstance.minPose
-      && setPoint <= ElevatorConstance.maxPose
-      && SwerveDrivetrainSubsystem.getInstance().getAccelerationX()
-      <= SwerveConstants.maxAccelerationForOpenElevator;
+        && setPoint <= ElevatorConstance.maxPose
+        && SwerveDrivetrainSubsystem.getInstance().getAcceleration() <= SwerveConstants.maxAccelerationForOpenElevator;
   }
 
   @Override
@@ -108,6 +105,10 @@ public class Elevator extends SubsystemBase implements
     return setPoint;
   }
 
+  public double getCurrent() {
+    return master.getOutputCurrent();
+  }
+
   public static Elevator getInstance() {
     if (instance == null) {
       instance = new Elevator();
@@ -115,16 +116,17 @@ public class Elevator extends SubsystemBase implements
     return instance;
   }
 
-  public double getCurrent() {
-    return master.getOutputCurrent();
-  }
-
   @Override
   public void periodic() {
+    board.addBoolean("can move", canMove());
     board.addNum("pose", getExtension());
-    board.addNum("v", master.getBusVoltage());
-    board.addNum("A", master.getOutputCurrent());
-    board.addNum("setpoint", setPoint);
-    board.addBoolean("can move", canMove());    
+
+    if (Intake.getInstance().isCubeIn()) {
+      midhight = ElevatorConstance.CubeMidPose;
+      highHight = ElevatorConstance.highPoseCube;
+    } else {
+      highHight = ElevatorConstance.ConeMidPose;
+      highHight = ElevatorConstance.highPoseCone;
+    }
   }
 }

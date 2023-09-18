@@ -12,7 +12,7 @@ public class IntakeAutomation extends SequentialCommandGroup{
     public IntakeAutomation(double power) {
         addCommands(
                 new SequentialCommandGroup(
-                    new ParallelDeadlineGroup(new WaitCommand(0.3), 
+                    new ParallelDeadlineGroup(new WaitCommand(0.4), 
                         new InstantCommand(() -> Intake.getInstance().setIgnoreCurrent(true)), 
                         new MotorCommand(Intake.getInstance(), power, power)
                     ),

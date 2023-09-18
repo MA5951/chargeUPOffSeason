@@ -31,11 +31,12 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     private Intake() {
         intakeMotor = new CANSparkMax(PortMap.Intake.intakeMotorID, MotorType.kBrushless);
 
-        sensor = new DigitalInput(PortMap.Intake.intakeLimitSwitchID);
+        sensor = new DigitalInput(PortMap.Intake.sensorID);
 
         board = new MAShuffleboard("Intake");
 
         intakeMotor.setIdleMode(IdleMode.kBrake);
+        intakeMotor.setInverted(false);
     }
 
     public boolean getSensor() {
@@ -61,15 +62,15 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void removeGamePieces() {
         setConeState(false);
         setCubeState(false);
-        setIgnoreSensor(false);
+        setIgnoreSensor(true);
     }
 
-    public boolean isCubeInIntake() {
+    public boolean isCubeIn() {
         return cubeInIntake;
     }
 
     public boolean isPieceInIntake() {
-        return isCubeInIntake() || isConeIn();
+        return isCubeIn() || isConeIn();
     }
 
     @Override
@@ -99,16 +100,16 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
 
     @Override
     public void periodic() {
-        board.addBoolean("Is Piece in Intake", isPieceInIntake());
         board.addBoolean("Is Cone in Intake", isConeIn());
-        board.addBoolean("is CLimitSwitch", getSensor());
-        board.addNum("Intake Current", getMotorCurrent());
+        board.addBoolean("Is cube in Intake", isCubeIn());
         
-        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent) {
+        if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent && ignoreSensor) {
             setConeState(true);
         }
 
-        if (getSensor() && !ignoreSensor){
+        if ((getSensor() || 
+            (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent)) 
+            && !ignoreSensor) {
             setCubeState(true);
         }
     }

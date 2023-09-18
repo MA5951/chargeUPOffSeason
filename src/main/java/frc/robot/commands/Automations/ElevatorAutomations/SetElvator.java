@@ -20,24 +20,24 @@ import frc.robot.subsystems.intake.IntakeConstance;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetElvator extends SequentialCommandGroup {
   /** Creates a new SetElvator. */
-  
+
   private static double getPower() {
-    return Intake.getInstance().isCubeInIntake() ? 0
+    return Intake.getInstance().isCubeIn() ? 0
         : IntakeConstance.HoldConePower;
-}
-  
+  }
+
   public SetElvator(double setPoint) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ParallelDeadlineGroup(
-        new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
-        new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)
-      ),
-      new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
-      new ParallelDeadlineGroup(
-        new WaitUntilCommand(Elevator.getInstance()::atPoint),
-        new MotorCommand(Intake.getInstance(), SetElvator::getPower, 0))
+        new ParallelDeadlineGroup(
+            new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
+            new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)),
+        new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
+        new ParallelDeadlineGroup(
+            new WaitUntilCommand(Elevator.getInstance()::atPoint),
+            new MotorCommand(Intake.getInstance(), SetElvator::getPower, 0))
+
     );
   }
 }

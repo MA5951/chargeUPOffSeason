@@ -13,9 +13,7 @@ public class AutoAdjustForScore extends CommandBase {
   private Command GoToScore;
 
   public AutoAdjustForScore() {
-    
     addRequirements(SwerveDrivetrainSubsystem.getInstance());
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -29,13 +27,13 @@ public class AutoAdjustForScore extends CommandBase {
   @Override
   public void execute() {
     GoToScore.execute();
-    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    GoToScore.end(true);
+    SwerveDrivetrainSubsystem.getInstance().stop();
+    GoToScore.end(interrupted);
   }
 
   // Returns true when the command should end.

@@ -22,12 +22,10 @@ public class PortMap {
     public static class Elevator {
       public static final int masterMotorID = 10;
       public static final int slaveMotorID = 11;
-      public static final int upperHalleffectID = 2;
-      public static final int lowerHalleffectID = 0; //TODO
     }
 
     public static class Intake {
       public static final int intakeMotorID = 12;
-      public static final int intakeLimitSwitchID = 0; //TODO
+      public static final int sensorID = 0;
     }
 }
