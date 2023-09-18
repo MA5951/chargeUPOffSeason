@@ -28,6 +28,8 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
+import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.leds.Leds.GamePiece;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.commands.paths.CenterToClimb;
@@ -46,9 +48,6 @@ import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
     public static final CommandPS4Controller DRIVER_PS4_CONTROLLER = new CommandPS4Controller(
             OperatorConstants.DRIVER_CONTROLLER_PORT);
 
@@ -177,6 +176,14 @@ public class RobotContainer {
 
         OPERATOR_PS4_CONTROLLER.povLeft().whileTrue(
                 new SetElvator(Elevator.getInstance().minHight));
+      
+      OPERATOR_PS4_CONTROLLER.L1().onTrue(
+        new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CONE))
+      );
+
+      OPERATOR_PS4_CONTROLLER.R1().onTrue(
+        new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CUBE))
+      );
     }
 
     /**

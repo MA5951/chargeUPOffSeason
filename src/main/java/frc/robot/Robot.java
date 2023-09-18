@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -13,7 +14,11 @@ import frc.robot.commands.swerve.DriveSwerveCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
+import frc.robot.subsystems.leds.Leds;
 
+import frc.robot.subsystems.leds.LedsConstants;
+import frc.robot.subsystems.leds.Leds.GamePiece;
+import edu.wpi.first.wpilibj.util.Color;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to
@@ -66,6 +71,8 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    Leds.getInstance();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -112,16 +119,22 @@ public class Robot extends TimedRobot {
     Elevator.getInstance().setSetPoint(ElevatorConstance.minPose);
 
     CommandScheduler.getInstance().setDefaultCommand(
-        SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
+      SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(
             RobotContainer.DRIVER_PS4_CONTROLLER::getLeftX,
             RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
-            RobotContainer.DRIVER_PS4_CONTROLLER::getRightX));
+            RobotContainer.DRIVER_PS4_CONTROLLER::getRightX)
+    );
+    
+    Leds.getInstance().setGamePiece(GamePiece.NONE);
+    
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    //SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    //Leds.getInstance().SmoothWave(2, 0.5, 0.8, new Color []{LedsConstants.MAcolor , LedsConstants.WHITE});
+
   }
 
   @Override

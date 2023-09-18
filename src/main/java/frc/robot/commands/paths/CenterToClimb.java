@@ -1,5 +1,6 @@
 package frc.robot.commands.paths;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -9,6 +10,8 @@ import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.commands.swerve.AutoBalance;
 import frc.robot.commands.swerve.LockModules;
 import frc.robot.subsystems.elevator.ElevatorConstance;
+import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.leds.Leds.GamePiece;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 

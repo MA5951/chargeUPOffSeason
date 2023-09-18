@@ -28,4 +28,8 @@ public class PortMap {
       public static final int intakeMotorID = 12;
       public static final int sensorID = 0;
     }
+
+    public static class Led {
+      public static final int ledPort = 0; //TODO
+    }
 }
