@@ -20,24 +20,27 @@ public class CenterToClimb extends SequentialCommandGroup{
     private static SwerveDrivetrainSubsystem swerve = SwerveDrivetrainSubsystem.getInstance();
 
     private static boolean isAtClimbAngle() {
-        return swerve.getPitch() > SwerveConstants.ANGLE_BEFORE_CLIMB;
+        return Math.abs(swerve.getPitch()) > SwerveConstants.ANGLE_BEFORE_CLIMB;
     }
 
     public CenterToClimb() {
         
         addCommands(
             new ResetElevator(),
-            new EjectAutomationAuto(ElevatorConstance.highPoseCube),
+            new EjectAutomationAuto(ElevatorConstance.highPoseCone),
+            swerve.getAutonomousPathCommand("center to climb", true),
+            new WaitCommand(1),
             new ParallelDeadlineGroup(
                 new WaitUntilCommand(CenterToClimb::isAtClimbAngle),
-                swerve.getAutonomousPathCommand("from B1 to climb", false)
+                swerve.getAutonomousPathCommand("center to climb 2", false)
+            ),
+            new WaitCommand(SwerveConstants.TIME_TO_CLIMB).raceWith(
+            new AutoBalance()
             ),
             new ParallelDeadlineGroup(
-                new WaitCommand(SwerveConstants.TIME_TO_CLIMB),
-                new AutoBalance()
-            ),
-            new LockModules(),
-            new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.NONE))
+                new WaitCommand(0.2),
+                new LockModules()
+            )
         );
     }
 }

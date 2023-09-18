@@ -4,12 +4,18 @@
 
 package frc.robot.commands.ScoringAutomation;
 
+import com.ma5951.utils.commands.MotorCommand;
+import com.ma5951.utils.commands.RunInternallyControlledSubsystem;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomationByTimer;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstance;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -20,10 +26,16 @@ public class EjectAutomationAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new InstantCommand(() -> Intake.getInstance().setCubeState(false)),
-      new SetElvator(scoring_pose),
-      new EjectAutomationByTimer(),
-      new SetElvator(ElevatorConstance.minPose)
-    );
+        new InstantCommand(() -> Intake.getInstance().setCubeState(false)),
+        new ParallelDeadlineGroup(
+            new WaitCommand(0.3),
+            new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, IntakeConstance.HoldConePower)),
+        new ParallelDeadlineGroup(
+            new RunInternallyControlledSubsystem(
+                Elevator.getInstance(), scoring_pose, true),
+            new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
+        new EjectAutomationByTimer(),
+        new RunInternallyControlledSubsystem(
+            Elevator.getInstance(), ElevatorConstance.minPose, false));
   }
 }

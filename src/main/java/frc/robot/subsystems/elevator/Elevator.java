@@ -19,8 +19,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
-public class Elevator extends SubsystemBase implements 
-  DefaultInternallyControlledSubsystem{
+public class Elevator extends SubsystemBase implements
+    DefaultInternallyControlledSubsystem {
   /** Creates a new Elevator. */
   private CANSparkMax master;
   private CANSparkMax slave;
@@ -34,7 +34,6 @@ public class Elevator extends SubsystemBase implements
   public double lowHight = ElevatorConstance.lowPose;
   public double minHight = ElevatorConstance.minPose;
 
-
   private Elevator() {
     master = new CANSparkMax(PortMap.Elevator.masterMotorID, MotorType.kBrushless);
     slave = new CANSparkMax(PortMap.Elevator.slaveMotorID, MotorType.kBrushless);
@@ -42,14 +41,14 @@ public class Elevator extends SubsystemBase implements
     master.setIdleMode(IdleMode.kBrake);
     slave.setIdleMode(IdleMode.kBrake);
 
+    master.setInverted(true);
+
     encoder = master.getEncoder();
-      //SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
+    // SparkMaxAlternateEncoder.Type.kQuadrature, ElevatorConstance.kCPR);
     encoder.setPositionConversionFactor(
-      ElevatorConstance.positionConversionFactor
-    );
+        ElevatorConstance.positionConversionFactor);
     encoder.setVelocityConversionFactor(
-      ElevatorConstance.positionConversionFactor / 60
-    );
+        ElevatorConstance.positionConversionFactor / 60);
     encoder.setPosition(0);
 
     master.setClosedLoopRampRate(ElevatorConstance.closedLoopRampRate);
@@ -81,8 +80,7 @@ public class Elevator extends SubsystemBase implements
 
   @Override
   public boolean atPoint() {
-    return Math.abs(getExtension() - setPoint) <=
-     ElevatorConstance.tolerance;
+    return Math.abs(getExtension() - setPoint) <= ElevatorConstance.tolerance;
   }
 
   @Override
@@ -93,14 +91,13 @@ public class Elevator extends SubsystemBase implements
   @Override
   public boolean canMove() {
     return setPoint >= ElevatorConstance.minPose
-      && setPoint <= ElevatorConstance.maxPose
-      && SwerveDrivetrainSubsystem.getInstance().getAcceleration()
-      <= SwerveConstants.maxAccelerationForOpenElevator;
+        && setPoint <= ElevatorConstance.maxPose
+        && SwerveDrivetrainSubsystem.getInstance().getAcceleration() <= SwerveConstants.maxAccelerationForOpenElevator;
   }
 
   @Override
   public void setSetPoint(double setPoint) {
-    this.setPoint = setPoint;    
+    this.setPoint = setPoint;
   }
 
   @Override
@@ -122,12 +119,12 @@ public class Elevator extends SubsystemBase implements
   @Override
   public void periodic() {
     board.addBoolean("can move", canMove());
-    board.addNum("Pose", getExtension());
-    
-    if(Intake.getInstance().isCubeIn()) {
+    board.addNum("pose", getExtension());
+
+    if (Intake.getInstance().isCubeIn()) {
       midhight = ElevatorConstance.CubeMidPose;
       highHight = ElevatorConstance.highPoseCube;
-    } else{
+    } else {
       highHight = ElevatorConstance.ConeMidPose;
       highHight = ElevatorConstance.highPoseCone;
     }

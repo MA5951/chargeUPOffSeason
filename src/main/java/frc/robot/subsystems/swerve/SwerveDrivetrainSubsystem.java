@@ -55,6 +55,8 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   private PIDController CONTROLLER_Y;
   private PIDController thetaPID;
 
+  private Double angleAlign;
+
   public boolean isXReversed = true;
   public boolean isYReversed = true;
   public boolean isXYReversed = true;
@@ -69,10 +71,9 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   public double maxVelocity = SwerveConstants.MAX_VELOCITY;
   public double maxAngularVelocity = SwerveConstants.MAX_ANGULAR_VELOCITY;
 
-  private static final TrajectoryConfig configForTelopPathCommand = 
-    new TrajectoryConfig(
+  private static final TrajectoryConfig configForTelopPathCommand = new TrajectoryConfig(
       SwerveConstants.MAX_VELOCITY / 4.0, SwerveConstants.MAX_ACCELERATION / 25.0);
-  
+
   private ProfiledPIDController thetaProfiledPID;
 
   private static final String theta_KP = "theta_KP";
@@ -82,7 +83,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   private static final String profiled_theta_KP = "Profiled_theta_KP";
   private static final String profiled_theta_KI = "Profiled_theta_KI";
   private static final String profiled_theta_KD = "Profiled_theta_KD";
-  
+
   public final MAShuffleboard board;
 
   private final Translation2d frontLeftLocation = new Translation2d(
@@ -144,27 +145,26 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
       SwerveConstants.REAR_RIGHT_MODULE_OFFSET_ENCODER);
 
   private final SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(kinematics,
-    new Rotation2d(0), getSwerveModulePositions(),
-    new Pose2d(0, 0, new Rotation2d(0)));
-  
-  private final Field2d field = 
-    new Field2d();
+      new Rotation2d(0), getSwerveModulePositions(),
+      new Pose2d(0, 0, new Rotation2d(0)));
+
+  private final Field2d field = new Field2d();
 
   private static SwerveModulePosition[] getSwerveModulePositions() {
     return new SwerveModulePosition[] {
-      rearLeftModule.getPosition(),
-      frontLeftModule.getPosition(),
-      rearRightModule.getPosition(),
-      frontRightModule.getPosition()
+        rearLeftModule.getPosition(),
+        frontLeftModule.getPosition(),
+        rearRightModule.getPosition(),
+        frontRightModule.getPosition()
     };
   }
 
   private static SwerveModuleState[] getSwerveModuleStates() {
     return new SwerveModuleState[] {
-      frontLeftModule.getState(), 
-      frontRightModule.getState(),
-      rearLeftModule.getState(),
-      rearRightModule.getState()
+        frontLeftModule.getState(),
+        frontRightModule.getState(),
+        rearLeftModule.getState(),
+        rearRightModule.getState()
     };
   }
 
@@ -176,29 +176,29 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     this.board = new MAShuffleboard("swerve");
 
     CONTROLLER_X = new PIDController(
-      SwerveConstants.KP_X, SwerveConstants.KI_X, 0);
+        SwerveConstants.KP_X, SwerveConstants.KI_X, 0);
 
     CONTROLLER_Y = new PIDController(
-      SwerveConstants.KP_Y, SwerveConstants.KI_Y, 0);
+        SwerveConstants.KP_Y, SwerveConstants.KI_Y, 0);
 
     board.addNum(theta_KP, SwerveConstants.THATA_KP);
     board.addNum(theta_KI, SwerveConstants.THATA_KI);
     board.addNum(theta_KD, SwerveConstants.THATA_KD);
 
     thetaPID = new PIDController(board.getNum(theta_KP),
-     board.getNum(theta_KI), board.getNum(theta_KD));
+        board.getNum(theta_KI), board.getNum(theta_KD));
 
     thetaPID.enableContinuousInput(-Math.PI, Math.PI);
-    
+
     board.addNum(profiled_theta_KP, SwerveConstants.PROFILED_THATA_KP);
     board.addNum(profiled_theta_KI, SwerveConstants.PROFILED_THATA_KI);
     board.addNum(profiled_theta_KD, SwerveConstants.PROFILED_THATA_KD);
 
     thetaProfiledPID = new ProfiledPIDController(
-      board.getNum(profiled_theta_KP), board.getNum(profiled_theta_KI),
-      board.getNum(profiled_theta_KD), 
-      new TrapezoidProfile.Constraints(SwerveConstants.MAX_ANGULAR_VELOCITY,
-      SwerveConstants.MAX_ANGULAR_ACCELERATION));
+        board.getNum(profiled_theta_KP), board.getNum(profiled_theta_KI),
+        board.getNum(profiled_theta_KD),
+        new TrapezoidProfile.Constraints(SwerveConstants.MAX_ANGULAR_VELOCITY,
+            SwerveConstants.MAX_ANGULAR_ACCELERATION));
 
     thetaProfiledPID.enableContinuousInput(0, 2 * Math.PI);
 
@@ -260,6 +260,10 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     return kinematics;
   }
 
+  public PIDController getThetaPID() {
+    return thetaPID;
+  }
+
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(getRotation2d(), getSwerveModulePositions(), pose);
   }
@@ -283,17 +287,23 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   public void drive(double x, double y, double omega, boolean fieldRelative) {
     SwerveModuleState[] states = kinematics
         .toSwerveModuleStates(
-            fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(x, y, omega, 
-            new Rotation2d(Math.toRadians((getFusedHeading() - offsetAngle))))
+            fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(x, y, omega,
+                new Rotation2d(Math.toRadians((getFusedHeading() - offsetAngle))))
                 : new ChassisSpeeds(x, y, omega));
     setModules(states);
   }
 
   public void FactorVelocityTo(double factor) {
-    maxVelocity = 
-      SwerveConstants.MAX_VELOCITY * factor;
-    maxAngularVelocity = 
-      SwerveConstants.MAX_ANGULAR_VELOCITY * factor;
+    maxVelocity = SwerveConstants.MAX_VELOCITY * factor;
+    maxAngularVelocity = SwerveConstants.MAX_ANGULAR_VELOCITY * factor;
+  }
+
+  public void setAngleAlign(Double angle) {
+    angleAlign = angle;
+  }
+
+  public Double getAngleAlign() {
+    return angleAlign;
   }
 
   public Pose2d getClosestScoringPose() {
@@ -302,22 +312,18 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     Translation2d closest = scoringPoses[0];
     for (int i = 1; i < scoringPoses.length; i++) {
       Translation2d pose = scoringPoses[i];
-      if (Math.abs(robotPose.getTranslation().getDistance(pose)) < 
-          Math.abs(robotPose.getTranslation().getDistance(closest))) {
+      if (Math.abs(robotPose.getTranslation().getDistance(pose)) < Math
+          .abs(robotPose.getTranslation().getDistance(closest))) {
         closest = pose;
       }
     }
     Pose2d ClosestScoringPose;
     double angle = DriverStation.getAlliance() == Alliance.Red ? 0 : 180;
-    ClosestScoringPose = new
-      Pose2d(
+    ClosestScoringPose = new Pose2d(
         closest.getX(),
         closest.getY(),
         new Rotation2d(
-          Math.toRadians(angle)
-        )
-      );
-      System.out.println(closest.getX());
+            Math.toRadians(angle)));
     return ClosestScoringPose;
   }
 
@@ -325,88 +331,82 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     Pose2d startPose = getPose();
     Pose2d endPose = getClosestScoringPose();
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-      startPose, new ArrayList<Translation2d>(),
-      endPose, configForTelopPathCommand);
+        startPose, new ArrayList<Translation2d>(),
+        endPose, configForTelopPathCommand);
     return new SwerveControllerCommand(
-      trajectory,
-      this::getPose,
-      getKinematics(),
-      CONTROLLER_X,
-      CONTROLLER_Y,
-      thetaProfiledPID,
-      this::setModules,
-      this
-    ).andThen(new InstantCommand(
-      this::stop
-    ));
-  }
-
-  public void odometrySetUpForAutonomous(PathPlannerTrajectory trajectory) {
-    resetNavx();
-    PathPlannerTrajectory tPathPlannerTrajectory;
-    if (DriverStation.getAlliance() == Alliance.Red) {
-      tPathPlannerTrajectory
-       = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, Alliance.Red);
-    } else {
-      tPathPlannerTrajectory = trajectory;
-    }
-    resetNavx();
-    navx.setAngleAdjustment(
-      tPathPlannerTrajectory.getInitialState().holonomicRotation.getDegrees());
-    Pose2d pose = new Pose2d(
-      tPathPlannerTrajectory.getInitialPose().getX(),
-      tPathPlannerTrajectory.getInitialPose().getY(),
-      tPathPlannerTrajectory.getInitialState().holonomicRotation
-    ); 
-    resetOdometry(pose);
-  }
-
-  public PathPlannerTrajectory getTrajectory(String pathName) {
-    return PathPlanner.loadPath(pathName, new PathConstraints(
-      SwerveConstants.MAX_VELOCITY,3));//SwerveConstants.maxVelocity, SwerveConstants.maxAcceleration));
-  }
-
-  public Command getAutonomousPathCommand(
-    String pathName, boolean isFirst) {
-    PathPlannerTrajectory trajectory = getTrajectory(pathName);
-    return new SequentialCommandGroup(
-      new InstantCommand(() -> {
-        if (isFirst) {
-          odometrySetUpForAutonomous(trajectory);
-        }}),
-      new PPSwerveControllerCommand(
         trajectory,
         this::getPose,
         getKinematics(),
         CONTROLLER_X,
         CONTROLLER_Y,
-        thetaPID,
+        thetaProfiledPID,
         this::setModules,
-        true,
-        this),
-      new InstantCommand(this::stop));
+        this).andThen(
+            new InstantCommand(
+                this::stop));
+  }
+
+  public void odometrySetUpForAutonomous(PathPlannerTrajectory trajectory) {
+    PathPlannerTrajectory tPathPlannerTrajectory;
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      tPathPlannerTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, Alliance.Red);
+    } else {
+      tPathPlannerTrajectory = trajectory;
+    }
+    resetNavx();
+    Pose2d pose = new Pose2d(
+        tPathPlannerTrajectory.getInitialPose().getX(),
+        tPathPlannerTrajectory.getInitialPose().getY(),
+        Rotation2d.fromDegrees(
+            tPathPlannerTrajectory.getInitialState().holonomicRotation.getDegrees()));
+    resetOdometry(pose);
+  }
+
+  public PathPlannerTrajectory getTrajectory(String pathName) {
+    return PathPlanner.loadPath(pathName, new PathConstraints(
+        SwerveConstants.MAX_VELOCITY, 3));// SwerveConstants.maxVelocity, SwerveConstants.maxAcceleration));
   }
 
   public Command getAutonomousPathCommand(
-    String pathName) {
+      String pathName, boolean isFirst) {
+    PathPlannerTrajectory trajectory = getTrajectory(pathName);
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          if (isFirst) {
+            odometrySetUpForAutonomous(trajectory);
+          }
+        }),
+        new PPSwerveControllerCommand(
+            trajectory,
+            this::getPose,
+            getKinematics(),
+            CONTROLLER_X,
+            CONTROLLER_Y,
+            thetaPID,
+            this::setModules,
+            true,
+            this),
+        new InstantCommand(this::stop));
+  }
+
+  public Command getAutonomousPathCommand(
+      String pathName) {
     return getAutonomousPathCommand(pathName, false);
   }
 
-  // public void updateOdometry() {
-  //   Optional<EstimatedRobotPose> result = 
-  //     RobotContainer.photonVision.getEstimatedRobotPose(getPose());
+  public void updateOdometry() {
+    Optional<EstimatedRobotPose> result = RobotContainer.photonVision.getEstimatedRobotPose(getPose());
 
-  //   if (result.isPresent()) {
-  //     EstimatedRobotPose camPose = result.get();
-  //     Pose2d temp = new Pose2d(
-  //       camPose.estimatedPose.toPose2d().getTranslation(),
-  //       getRotation2d()
-  //     );
-  //     odometry.addVisionMeasurement(temp,
-  //       camPose.timestampSeconds);
-  //   }
-  // }
-
+    if (result.isPresent()) {
+      EstimatedRobotPose camPose = result.get();
+      Pose2d temp = new Pose2d(
+          camPose.estimatedPose.toPose2d().getTranslation(),
+          Rotation2d.fromDegrees(getFusedHeading()));
+      odometry.addVisionMeasurement(temp,
+          camPose.timestampSeconds);
+    }
+  }
+  
   public void setAccelerationLimit(double limit) {
     frontLeftModule.setAccelerationLimit(limit);
     frontRightModule.setAccelerationLimit(limit);
@@ -422,14 +422,11 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     if (DriverStation.getAlliance() == Alliance.Red) {
       navx.setAngleAdjustment(180);
       resetOdometry(
-        new Pose2d(
-          new Translation2d(
-            Constants.FieldConstants.FIELD_LENGTH_METERS - getPose().getX(),
-            Constants.FieldConstants.FIELD_WIDTH_METERS - getPose().getY()
-          ),
-          getRotation2d()
-        )
-      );
+          new Pose2d(
+              new Translation2d(
+                  Constants.FieldConstants.FIELD_LENGTH_METERS - getPose().getX(),
+                  Constants.FieldConstants.FIELD_WIDTH_METERS - getPose().getY()),
+              getRotation2d()));
       offsetAngle += 180;
     }
   }
@@ -444,24 +441,26 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    acc = (
-      frontLeftModule.getDriveVelocity() - lastVelocity) / RobotConstants.KDELTA_TIME;
+    acc = (frontLeftModule.getDriveVelocity() - lastVelocity) / RobotConstants.KDELTA_TIME;
     odometry.update(getRotation2d(), getSwerveModulePositions());
 
     lastVelocity = frontLeftModule.getDriveVelocity();
 
     board.addNum("angle in degrees", getPose().getRotation().getDegrees());
-        
-    if(Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
+    board.addNum("roll", getRoll());
+    board.addNum("pitch", getPitch());
+
+    field.setRobotPose(getPose());
+
+    if (Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
       if (accelerationUpdated) {
         setAccelerationLimit(SwerveConstants.accelerationLimitForOpenElevator);
       }
       maxVelocity = Math.min(
-        SwerveConstants.maxAccelerationForOpenElevator * SwerveConstants.Tstop,
-        SwerveConstants.MAX_VELOCITY
-      );
+          SwerveConstants.maxAccelerationForOpenElevator * SwerveConstants.Tstop,
+          SwerveConstants.MAX_VELOCITY);
       accelerationUpdated = false;
-    } else if(!accelerationUpdated) {
+    } else if (!accelerationUpdated) {
       setAccelerationLimit(0);
       maxVelocity = SwerveConstants.MAX_VELOCITY;
       accelerationUpdated = true;
