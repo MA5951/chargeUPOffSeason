@@ -92,7 +92,10 @@ public class Elevator extends SubsystemBase implements
   public boolean canMove() {
     return setPoint >= ElevatorConstance.minPose
         && setPoint <= ElevatorConstance.maxPose
-        && SwerveDrivetrainSubsystem.getInstance().getAcceleration() <= SwerveConstants.maxAccelerationForOpenElevator;
+        && SwerveDrivetrainSubsystem.getInstance().getAcceleration() <= SwerveConstants.maxAccelerationForOpenElevator
+            * 2.2
+        && Math.abs(SwerveDrivetrainSubsystem.getInstance()
+            .getVelocity()) <= ((SwerveConstants.maxAccelerationForOpenElevator * SwerveConstants.Tstop) * 1.5);
   }
 
   @Override

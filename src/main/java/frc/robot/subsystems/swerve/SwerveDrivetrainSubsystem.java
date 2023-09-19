@@ -306,6 +306,10 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     return angleAlign;
   }
 
+  public double getVelocity() {
+    return frontLeftModule.getDriveVelocity();
+  }
+
   public Pose2d getClosestScoringPose() {
     Translation2d[] scoringPoses = Constants.FieldConstants.ScoringPoses;
     Pose2d robotPose = getPose();
@@ -406,7 +410,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
           camPose.timestampSeconds);
     }
   }
-  
+
   public void setAccelerationLimit(double limit) {
     frontLeftModule.setAccelerationLimit(limit);
     frontRightModule.setAccelerationLimit(limit);

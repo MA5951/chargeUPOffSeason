@@ -21,12 +21,12 @@ import edu.wpi.first.wpilibj.util.Color;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-        public static final Alliance alliance = Alliance.Blue;
+        public static final Alliance alliance = Alliance.Red;
 
         public static class Camera {
-                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_X = alliance == Alliance.Blue ? -0.2 : 0.43; // TODO
+                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_X = alliance == Alliance.Blue ? -0.2 : 0.4; // TODO
 
-                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Y = alliance == Alliance.Blue ? 0.434 : 0.414; // TODO
+                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Y = alliance == Alliance.Blue ? 0.434 : 0.41; // TODO
 
                 public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Z = alliance == Alliance.Blue ? 0.7 : 0.7; // TODO
 
@@ -37,18 +37,19 @@ public final class Constants {
                 public static final double CAMERA_YAW = alliance == Alliance.Blue ? 0 : 0; // TODO
         }
 
-    public static class ColorPresets {
-        public static final Color CONE_YELLOW = new Color(255, 237, 70);
-        public static final Color CUBE_PURPLE = new Color(113, 82, 199);
-        public static final Color RED = new Color(216, 24, 24);
-        public static final Color BLUE = new Color(31, 55, 178);
-        public static final Color WHITE = new Color(255, 255, 255);
-        public static final Color BLACK = new Color(0, 0, 0);
-        public static final Color GREEN = new Color(47, 188, 52);
-        public static final Color ORANGE = new Color(246, 167, 48);
-        public static final Color CYAN = new Color(51, 204, 204);
-        public static final Color MAcolor = new Color(127, 0, 0);
-      }
+        public static class ColorPresets {
+                public static final Color CONE_YELLOW = new Color(255, 237, 70);
+                public static final Color CUBE_PURPLE = new Color(113, 82, 199);
+                public static final Color RED = new Color(216, 24, 24);
+                public static final Color BLUE = new Color(31, 55, 178);
+                public static final Color WHITE = new Color(255, 255, 255);
+                public static final Color BLACK = new Color(0, 0, 0);
+                public static final Color GREEN = new Color(47, 188, 52);
+                public static final Color ORANGE = new Color(246, 167, 48);
+                public static final Color CYAN = new Color(51, 204, 204);
+                public static final Color MAcolor = new Color(127, 0, 0);
+        }
+
         public static class OperatorConstants {
                 public static final int DRIVER_CONTROLLER_PORT = 0;
                 public static final int OPERATOR_CONTROLLER_PORT = 1;
@@ -62,8 +63,8 @@ public final class Constants {
         public static final class FieldConstants {
                 public static final double FIELD_WIDTH_METERS = 8.02;
                 public static final double FIELD_LENGTH_METERS = 16.54;
-                private static final double BLUE_X = 1.81;
-                private static final double RED_X = 14.52;
+                private static final double BLUE_X = 1.4;
+                private static final double RED_X = 15;
                 private static final double A1Y = 0.54;
                 private static final double A2Y = 1.09;
                 private static final double A3Y = 1.66;

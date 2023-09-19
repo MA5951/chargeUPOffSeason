@@ -48,151 +48,155 @@ import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    public static final CommandPS4Controller DRIVER_PS4_CONTROLLER = new CommandPS4Controller(
-            OperatorConstants.DRIVER_CONTROLLER_PORT);
+        public static final CommandPS4Controller DRIVER_PS4_CONTROLLER = new CommandPS4Controller(
+                        OperatorConstants.DRIVER_CONTROLLER_PORT);
 
-    public static final CommandPS4Controller OPERATOR_PS4_CONTROLLER = new CommandPS4Controller(
-            OperatorConstants.OPERATOR_CONTROLLER_PORT);
+        public static final CommandPS4Controller OPERATOR_PS4_CONTROLLER = new CommandPS4Controller(
+                        OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
-    public static PhotonVision photonVision;
-    private static AprilTagFieldLayout aprilTagFieldLayout;
+        public static PhotonVision photonVision;
+        private static AprilTagFieldLayout aprilTagFieldLayout;
 
-    public RobotContainer() {
-        // Configure the trigger bindings
-        try {
-            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-        } catch (Exception e) {
-            System.err.println(e);
+        public RobotContainer() {
+                // Configure the trigger bindings
+                try {
+                        aprilTagFieldLayout = AprilTagFieldLayout
+                                        .loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+                } catch (Exception e) {
+                        System.err.println(e);
+                }
+
+                photonVision = new PhotonVision(
+                                "ma5951",
+                                new Transform3d(
+                                                new Translation3d(
+                                                                Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
+                                                                Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
+                                                                Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z),
+                                                new Rotation3d(
+                                                                Constants.Camera.CAMERA_ROLL,
+                                                                Constants.Camera.CAMERA_PITCH,
+                                                                Constants.Camera.CAMERA_YAW)),
+                                aprilTagFieldLayout);
+
+                configureBindings();
         }
 
-        photonVision = new PhotonVision(
-                "ma5951",
-                new Transform3d(
-                        new Translation3d(
-                                Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_X,
-                                Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Y,
-                                Constants.Camera.CAMERA_DISTANCE_FROM_CENTER_IN_Z),
-                        new Rotation3d(
-                                Constants.Camera.CAMERA_ROLL,
-                                Constants.Camera.CAMERA_PITCH,
-                                Constants.Camera.CAMERA_YAW)),
-                aprilTagFieldLayout);
+        /**
+         * Use this method to define your trigger->command mappings. Triggers can be
+         * created via the
+         * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+         * an arbitrary
+         * predicate, or via the named factories in {@link
+         * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+         * {@link
+         * CommandXboxController
+         * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+         * PS4} controllers or
+         * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+         * joysticks}.
+         */
+        private void configureBindings() {
+                // r1 = cube intake, l1 = cone intake, squere = no timer eject, l2 = timer
+                // eject, r2 = no timer eject
+                DRIVER_PS4_CONTROLLER.R1().whileTrue(
+                                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
+                                                .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)));
 
-        configureBindings();
-    }
+                DRIVER_PS4_CONTROLLER.L1().whileTrue(
+                                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
+                                                .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
 
-    /**
-     * Use this method to define your trigger->command mappings. Triggers can be
-     * created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-     * an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-     * {@link
-     * CommandXboxController
-     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or
-     * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
-     */
-    private void configureBindings() {
-        // r1 = cube intake, l1 = cone intake, squere = no timer eject, l2 = timer
-        // eject, r2 = no timer eject
-        DRIVER_PS4_CONTROLLER.R1().whileTrue(
-                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
-                        .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)));
+                DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
+                                .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
+                                                .andThen(new InstantCommand(
+                                                                () -> Elevator.getInstance().setSetPoint(
+                                                                                ElevatorConstance.minPose))));
 
-        DRIVER_PS4_CONTROLLER.L1().whileTrue(
-                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
-                        .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
+                DRIVER_PS4_CONTROLLER.povUp().whileTrue(
+                                new InstantCommand(
+                                                () -> SwerveDrivetrainSubsystem.getInstance()
+                                                                .setAngleAlign(SwerveConstants.shelfAngle)))
+                                .whileFalse(new InstantCommand(
+                                                () -> SwerveDrivetrainSubsystem.getInstance()
+                                                                .setAngleAlign(null)));
 
-        DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
-                .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
-                        .andThen(new InstantCommand(
-                                () -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose))));
+                DRIVER_PS4_CONTROLLER.povDown().whileTrue(
+                                new InstantCommand(
+                                                () -> SwerveDrivetrainSubsystem.getInstance()
+                                                                .setAngleAlign(SwerveConstants.gridAngle)))
+                                .whileFalse(new InstantCommand(
+                                                () -> SwerveDrivetrainSubsystem.getInstance()
+                                                                .setAngleAlign(null)));
 
-        DRIVER_PS4_CONTROLLER.povUp().whileTrue(
-                new InstantCommand(
-                        () -> SwerveDrivetrainSubsystem.getInstance()
-                                .setAngleAlign(SwerveConstants.shelfAngle)))
-                .whileFalse(new InstantCommand(
-                        () -> SwerveDrivetrainSubsystem.getInstance()
-                                .setAngleAlign(null)));
+                DRIVER_PS4_CONTROLLER.triangle().whileTrue(
+                                new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset()));
 
-        DRIVER_PS4_CONTROLLER.povDown().whileTrue(
-                new InstantCommand(
-                        () -> SwerveDrivetrainSubsystem.getInstance()
-                                .setAngleAlign(SwerveConstants.gridAngle)))
-                .whileFalse(new InstantCommand(
-                        () -> SwerveDrivetrainSubsystem.getInstance()
-                                .setAngleAlign(null)));
+                DRIVER_PS4_CONTROLLER.R2().whileTrue(
+                                new InstantCommand(
+                                                () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(0.4)))
+                                .whileFalse(
+                                                new InstantCommand(
+                                                                () -> SwerveDrivetrainSubsystem.getInstance()
+                                                                                .FactorVelocityTo(1)));
 
-        DRIVER_PS4_CONTROLLER.triangle().whileTrue(
-                new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset()));
+                DRIVER_PS4_CONTROLLER.L2().whileTrue(
+                                new InstantCommand(
+                                                () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(
+                                                                SwerveConstants.maxVelocityOpenElevatorFctor)))
+                                .whileFalse(
+                                                new InstantCommand(
+                                                                () -> SwerveDrivetrainSubsystem.getInstance()
+                                                                                .FactorVelocityTo(1)));
 
-        DRIVER_PS4_CONTROLLER.R2().whileTrue(
-                new InstantCommand(
-                        () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(0.4)))
-                .whileFalse(
-                        new InstantCommand(
-                                () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1)));
+                DRIVER_PS4_CONTROLLER.touchpad().whileTrue(
+                                new MotorCommand(Intake.getInstance(), IntakeConstance.IntakePowerForCone, 0));
 
-        DRIVER_PS4_CONTROLLER.L2().whileTrue(
-                new InstantCommand(
-                        () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(0.1)))
-                .whileFalse(
-                        new InstantCommand(
-                                () -> SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1)));
+                DRIVER_PS4_CONTROLLER.povLeft().whileTrue(new ResetElevator());
 
-        DRIVER_PS4_CONTROLLER.touchpad().whileTrue(
-                new MotorCommand(Intake.getInstance(), IntakeConstance.IntakePowerForCone, 0));
+                DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
 
-        DRIVER_PS4_CONTROLLER.povLeft().whileTrue(new ResetElevator());
+                OPERATOR_PS4_CONTROLLER.circle().whileTrue(new ResetElevator());
 
-        DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
+                OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
+                                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
+                                                .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)))
+                                .whileFalse(
+                                                new SetElvator(ElevatorConstance.minPose));
 
-        OPERATOR_PS4_CONTROLLER.circle().whileTrue(new ResetElevator());
+                OPERATOR_PS4_CONTROLLER.square().whileTrue(
+                                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
+                                                .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)))
+                                .whileFalse(
+                                                new InstantCommand(() -> Elevator.getInstance()
+                                                                .setSetPoint(ElevatorConstance.minPose)));
 
-        OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
-                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
-                        .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)))
-                .whileFalse(
-                        new SetElvator(ElevatorConstance.minPose));
+                OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
+                                new SetElvator(Elevator.getInstance().highHight));
 
-        OPERATOR_PS4_CONTROLLER.square().whileTrue(
-                new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
-                        .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)))
-                .whileFalse(
-                        new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.minPose)));
+                OPERATOR_PS4_CONTROLLER.povDown().whileTrue(
+                                new SetElvator(ElevatorConstance.lowPose));
 
-        OPERATOR_PS4_CONTROLLER.povUp().whileTrue(
-                new SetElvator(Elevator.getInstance().highHight));
+                OPERATOR_PS4_CONTROLLER.povRight().whileTrue(
+                                new SetElvator(Elevator.getInstance().midhight));
 
-        OPERATOR_PS4_CONTROLLER.povDown().whileTrue(
-                new SetElvator(ElevatorConstance.lowPose));
+                OPERATOR_PS4_CONTROLLER.povLeft().whileTrue(
+                                new SetElvator(Elevator.getInstance().minHight));
 
-        OPERATOR_PS4_CONTROLLER.povRight().whileTrue(
-                new SetElvator(Elevator.getInstance().midhight));
+                OPERATOR_PS4_CONTROLLER.L1().onTrue(
+                                new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CONE)));
 
-        OPERATOR_PS4_CONTROLLER.povLeft().whileTrue(
-                new SetElvator(Elevator.getInstance().minHight));
-      
-      OPERATOR_PS4_CONTROLLER.L1().onTrue(
-        new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CONE))
-      );
+                OPERATOR_PS4_CONTROLLER.R1().onTrue(
+                                new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CUBE)));
+        }
 
-      OPERATOR_PS4_CONTROLLER.R1().onTrue(
-        new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CUBE))
-      );
-    }
-
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
-        return new TwoPiceAutoLeftTest();
-    }
+        /**
+         * Use this to pass the autonomous command to the main {@link Robot} class.
+         *
+         * @return the command to run in autonomous
+         */
+        public Command getAutonomousCommand() {
+                // An example command will be run in autonomous
+                return new TwoPiceAutoRight();
+        }
 }

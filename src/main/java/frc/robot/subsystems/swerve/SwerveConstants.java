@@ -113,8 +113,18 @@ public class SwerveConstants {
 
         public final static double Tstop = 0.25;
         public final static double maxAccelerationForOpenElevator = 2.7;
-        public final static double accelerationLimitForOpenElevator = MAX_VELOCITY / maxAccelerationForOpenElevator;
+        public final static double accelerationLimitForOpenElevator = (MAX_VELOCITY / maxAccelerationForOpenElevator);
+        public final static double maxVelocityOpenElevatorFctor = ((maxAccelerationForOpenElevator * Tstop)
+                        / MAX_VELOCITY);
 
         public final static double shelfAngle = 0;
         public final static double gridAngle = Math.PI;
+
+        // PID shelf
+        public final static double shelf_KP = 3.3; // TODO
+        public final static double shelf_KI = 0.0009; // TODO
+        public final static double shelf_KD = 0; // TODO
+
+        public final static double shelfSetPointX = 0; // TODO
+        public final static double shelfSetPointY = 0; // TODO
 }
