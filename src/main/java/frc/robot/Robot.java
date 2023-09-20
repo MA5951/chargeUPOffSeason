@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.swerve.DriveSwerveCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.leds.Leds.GamePiece;
@@ -29,6 +31,11 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private boolean piplineChangedAptiltag = false;
+  private boolean piplineChangedReflective = false;
+
+  public static double scoringSetPointX = SwerveConstants.scoringSetPointXCone;
+  public static double scoringSetPointY = SwerveConstants.scoringSetPointYCone;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -42,6 +49,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
+    RobotContainer.photonVision.changePipeline(0);
 
     CommandScheduler.getInstance().setDefaultCommand(
         Elevator.getInstance(), new DefaultRunInternallyControlledSubsystem(
@@ -110,8 +118,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
-    SwerveDrivetrainSubsystem.getInstance().fixOdometry();
 
     Elevator.getInstance().setSetPoint(Elevator.getInstance().getExtension());
 
@@ -129,7 +137,24 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     RobotContainer.photonVision.update();
-    SwerveDrivetrainSubsystem.getInstance().updateOdometry();
+    if (Intake.getInstance().isCubeIn() && !piplineChangedAptiltag) {
+      RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
+      piplineChangedAptiltag = true;
+      scoringSetPointX = SwerveConstants.scoringSetPointXCube;
+      scoringSetPointY = SwerveConstants.scoringSetPointYCube;
+    } else {
+      piplineChangedAptiltag = false;
+    }
+
+    if (Intake.getInstance().isConeIn() && !piplineChangedReflective) {
+      RobotContainer.photonVision.changePipeline(Constants.pipline.reflective);
+      piplineChangedReflective = true;
+      scoringSetPointX = SwerveConstants.scoringSetPointXCone;
+      scoringSetPointY = SwerveConstants.scoringSetPointYCone;
+    } else if (!Intake.getInstance().isConeIn()) {
+      piplineChangedReflective = false;
+      RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
+    }
     // Leds.getInstance().SmoothWave(2, 0.5, 0.8, new Color []{LedsConstants.MAcolor
     // , LedsConstants.WHITE});
 

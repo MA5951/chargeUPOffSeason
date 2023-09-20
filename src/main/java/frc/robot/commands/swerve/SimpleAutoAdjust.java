@@ -8,23 +8,31 @@ import com.ma5951.utils.PhotonVision;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
-public class AutoShelfAdjust extends CommandBase {
+public class SimpleAutoAdjust extends CommandBase {
   /** Creates a new AutoShelfAdjust. */
   private SwerveDrivetrainSubsystem swerve;
   private PhotonVision photonVision;
   private PIDController pidX;
   private PIDController pidY;
+  private double thetaSetPoint;
 
-  public AutoShelfAdjust() {
+  public SimpleAutoAdjust(
+      double xSetPoint, double ySetPoint, double thetaSetPoint) {
     photonVision = RobotContainer.photonVision;
     swerve = SwerveDrivetrainSubsystem.getInstance();
     addRequirements(swerve);
-    pidX.setSetpoint(SwerveConstants.shelfSetPointX);
-    pidY.setSetpoint(SwerveConstants.shelfSetPointY);
+    pidX = new PIDController(
+        SwerveConstants.x_KP, SwerveConstants.x_KI, SwerveConstants.x_KD);
+    pidY = new PIDController(
+        SwerveConstants.y_KP, SwerveConstants.y_KI, SwerveConstants.y_KD);
+    pidX.setSetpoint(xSetPoint);
+    pidY.setSetpoint(ySetPoint);
+    this.thetaSetPoint = thetaSetPoint;
   }
 
   // Called when the command is initially scheduled.
@@ -35,13 +43,20 @@ public class AutoShelfAdjust extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double distance;
+    if (photonVision.getPipeline() == Constants.pipline.apriltag) {
+      distance = photonVision.getDistanceToTargetMeters();
+    } else {
+      distance = photonVision.getDistanceToTargetMeters(
+          Constants.FieldConstants.reflectiveHight);
+    }
+    double angle = Math.toRadians(photonVision.getYaw());
+
     swerve.drive(
-        pidX.calculate(photonVision.getDistanceToTargetMeters() *
-            Math.cos(Math.toRadians(photonVision.getYaw()))),
-        pidY.calculate(photonVision.getDistanceToTargetMeters() *
-            Math.sin(Math.toRadians(photonVision.getYaw()))),
-        swerve.getThetaPID().calculate(
-            swerve.getFusedHeading(), SwerveConstants.shelfAngle),
+        -pidX.calculate(distance * Math.cos(angle)),
+        pidY.calculate(distance * Math.sin(angle)),
+        SwerveDrivetrainSubsystem.getInstance().getThetaPID().calculate(
+            SwerveDrivetrainSubsystem.getInstance().getPose().getRotation().getRadians(), thetaSetPoint),
         false);
   }
 
@@ -54,7 +69,6 @@ public class AutoShelfAdjust extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pidX.atSetpoint() && pidY.atSetpoint() &&
-        swerve.getThetaPID().atSetpoint();
+    return !photonVision.hasTarget();
   }
 }

@@ -24,6 +24,7 @@ public class PhotonVision {
     private double cameraPitchRadians;
     private AprilTagFieldLayout layout;
     private PhotonPoseEstimator photonPoseEstimator;
+    private int pipline = 0;
 
     public PhotonVision(String cameraName,
             Transform3d robotToCam,
@@ -122,7 +123,18 @@ public class PhotonVision {
                 cameraHeightMeters,
                 layout.getTagPose(getTargetID()).get().getZ(),
                 cameraPitchRadians,
-                Units.degreesToRadians(getPich()));
+                Units.degreesToRadians(getPich())) - 0.1;
+    }
+
+    /**
+     * @return distance from the target in meters
+     */
+    public double getDistanceToTargetMeters(double targetHaight) {
+        return PhotonUtils.calculateDistanceToTargetMeters(
+                cameraHeightMeters,
+                targetHaight,
+                cameraPitchRadians,
+                Units.degreesToRadians(getPich())) - 0.1;
     }
 
     public Optional<EstimatedRobotPose> getEstimatedRobotPose(Pose2d prevEstimatedRobotPose) {
@@ -137,6 +149,11 @@ public class PhotonVision {
      */
     public void changePipeline(int PipelineIndex) {
         camera.setPipelineIndex(PipelineIndex);
+        pipline = PipelineIndex;
+    }
+
+    public int getPipeline() {
+        return pipline;
     }
 
     /**
@@ -163,6 +180,10 @@ public class PhotonVision {
      */
     public void setLED(VisionLEDMode mode) {
         camera.setLED(mode);
+    }
+
+    public boolean hasResult() {
+        return result != null;
     }
 
     /**

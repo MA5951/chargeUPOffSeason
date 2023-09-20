@@ -23,7 +23,7 @@ import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.Automations.TeleopAutomations.ShelfIntakeAutomation;
-import frc.robot.commands.swerve.AutoAdjustForScore;
+import frc.robot.commands.swerve.SimpleAutoAdjust;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
@@ -32,11 +32,7 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.leds.Leds.GamePiece;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
-import frc.robot.commands.paths.CenterToClimb;
-import frc.robot.commands.paths.TwoPiceAutoLeft;
-import frc.robot.commands.paths.TwoPiceAutoLeftTest;
 import frc.robot.commands.paths.TwoPiceAutoRight;
-import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -111,8 +107,10 @@ public class RobotContainer {
                                 .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
                                                 .andThen(new InstantCommand(
                                                                 () -> Elevator.getInstance().setSetPoint(
-                                                                                ElevatorConstance.minPose))));
-
+                                                                                ElevatorConstance.minPose)))
+                                                .andThen(new InstantCommand(() -> photonVision
+                                                                .changePipeline(Constants.pipline.apriltag))));
+                ;
                 DRIVER_PS4_CONTROLLER.povUp().whileTrue(
                                 new InstantCommand(
                                                 () -> SwerveDrivetrainSubsystem.getInstance()
@@ -154,7 +152,13 @@ public class RobotContainer {
 
                 DRIVER_PS4_CONTROLLER.povLeft().whileTrue(new ResetElevator());
 
-                DRIVER_PS4_CONTROLLER.cross().whileTrue(new AutoAdjustForScore());
+                DRIVER_PS4_CONTROLLER.cross().whileTrue(new SimpleAutoAdjust(
+                                Robot.scoringSetPointX, Robot.scoringSetPointY,
+                                SwerveConstants.gridAngle));
+
+                DRIVER_PS4_CONTROLLER.square().whileTrue(new SimpleAutoAdjust(
+                                SwerveConstants.shelfSetPointX, SwerveConstants.shelfSetPointY,
+                                SwerveConstants.shelfAngle));
 
                 OPERATOR_PS4_CONTROLLER.circle().whileTrue(new ResetElevator());
 
