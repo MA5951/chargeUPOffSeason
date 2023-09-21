@@ -22,7 +22,7 @@ import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.Automations.ElevatorAutomations.SetElvator;
 import frc.robot.commands.Automations.IntakeAutomations.EjectAutomation;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
-import frc.robot.commands.Automations.TeleopAutomations.ShelfIntakeAutomation;
+import frc.robot.commands.Automations.TeleopAutomations.ElvatoreIntakeAutomation;
 import frc.robot.commands.swerve.SimpleAutoAdjust;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
@@ -107,9 +107,9 @@ public class RobotContainer {
                                 .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
                                                 .andThen(new InstantCommand(
                                                                 () -> Elevator.getInstance().setSetPoint(
-                                                                                ElevatorConstance.minPose)))
-                                                .andThen(new InstantCommand(() -> photonVision
-                                                                .changePipeline(Constants.pipline.apriltag))));
+                                                                                ElevatorConstance.minPose))));
+                                                //.andThen(new InstantCommand(() -> photonVision
+                                                               // .changePipeline(Constants.pipline.apriltag))));
                 ;
                 DRIVER_PS4_CONTROLLER.povUp().whileTrue(
                                 new InstantCommand(
@@ -164,13 +164,13 @@ public class RobotContainer {
 
                 OPERATOR_PS4_CONTROLLER.triangle().whileTrue(
                                 new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
-                                                .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCone)))
+                                                .andThen(new ElvatoreIntakeAutomation(IntakeConstance.IntakePowerForCone , ElevatorConstance.ShelfPose)))
                                 .whileFalse(
                                                 new SetElvator(ElevatorConstance.minPose));
 
                 OPERATOR_PS4_CONTROLLER.square().whileTrue(
                                 new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
-                                                .andThen(new ShelfIntakeAutomation(IntakeConstance.IntakePowerForCube)))
+                                                .andThen(new ElvatoreIntakeAutomation(IntakeConstance.IntakePowerForCube , ElevatorConstance.ShelfPose)))
                                 .whileFalse(
                                                 new InstantCommand(() -> Elevator.getInstance()
                                                                 .setSetPoint(ElevatorConstance.minPose)));
@@ -192,10 +192,19 @@ public class RobotContainer {
 
                 OPERATOR_PS4_CONTROLLER.R1().onTrue(
                                 new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CUBE)));
+
+                OPERATOR_PS4_CONTROLLER.R2().whileTrue(
+                        new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
+                                                .andThen(new ElvatoreIntakeAutomation(IntakeConstance.IntakePowerForCone , ElevatorConstance.RampPose)))
+                                .whileFalse(
+                                                new SetElvator(ElevatorConstance.minPose));
+                
         }
 
         /**
-         * Use this to pass the autonomous command to the main {@link Robot} class.
+         * Use this to pass the autonomous command to the main {@link Robot} class.[]\
+         * [\]
+         * 
          *
          * @return the command to run in autonomous
          */

@@ -136,25 +136,25 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    RobotContainer.photonVision.update();
-    if (Intake.getInstance().isCubeIn() && !piplineChangedAptiltag) {
-      RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
-      piplineChangedAptiltag = true;
-      scoringSetPointX = SwerveConstants.scoringSetPointXCube;
-      scoringSetPointY = SwerveConstants.scoringSetPointYCube;
-    } else {
-      piplineChangedAptiltag = false;
-    }
+    // RobotContainer.photonVision.update();
+    // if (Intake.getInstance().isCubeIn() && !piplineChangedAptiltag) {
+    //   RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
+    //   piplineChangedAptiltag = true;
+    //   scoringSetPointX = SwerveConstants.scoringSetPointXCube;
+    //   scoringSetPointY = SwerveConstants.scoringSetPointYCube;
+    // } else {
+    //   piplineChangedAptiltag = false;
+    // }
 
-    if (Intake.getInstance().isConeIn() && !piplineChangedReflective) {
-      RobotContainer.photonVision.changePipeline(Constants.pipline.reflective);
-      piplineChangedReflective = true;
-      scoringSetPointX = SwerveConstants.scoringSetPointXCone;
-      scoringSetPointY = SwerveConstants.scoringSetPointYCone;
-    } else if (!Intake.getInstance().isConeIn()) {
-      piplineChangedReflective = false;
-      RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
-    }
+    // if (Intake.getInstance().isConeIn() && !piplineChangedReflective) {
+    //   RobotContainer.photonVision.changePipeline(Constants.pipline.reflective);
+    //   piplineChangedReflective = true;
+    //   scoringSetPointX = SwerveConstants.scoringSetPointXCone;
+    //   scoringSetPointY = SwerveConstants.scoringSetPointYCone;
+    // } else if (!Intake.getInstance().isConeIn()) {
+    //   piplineChangedReflective = false;
+    //   RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
+    // }
     // Leds.getInstance().SmoothWave(2, 0.5, 0.8, new Color []{LedsConstants.MAcolor
     // , LedsConstants.WHITE});
 
