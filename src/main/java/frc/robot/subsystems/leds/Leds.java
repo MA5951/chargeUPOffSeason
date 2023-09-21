@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.leds;
 
+import java.security.Principal;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +38,7 @@ public class Leds extends SubsystemBase {
   private double lastChange;
   private GamePiece gamePiece;
   private Autostate autostate;
+  private boolean lastmodecahnge;
 
   public Leds() {
     led = new AddressableLED(PortMap.Led.ledPort);
@@ -185,41 +188,25 @@ public class Leds extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     
-    if (DriverStation.isDisabled()) {
-      setAllianceColor();
-      updateLeds();
-    } else if (DriverStation.isTeleop()) {
-      if (Intake.getInstance().isCubeIn()) {
-        setSingleColor(LedsConstants.CUBE_PURPLE);
-        setGamePiece(GamePiece.NONE);
-        updateLeds();
-      } else if (Intake.getInstance().isConeIn()) {
-        setSingleColor(LedsConstants.CONE_YELLOW);
-        setGamePiece(GamePiece.NONE);
-        updateLeds();
-      } else if (gamePiece == GamePiece.CONE){
-        blinkColorPattern(0.5, LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
-        updateLeds();
-      } else if (gamePiece == GamePiece.CUBE){
+    
+      
+      if (gamePiece == GamePiece.CUBE) {
         blinkColorPattern(0.5, LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
         updateLeds();
-      } else if (Intake.getInstance().isPieceInIntake() == false) {
-        setGamePiece(GamePiece.NONE);
-        cahrgedPattern( LedsConstants.MAcolor , LedsConstants.WHITE);
+        gamePiece = GamePiece.NONE;
+      }else if (gamePiece == GamePiece.CONE) {
+        blinkColorPattern(0.5, LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
         updateLeds();
-      }
+        gamePiece = GamePiece.NONE;
+      }else if (Intake.getInstance().isConeIn()) {
+              }
       
-    } else if (DriverStation.isAutonomous()) {
-      if (autostate == Autostate.CLIMED){
-        smoothWaveColorPattern(2, 1, 1, new Color [] {LedsConstants.GREEN, LedsConstants.BLACK});
-        updateLeds();
-      }else {
-        smoothWaveColorPattern(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
-        updateLeds();
-      }
-    }
+      
+    
+      
     
     
   }
+    }
   
-}
+

@@ -1,5 +1,6 @@
 package com.ma5951.utils;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -117,7 +118,7 @@ public class PhotonVision {
 
     /**
      * @return distance from the target in meters
-     */
+    */
     public double getDistanceToTargetMeters() {
         return PhotonUtils.calculateDistanceToTargetMeters(
                 cameraHeightMeters,
@@ -181,7 +182,7 @@ public class PhotonVision {
     public void setLED(VisionLEDMode mode) {
         camera.setLED(mode);
     }
-
+ 
     public boolean hasResult() {
         return result != null;
     }
@@ -190,12 +191,21 @@ public class PhotonVision {
      * @return if a targt was detected
      */
     public boolean hasTarget() {
-        return result.hasTargets();
+        if (!result.hasTargets()) {
+            return false;
+        }else if ( getPipeline() == 0 && getTargetID() <= 8) {
+            return true;
+        } else if ( getPipeline() == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public void update() {
         result = camera.getLatestResult();
-        if (hasTarget()) {
+        if (result.hasTargets()) {
             target = result.getBestTarget();
         }
     }

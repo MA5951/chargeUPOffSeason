@@ -46,6 +46,7 @@ public class SimpleAutoAdjust extends CommandBase {
     double distance;
     if (photonVision.getPipeline() == Constants.pipline.apriltag) {
       distance = photonVision.getDistanceToTargetMeters();
+      distance = distance *-1;
     } else {
       distance = photonVision.getDistanceToTargetMeters(
           Constants.FieldConstants.reflectiveHight);

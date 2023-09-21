@@ -32,6 +32,7 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.leds.Leds.GamePiece;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
+import frc.robot.commands.paths.CenterToClimb;
 import frc.robot.commands.paths.TwoPiceAutoRight;
 
 /**
@@ -108,8 +109,7 @@ public class RobotContainer {
                                                 .andThen(new InstantCommand(
                                                                 () -> Elevator.getInstance().setSetPoint(
                                                                                 ElevatorConstance.minPose))));
-                                                //.andThen(new InstantCommand(() -> photonVision
-                                                               // .changePipeline(Constants.pipline.apriltag))));
+                                                
                 ;
                 DRIVER_PS4_CONTROLLER.povUp().whileTrue(
                                 new InstantCommand(
@@ -210,6 +210,6 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return new TwoPiceAutoRight();
+                return new CenterToClimb();
         }
 }

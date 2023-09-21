@@ -74,7 +74,7 @@ public class SwerveConstants {
         public final static boolean DRIVE_ENBLE_CURRENT_LIMIT = true;
 
         // swerve physics
-        public final static double MAX_VELOCITY = 4.96824;
+        public final static double MAX_VELOCITY = 4.96824 * 0.1;
         public final static double MAX_ACCELERATION = Math.pow(MAX_VELOCITY, 2) / RADIUS;
         public final static double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / RADIUS; // radians
 

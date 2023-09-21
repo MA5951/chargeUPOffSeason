@@ -45,6 +45,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.PortMap;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.pipline;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 
@@ -453,36 +454,13 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     board.addNum("angle in degrees", getPose().getRotation().getDegrees());
     board.addNum("roll", getRoll());
     board.addNum("pitch", getPitch());
-
-    // if (RobotContainer.photonVision.getPipeline() == 1 &&
-    //     RobotContainer.photonVision.hasTarget()) {
-    //   board.addNum("dis photon vision",
-    //       RobotContainer.photonVision.getDistanceToTargetMeters(Constants.FieldConstants.reflectiveHight) * Math.cos(
-    //           Math.toRadians(RobotContainer.photonVision.getYaw())));
-
-    //   board.addNum("dis photon vision y",
-    //       RobotContainer.photonVision.getDistanceToTargetMeters(Constants.FieldConstants.reflectiveHight) * Math.sin(
-    //           Math.toRadians(RobotContainer.photonVision.getYaw())));
-    //   board.addNum("yaw photon ", RobotContainer.photonVision.getYaw());
-    // } else if (RobotContainer.photonVision.hasTarget()) {
-    //   board.addNum("dis photon vision",
-    //       RobotContainer.photonVision.getDistanceToTargetMeters() * Math.cos(
-    //           Math.toRadians(RobotContainer.photonVision.getYaw())));
-
-    //   board.addNum("dis photon vision y",
-    //       RobotContainer.photonVision.getDistanceToTargetMeters() * Math.sin(
-    //           Math.toRadians(RobotContainer.photonVision.getYaw())));
-    //   board.addNum("yaw photon ", RobotContainer.photonVision.getYaw());
-    // }
-
-    // board.addNum("pipline", RobotContainer.photonVision.getPipeline());
+    board.addNum("Pipeline", RobotContainer.photonVision.getPipeline());
 
     field.setRobotPose(getPose());
 
 
 
     if (Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
-      System.out.println("fffffffffffffffffffffff");
       if (accelerationUpdated) {
         setAccelerationLimit(SwerveConstants.accelerationLimitForOpenElevator);
       }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ma5951.utils.PhotonVision;
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -76,8 +77,8 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    RobotContainer.photonVision.update();
 
-    Leds.getInstance();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -136,27 +137,28 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // RobotContainer.photonVision.update();
-    // if (Intake.getInstance().isCubeIn() && !piplineChangedAptiltag) {
-    //   RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
-    //   piplineChangedAptiltag = true;
-    //   scoringSetPointX = SwerveConstants.scoringSetPointXCube;
-    //   scoringSetPointY = SwerveConstants.scoringSetPointYCube;
-    // } else {
-    //   piplineChangedAptiltag = false;
-    // }
 
-    // if (Intake.getInstance().isConeIn() && !piplineChangedReflective) {
-    //   RobotContainer.photonVision.changePipeline(Constants.pipline.reflective);
-    //   piplineChangedReflective = true;
-    //   scoringSetPointX = SwerveConstants.scoringSetPointXCone;
-    //   scoringSetPointY = SwerveConstants.scoringSetPointYCone;
-    // } else if (!Intake.getInstance().isConeIn()) {
-    //   piplineChangedReflective = false;
-    //   RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
-    // }
-    // Leds.getInstance().SmoothWave(2, 0.5, 0.8, new Color []{LedsConstants.MAcolor
-    // , LedsConstants.WHITE});
+
+    if (Intake.getInstance().isCubeIn() && !piplineChangedAptiltag) {
+      RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
+      piplineChangedAptiltag = true;
+      scoringSetPointX = SwerveConstants.scoringSetPointXCube;
+      scoringSetPointY = SwerveConstants.scoringSetPointYCube;
+    } else {
+      piplineChangedAptiltag = false;
+    }
+
+    if (Intake.getInstance().isConeIn() && !piplineChangedReflective) {
+      RobotContainer.photonVision.changePipeline(Constants.pipline.reflective);
+      piplineChangedReflective = true;
+      scoringSetPointX = SwerveConstants.scoringSetPointXCone;
+      scoringSetPointY = SwerveConstants.scoringSetPointYCone;
+    } else if (!Intake.getInstance().isConeIn()) {
+      piplineChangedReflective = false;
+      RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
+    }
+
+
 
   }
 
