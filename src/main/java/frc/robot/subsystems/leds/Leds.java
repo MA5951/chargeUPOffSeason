@@ -29,6 +29,16 @@ public class Leds extends SubsystemBase {
     CLIMED,
     NONE
   }
+
+  public enum Animation {
+    SETCOLOR,
+    RAINBOW,
+    BLINK,
+    WAVE,
+    SMOOTHWAVE,
+    CHARGED,
+    NONE
+  }
   
   private AddressableLED led;
   private AddressableLEDBuffer ledBuffer;
@@ -38,7 +48,9 @@ public class Leds extends SubsystemBase {
   private double lastChange;
   private GamePiece gamePiece;
   private Autostate autostate;
+  private Animation animation;
   private boolean lastmodecahnge;
+  private Double interval;
 
   public Leds() {
     led = new AddressableLED(PortMap.Led.ledPort);
@@ -84,7 +96,11 @@ public class Leds extends SubsystemBase {
     firstHue = (firstHue + 3) % 180;
   }
 
-  public void blinkColorPattern(double interval ,Color color1, Color color2) {
+  public void setBlinkParametrs(Double interval){
+    interval = this.interval;
+  }
+
+  public void blinkColorPattern(Color colorOne, Color colorTwo) {
     double timestamp = Timer.getFPGATimestamp();
 
     if (timestamp - lastChange > interval) {
@@ -92,10 +108,10 @@ public class Leds extends SubsystemBase {
         lastChange = timestamp;
     }
     if (on) {
-        setSingleColor(color1);;
+        setSingleColor(colorOne);;
     }
     else {
-        setSingleColor(color2);
+        setSingleColor(colorTwo);
     }
   }
 
@@ -113,8 +129,6 @@ public class Leds extends SubsystemBase {
       ledBuffer.setLED(i, currentColor);
     }
   }
-
-  
 
   public void smoothWaveColorPattern(int numColors, double period, double speed, Color[] colors) {
     double elapsedTime = Timer.getFPGATimestamp();
@@ -173,6 +187,27 @@ public class Leds extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
+  public void setAnimation(Animation animation , Color color1 , Color color2 ) {
+    
+    if (animation == Animation.SETCOLOR){
+      setSingleColor(color1);
+      updateLeds();
+    } else if (animation == Animation.RAINBOW) {
+      rainbowColorPattern();
+      updateLeds();
+    } else if (animation == Animation.BLINK) {
+      blinkColorPattern( color1, color2);
+      updateLeds();
+    } else if (animation == Animation.CHARGED) {
+      cahrgedPattern(color1, color2);
+      updateLeds();
+    } else if (animation == Animation.NONE) {
+      
+    }
+
+
+  }
+
   public void updateLeds() {
     led.setData(ledBuffer);
   }
@@ -191,18 +226,27 @@ public class Leds extends SubsystemBase {
     
       
       if (gamePiece == GamePiece.CUBE) {
-        blinkColorPattern(0.5, LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
+        setBlinkParametrs(0.5);
+        animation = Animation.BLINK;
+        gamePiece = GamePiece.NONE;
+      } else if (gamePiece == GamePiece.CONE) {
+        setBlinkParametrs(0.5);
+        animation = Animation.BLINK;
+        gamePiece = GamePiece.NONE;
+      } else if (Intake.getInstance().isConeIn()) {
+        animation = Animation.NONE;
+        setSingleColor(LedsConstants.CONE_YELLOW);
+        updateLeds();
+        gamePiece = GamePiece.NONE  ;   
+      } else if (Intake.getInstance().isCubeIn()) {
+        animation = Animation.NONE;
+        setSingleColor(LedsConstants.CUBE_PURPLE);
         updateLeds();
         gamePiece = GamePiece.NONE;
-      }else if (gamePiece == GamePiece.CONE) {
-        blinkColorPattern(0.5, LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
-        updateLeds();
-        gamePiece = GamePiece.NONE;
-      }else if (Intake.getInstance().isConeIn()) {
-              }
+      }
       
       
-    
+      setAnimation(animation, null, null);
       
     
     
