@@ -6,6 +6,8 @@ package frc.robot.subsystems.leds;
 
 
 
+import com.ma5951.utils.led.BlinkingColorPattern;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,11 +33,10 @@ public class Leds extends SubsystemBase {
   }
 
   public enum Animation {
-    SETCOLOR,
-    RAINBOW,
-    BLINK,
-    WAVE,
-    SMOOTHWAVE,
+    BLINK_CONE,
+    BLINK_CUBE,
+    SOLID_CONE,
+    SOLID_CUBE,
     CHARGED,
     NONE
   }
@@ -45,12 +46,13 @@ public class Leds extends SubsystemBase {
   private int firstHue = 0;
   private static Leds leds;
   private boolean on;
-  private double lastChange;
   private GamePiece gamePiece;
   private Autostate autostate;
   private Animation animation;
+  private double lastChange;
   private boolean lastmodecahnge;
-  private Double interval;
+  private boolean lastItem;
+
 
   public Leds() {
     led = new AddressableLED(PortMap.Led.ledPort);
@@ -60,9 +62,7 @@ public class Leds extends SubsystemBase {
     led.start();
   }
 
-  public void setGamePiece(GamePiece gamePiece) {
-    this.gamePiece = gamePiece;
-  }
+
 
   public void setAutostate(Autostate autostate) {
     this.autostate = autostate;
@@ -96,11 +96,7 @@ public class Leds extends SubsystemBase {
     firstHue = (firstHue + 3) % 180;
   }
 
-  public void setBlinkParametrs(Double interval){
-    interval = this.interval;
-  }
-
-  public void blinkColorPattern(Color colorOne, Color colorTwo) {
+  public void blinkColorPattern( double interval,Color colorOne, Color colorTwo) {
     double timestamp = Timer.getFPGATimestamp();
 
     if (timestamp - lastChange > interval) {
@@ -187,25 +183,40 @@ public class Leds extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
-  public void setAnimation(Animation animation , Color color1 , Color color2 ) {
+  public void runAnimation(Animation animation) {
     
-    if (animation == Animation.SETCOLOR){
-      setSingleColor(color1);
+    if (animation == Animation.BLINK_CONE){
+      blinkColorPattern(0.5 , LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
       updateLeds();
-    } else if (animation == Animation.RAINBOW) {
-      rainbowColorPattern();
+    } else if (animation == Animation.BLINK_CUBE) {
+      blinkColorPattern(0.5 , LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
       updateLeds();
-    } else if (animation == Animation.BLINK) {
-      blinkColorPattern( color1, color2);
+    } else if (animation == Animation.SOLID_CONE) {
+      setSingleColor(LedsConstants.CONE_YELLOW);
+      updateLeds();
+    } else if (animation == Animation.SOLID_CUBE) {
+      setSingleColor(LedsConstants.CUBE_PURPLE);
       updateLeds();
     } else if (animation == Animation.CHARGED) {
-      cahrgedPattern(color1, color2);
+      cahrgedPattern(LedsConstants.MAcolor, LedsConstants.WHITE);
       updateLeds();
     } else if (animation == Animation.NONE) {
-      
+
     }
 
 
+  }
+
+  public void setAnimation(Animation setanimation) {
+    animation = setanimation;
+  }
+
+  public void setGamePiece() {
+    if (Intake.getInstance().isConeIn()) {
+      animation = Animation.SOLID_CONE;
+    } else if (Intake.getInstance().isCubeIn()) {
+      animation = Animation.SOLID_CUBE;
+    }
   }
 
   public void updateLeds() {
@@ -223,34 +234,12 @@ public class Leds extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     
-    
+          
+      runAnimation(animation);
       
-      if (gamePiece == GamePiece.CUBE) {
-        setBlinkParametrs(0.5);
-        animation = Animation.BLINK;
-        gamePiece = GamePiece.NONE;
-      } else if (gamePiece == GamePiece.CONE) {
-        setBlinkParametrs(0.5);
-        animation = Animation.BLINK;
-        gamePiece = GamePiece.NONE;
-      } else if (Intake.getInstance().isConeIn()) {
-        animation = Animation.NONE;
-        setSingleColor(LedsConstants.CONE_YELLOW);
-        updateLeds();
-        gamePiece = GamePiece.NONE  ;   
-      } else if (Intake.getInstance().isCubeIn()) {
-        animation = Animation.NONE;
-        setSingleColor(LedsConstants.CUBE_PURPLE);
-        updateLeds();
-        gamePiece = GamePiece.NONE;
-      }
-      
-      
-      setAnimation(animation, null, null);
-      
-    
     
   }
-    }
+}
+
   
 

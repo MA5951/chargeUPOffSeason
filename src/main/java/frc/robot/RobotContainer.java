@@ -29,6 +29,7 @@ import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.leds.Leds.Animation;
 import frc.robot.subsystems.leds.Leds.GamePiece;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
@@ -98,11 +99,13 @@ public class RobotContainer {
                 // eject, r2 = no timer eject
                 DRIVER_PS4_CONTROLLER.R1().whileTrue(
                                 new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))
-                                                .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)));
+                                                .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCone))
+                                                .andThen(new InstantCommand(() -> Leds.getInstance().setGamePiece())));
 
                 DRIVER_PS4_CONTROLLER.L1().whileTrue(
                                 new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(false))
-                                                .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
+                                                .andThen(new RunIntakeAutomation(IntakeConstance.IntakePowerForCube))
+                                                .andThen(new InstantCommand(() -> Leds.getInstance().setGamePiece())));
 
                 DRIVER_PS4_CONTROLLER.circle().whileTrue(new EjectAutomation())
                                 .whileFalse(new InstantCommand(Intake.getInstance()::removeGamePieces)
@@ -188,10 +191,10 @@ public class RobotContainer {
                                 new SetElvator(Elevator.getInstance().minHight));
 
                 OPERATOR_PS4_CONTROLLER.L1().onTrue(
-                                new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CONE)));
+                                new InstantCommand(() -> Leds.getInstance().setAnimation(Animation.BLINK_CONE)));
 
                 OPERATOR_PS4_CONTROLLER.R1().onTrue(
-                                new InstantCommand(() -> Leds.getInstance().setGamePiece(GamePiece.CUBE)));
+                                new InstantCommand(() -> Leds.getInstance().setAnimation(Animation.BLINK_CUBE)));
 
                 OPERATOR_PS4_CONTROLLER.R2().whileTrue(
                         new InstantCommand(() -> Intake.getInstance().setIgnoreSensor(true))

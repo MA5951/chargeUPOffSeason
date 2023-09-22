@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
             RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
             RobotContainer.DRIVER_PS4_CONTROLLER::getRightX));
 
-    Leds.getInstance().setGamePiece(GamePiece.NONE);
+    Leds.getInstance();
 
   }
 
