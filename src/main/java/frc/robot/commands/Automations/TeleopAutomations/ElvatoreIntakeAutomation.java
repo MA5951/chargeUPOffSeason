@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorConstance;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

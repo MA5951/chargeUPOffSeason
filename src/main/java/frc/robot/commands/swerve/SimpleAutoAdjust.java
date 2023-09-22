@@ -46,7 +46,7 @@ public class SimpleAutoAdjust extends CommandBase {
     double distance;
     if (photonVision.getPipeline() == Constants.pipline.apriltag) {
       distance = photonVision.getDistanceToTargetMeters();
-      distance = distance *-1;
+
     } else {
       distance = photonVision.getDistanceToTargetMeters(
           Constants.FieldConstants.reflectiveHight);
@@ -54,7 +54,7 @@ public class SimpleAutoAdjust extends CommandBase {
     double angle = Math.toRadians(photonVision.getYaw());
 
     swerve.drive(
-        -pidX.calculate(distance * Math.cos(angle)),
+        -pidX.calculate( -1 * distance * Math.cos(angle)),
         pidY.calculate(distance * Math.sin(angle)),
         SwerveDrivetrainSubsystem.getInstance().getThetaPID().calculate(
             SwerveDrivetrainSubsystem.getInstance().getPose().getRotation().getRadians(), thetaSetPoint),
