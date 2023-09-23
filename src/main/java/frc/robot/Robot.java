@@ -17,7 +17,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.leds.Leds.GamePiece;
+import frc.robot.subsystems.leds.Leds.Autostate;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -103,7 +103,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    Leds.getInstance().setAutostate(Autostate.NONE);
+
   }
+
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -130,7 +134,7 @@ public class Robot extends TimedRobot {
             RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
             RobotContainer.DRIVER_PS4_CONTROLLER::getRightX));
 
-    Leds.getInstance();
+
 
   }
 

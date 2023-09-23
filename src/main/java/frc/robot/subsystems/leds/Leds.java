@@ -6,8 +6,6 @@ package frc.robot.subsystems.leds;
 
 
 
-import com.ma5951.utils.led.BlinkingColorPattern;
-
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,7 +26,7 @@ public class Leds extends SubsystemBase {
   }
 
   public enum Autostate {
-    CLIMED,
+    BALAMCED,
     NONE
   }
 
@@ -61,7 +59,6 @@ public class Leds extends SubsystemBase {
     led.setData(ledBuffer);
     led.start();
   }
-
 
 
   public void setAutostate(Autostate autostate) {
@@ -183,27 +180,42 @@ public class Leds extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
-  public void runAnimation(Animation animation) {
+  public void runTeleopAnimation(Animation animation) {
     
-    if (animation == Animation.BLINK_CONE){
-      blinkColorPattern(0.5 , LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
-      updateLeds();
-    } else if (animation == Animation.BLINK_CUBE) {
-      blinkColorPattern(0.5 , LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
-      updateLeds();
-    } else if (animation == Animation.SOLID_CONE) {
-      setSingleColor(LedsConstants.CONE_YELLOW);
-      updateLeds();
-    } else if (animation == Animation.SOLID_CUBE) {
-      setSingleColor(LedsConstants.CUBE_PURPLE);
-      updateLeds();
-    } else if (animation == Animation.CHARGED) {
-      cahrgedPattern(LedsConstants.MAcolor, LedsConstants.WHITE);
-      updateLeds();
-    } else if (animation == Animation.NONE) {
+    switch(animation) {
+        case BLINK_CONE:
+          blinkColorPattern(0.5 , LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
+          updateLeds();
+        case BLINK_CUBE:
+          blinkColorPattern(0.5 , LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
+          updateLeds();
+        case SOLID_CONE:
+          setSingleColor(LedsConstants.CONE_YELLOW);
+          updateLeds();
+        case SOLID_CUBE:
+          setSingleColor(LedsConstants.CUBE_PURPLE);
+          updateLeds();
+        case CHARGED:
+          cahrgedPattern(LedsConstants.MAcolor, LedsConstants.WHITE);
+          updateLeds();
+        case NONE:
+
 
     }
 
+
+  }
+
+  public void runAutoAnimation(Autostate autostate) {
+
+    switch(autostate) {
+      case BALAMCED:
+        setSingleColor(LedsConstants.GREEN);
+        updateLeds();
+      case NONE:
+        smoothWaveColorPattern(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
+        updateLeds();
+    }
 
   }
 
@@ -230,12 +242,23 @@ public class Leds extends SubsystemBase {
     return leds;
   }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     
           
-      runAnimation(animation);
+      if (DriverStation.isDisabled()) {
+        setAllianceColor();
+      } else if (DriverStation.isAutonomous()) {
+        runAutoAnimation(autostate);
+      } else if (DriverStation.isTeleop()) {
+        runTeleopAnimation(animation);
+      } else if (DriverStation.isTest()) {
+
+      } else {
+
+      }
       
     
   }
