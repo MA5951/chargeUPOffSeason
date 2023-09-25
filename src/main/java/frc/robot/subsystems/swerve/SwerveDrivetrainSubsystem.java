@@ -456,9 +456,20 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     board.addNum("pitch", getPitch());
     board.addNum("Pipeline", RobotContainer.photonVision.getPipeline());
 
+    /* 
+    if (RobotContainer.photonVision.getPipeline() == 0 && RobotContainer.photonVision.hasTarget()) {
+      board.addNum("dis photon vision X",
+          RobotContainer.photonVision.getDistanceToTargetMeters() * Math.cos(
+              Math.toRadians(RobotContainer.photonVision.getYaw())));
+
+      board.addNum("dis photon vision Y",
+          RobotContainer.photonVision.getDistanceToTargetMeters() * Math.sin(
+              Math.toRadians(RobotContainer.photonVision.getYaw())));
+      board.addNum("yaw photon ", RobotContainer.photonVision.getYaw());
+    }
+    */
+
     field.setRobotPose(getPose());
-
-
 
     if (Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
       if (accelerationUpdated) {
