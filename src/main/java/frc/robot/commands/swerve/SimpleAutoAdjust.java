@@ -33,6 +33,7 @@ public class SimpleAutoAdjust extends CommandBase {
     pidX.setSetpoint(xSetPoint);
     pidY.setSetpoint(ySetPoint);
     this.thetaSetPoint = thetaSetPoint;
+    SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(0.4);
   }
 
   // Called when the command is initially scheduled.
@@ -72,6 +73,7 @@ public class SimpleAutoAdjust extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     swerve.stop();
+    SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1);
   }
 
   // Returns true when the command should end.

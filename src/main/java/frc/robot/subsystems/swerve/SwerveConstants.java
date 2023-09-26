@@ -74,7 +74,7 @@ public class SwerveConstants {
         public final static boolean DRIVE_ENBLE_CURRENT_LIMIT = true;
 
         // swerve physics
-        public final static double MAX_VELOCITY = 4.96824 * 0.1;
+        public final static double MAX_VELOCITY = 4.96824;
         public final static double MAX_ACCELERATION = Math.pow(MAX_VELOCITY, 2) / RADIUS;
         public final static double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / RADIUS; // radians
 
@@ -125,8 +125,8 @@ public class SwerveConstants {
         public final static double y_KI = 0;
         public final static double y_KD = 0;
 
-        public final static double shelfSetPointX = 1; // TODO
-        public final static double shelfSetPointY = -0.5; // TODO
+        public final static double shelfSetPointX = 0.8; // TODO
+        public final static double shelfSetPointY = -0.2; // TODO
 
         public final static double scoringSetPointXCone = 0.485083186873948;
         public final static double scoringSetPointYCone = 0.11;
