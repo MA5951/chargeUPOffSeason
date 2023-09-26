@@ -8,18 +8,18 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorConstance;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ShelfIntakeAutomation extends SequentialCommandGroup {
+public class ElvatoreIntakeAutomation extends SequentialCommandGroup {
   /** Creates a new ShelfIntakeAutomation. */
-  public ShelfIntakeAutomation(double power) {
+  public ElvatoreIntakeAutomation(double power , double hight) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new InstantCommand(() -> Elevator.getInstance().setSetPoint(ElevatorConstance.ShelfPose))
+      new InstantCommand(() -> Elevator.getInstance().setSetPoint(hight))
       .andThen(new RunIntakeAutomation(power))
     );
   }

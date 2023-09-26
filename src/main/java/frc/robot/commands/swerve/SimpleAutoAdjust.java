@@ -33,6 +33,7 @@ public class SimpleAutoAdjust extends CommandBase {
     pidX.setSetpoint(xSetPoint);
     pidY.setSetpoint(ySetPoint);
     this.thetaSetPoint = thetaSetPoint;
+    SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(0.4);
   }
 
   // Called when the command is initially scheduled.
@@ -44,26 +45,35 @@ public class SimpleAutoAdjust extends CommandBase {
   @Override
   public void execute() {
     double distance;
+    
     if (photonVision.getPipeline() == Constants.pipline.apriltag) {
       distance = photonVision.getDistanceToTargetMeters();
+      
+
     } else {
       distance = photonVision.getDistanceToTargetMeters(
           Constants.FieldConstants.reflectiveHight);
+
+      
     }
     double angle = Math.toRadians(photonVision.getYaw());
 
+    
+
     swerve.drive(
-        -pidX.calculate(distance * Math.cos(angle)),
+        -pidX.calculate( 1 * distance * Math.cos(angle)),
         pidY.calculate(distance * Math.sin(angle)),
         SwerveDrivetrainSubsystem.getInstance().getThetaPID().calculate(
             SwerveDrivetrainSubsystem.getInstance().getPose().getRotation().getRadians(), thetaSetPoint),
         false);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     swerve.stop();
+    SwerveDrivetrainSubsystem.getInstance().FactorVelocityTo(1);
   }
 
   // Returns true when the command should end.

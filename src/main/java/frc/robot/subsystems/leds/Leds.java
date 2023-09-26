@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.leds;
 
+
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,7 +26,16 @@ public class Leds extends SubsystemBase {
   }
 
   public enum Autostate {
-    CLIMED,
+    BALAMCED,
+    NONE
+  }
+
+  public enum Animation {
+    BLINK_CONE,
+    BLINK_CUBE,
+    SOLID_CONE,
+    SOLID_CUBE,
+    CHARGED,
     NONE
   }
   
@@ -33,9 +44,13 @@ public class Leds extends SubsystemBase {
   private int firstHue = 0;
   private static Leds leds;
   private boolean on;
-  private double lastChange;
   private GamePiece gamePiece;
   private Autostate autostate;
+  private Animation animation;
+  private double lastChange;
+  private boolean lastmodecahnge;
+  private boolean lastItem;
+
 
   public Leds() {
     led = new AddressableLED(PortMap.Led.ledPort);
@@ -45,9 +60,6 @@ public class Leds extends SubsystemBase {
     led.start();
   }
 
-  public void setGamePiece(GamePiece gamePiece) {
-    this.gamePiece = gamePiece;
-  }
 
   public void setAutostate(Autostate autostate) {
     this.autostate = autostate;
@@ -81,7 +93,7 @@ public class Leds extends SubsystemBase {
     firstHue = (firstHue + 3) % 180;
   }
 
-  public void blinkColorPattern(double interval ,Color color1, Color color2) {
+  public void blinkColorPattern( double interval,Color colorOne, Color colorTwo) {
     double timestamp = Timer.getFPGATimestamp();
 
     if (timestamp - lastChange > interval) {
@@ -89,10 +101,10 @@ public class Leds extends SubsystemBase {
         lastChange = timestamp;
     }
     if (on) {
-        setSingleColor(color1);;
+        setSingleColor(colorOne);;
     }
     else {
-        setSingleColor(color2);
+        setSingleColor(colorTwo);
     }
   }
 
@@ -110,8 +122,6 @@ public class Leds extends SubsystemBase {
       ledBuffer.setLED(i, currentColor);
     }
   }
-
-  
 
   public void smoothWaveColorPattern(int numColors, double period, double speed, Color[] colors) {
     double elapsedTime = Timer.getFPGATimestamp();
@@ -170,6 +180,50 @@ public class Leds extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
+  public void runTeleopAnimation(Animation animation) {
+    
+    if ( animation == Animation.BLINK_CONE) {
+      blinkColorPattern(0.5 , LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
+      updateLeds();
+    } else if ( animation == Animation.BLINK_CUBE) {
+      blinkColorPattern(0.5 , LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
+      updateLeds();
+    } else if ( animation == Animation.SOLID_CONE) {
+      setSingleColor(LedsConstants.CONE_YELLOW);
+      updateLeds();
+    } else if ( animation == Animation.SOLID_CUBE) {
+      setSingleColor(LedsConstants.CUBE_PURPLE);
+          updateLeds();
+    }
+
+  }
+
+  public void runAutoAnimation(Autostate autostate) {
+
+    if (autostate == Autostate.BALAMCED) {
+      setSingleColor(LedsConstants.GREEN);
+        updateLeds();
+    } else if (autostate == Autostate.NONE) {
+      smoothWaveColorPattern(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
+      updateLeds();
+    }
+
+  }
+
+  public void setAnimation(Animation setanimation) {
+    animation = setanimation;
+  }
+
+  public void setGamePiece() {
+    if (Intake.getInstance().isConeIn()) {
+      animation = Animation.SOLID_CONE;
+    } else if (Intake.getInstance().isCubeIn()) {
+      animation = Animation.SOLID_CUBE;
+    } else {
+      animation = Animation.NONE;
+    }
+  }
+
   public void updateLeds() {
     led.setData(ledBuffer);
   }
@@ -181,45 +235,27 @@ public class Leds extends SubsystemBase {
     return leds;
   }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     
-    if (DriverStation.isDisabled()) {
-      setAllianceColor();
-      updateLeds();
-    } else if (DriverStation.isTeleop()) {
-      if (Intake.getInstance().isCubeIn()) {
-        setSingleColor(LedsConstants.CUBE_PURPLE);
-        setGamePiece(GamePiece.NONE);
-        updateLeds();
-      } else if (Intake.getInstance().isConeIn()) {
-        setSingleColor(LedsConstants.CONE_YELLOW);
-        setGamePiece(GamePiece.NONE);
-        updateLeds();
-      } else if (gamePiece == GamePiece.CONE){
-        blinkColorPattern(0.5, LedsConstants.CONE_YELLOW , LedsConstants.BLACK);
-        updateLeds();
-      } else if (gamePiece == GamePiece.CUBE){
-        blinkColorPattern(0.5, LedsConstants.CUBE_PURPLE , LedsConstants.BLACK);
-        updateLeds();
-      } else if (Intake.getInstance().isPieceInIntake() == false) {
-        setGamePiece(GamePiece.NONE);
-        cahrgedPattern( LedsConstants.MAcolor , LedsConstants.WHITE);
-        updateLeds();
+          
+      if (DriverStation.isDisabled()) {
+        setAllianceColor();
+      } else if (DriverStation.isAutonomous()) {
+        //runAutoAnimation(autostate);
+      } else if (DriverStation.isTeleop()) {
+        runTeleopAnimation(animation);
+      } else if (DriverStation.isTest()) {
+
+      } else {
+
       }
       
-    } else if (DriverStation.isAutonomous()) {
-      if (autostate == Autostate.CLIMED){
-        smoothWaveColorPattern(2, 1, 1, new Color [] {LedsConstants.GREEN, LedsConstants.BLACK});
-        updateLeds();
-      }else {
-        smoothWaveColorPattern(3, 1, 1, new Color [] {LedsConstants.CONE_YELLOW, LedsConstants.CUBE_PURPLE, LedsConstants.CYAN});
-        updateLeds();
-      }
-    }
-    
     
   }
-  
 }
+
+  
+

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ma5951.utils.PhotonVision;
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -16,7 +17,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.subsystems.leds.Leds.GamePiece;
+import frc.robot.subsystems.leds.Leds.Autostate;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -76,8 +77,8 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    RobotContainer.photonVision.update();
 
-    Leds.getInstance();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -102,7 +103,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    Leds.getInstance().setAutostate(Autostate.NONE);
+
   }
+
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -129,14 +134,15 @@ public class Robot extends TimedRobot {
             RobotContainer.DRIVER_PS4_CONTROLLER::getLeftY,
             RobotContainer.DRIVER_PS4_CONTROLLER::getRightX));
 
-    Leds.getInstance().setGamePiece(GamePiece.NONE);
+
 
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    RobotContainer.photonVision.update();
+
+
     if (Intake.getInstance().isCubeIn() && !piplineChangedAptiltag) {
       RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
       piplineChangedAptiltag = true;
@@ -155,8 +161,8 @@ public class Robot extends TimedRobot {
       piplineChangedReflective = false;
       RobotContainer.photonVision.changePipeline(Constants.pipline.apriltag);
     }
-    // Leds.getInstance().SmoothWave(2, 0.5, 0.8, new Color []{LedsConstants.MAcolor
-    // , LedsConstants.WHITE});
+
+
 
   }
 
