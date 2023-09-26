@@ -43,29 +43,29 @@ public class SimpleAutoAdjust extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    int reverse;
     double distance;
     
     if (photonVision.getPipeline() == Constants.pipline.apriltag) {
       distance = photonVision.getDistanceToTargetMeters();
-      reverse = 1;
+      
 
     } else {
       distance = photonVision.getDistanceToTargetMeters(
           Constants.FieldConstants.reflectiveHight);
 
-      reverse = -1;
+      
     }
     double angle = Math.toRadians(photonVision.getYaw());
 
     
 
     swerve.drive(
-        -pidX.calculate( reverse * distance * Math.cos(angle)),
+        -pidX.calculate( 1 * distance * Math.cos(angle)),
         pidY.calculate(distance * Math.sin(angle)),
         SwerveDrivetrainSubsystem.getInstance().getThetaPID().calculate(
             SwerveDrivetrainSubsystem.getInstance().getPose().getRotation().getRadians(), thetaSetPoint),
         false);
+
   }
 
   // Called once the command ends or is interrupted.
