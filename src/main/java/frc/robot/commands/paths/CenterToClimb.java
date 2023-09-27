@@ -32,11 +32,11 @@ public class CenterToClimb extends SequentialCommandGroup {
                 addCommands(
                                 new ResetElevator(),
                                 new EjectAutomationAuto(ElevatorConstance.highPoseCone),
-                                swerve.getAutonomousPathCommand("center to climb a", true),
+                                swerve.getAutonomousPathCommand("center to climb 1", true , 1 , 1),
                                 new WaitCommand(1),
                                 new ParallelDeadlineGroup(
                                                 new WaitUntilCommand(CenterToClimb::isAtClimbAngle),
-                                                swerve.getAutonomousPathCommand("center to climb 2", false)),
+                                                swerve.getAutonomousPathCommand("center to climb 2", false , 1 , 1)),
                                 new WaitCommand(SwerveConstants.TIME_TO_CLIMB).raceWith(
                                                 new AutoBalance()),
                                 new ParallelDeadlineGroup(
