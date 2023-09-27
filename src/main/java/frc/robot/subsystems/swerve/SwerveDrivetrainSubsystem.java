@@ -367,14 +367,14 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     resetOdometry(pose);
   }
 
-  public PathPlannerTrajectory getTrajectory(String pathName) {
+  public PathPlannerTrajectory getTrajectory(String pathName , double maxVelocityForAuto , double maxAccelerationForAuto) {
     return PathPlanner.loadPath(pathName, new PathConstraints(
-        SwerveConstants.MAX_VELOCITY, 3));// SwerveConstants.maxVelocity, SwerveConstants.maxAcceleration));
+        maxVelocityForAuto, maxAccelerationForAuto));
   }
 
   public Command getAutonomousPathCommand(
-      String pathName, boolean isFirst) {
-    PathPlannerTrajectory trajectory = getTrajectory(pathName);
+      String pathName, boolean isFirst, double maxVelocityForAuto , double maxAccelerationForAuto) {
+    PathPlannerTrajectory trajectory = getTrajectory(pathName , maxVelocityForAuto , maxAccelerationForAuto );
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
           if (isFirst) {
@@ -396,7 +396,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   public Command getAutonomousPathCommand(
       String pathName) {
-    return getAutonomousPathCommand(pathName, false);
+    return getAutonomousPathCommand(pathName, false , SwerveConstants.MAX_VELOCITY , 3 );
   }
 
   public void updateOdometry() {
