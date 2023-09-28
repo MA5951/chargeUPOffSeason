@@ -36,7 +36,7 @@ public class CenterToClimb extends SequentialCommandGroup {
                                 new WaitCommand(1),
                                 new ParallelDeadlineGroup(
                                                 new WaitUntilCommand(CenterToClimb::isAtClimbAngle),
-                                                swerve.getAutonomousPathCommand("center to climb 2", false , 1 , 1)),
+                                                swerve.getAutonomousPathCommand("center to climb", false , 2.5 , 1)),
                                 new WaitCommand(SwerveConstants.TIME_TO_CLIMB).raceWith(
                                                 new AutoBalance()),
                                 new ParallelDeadlineGroup(
