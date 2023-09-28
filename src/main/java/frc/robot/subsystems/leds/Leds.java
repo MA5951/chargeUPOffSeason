@@ -244,7 +244,7 @@ public class Leds extends SubsystemBase {
       if (DriverStation.isDisabled()) {
         setAllianceColor();
       } else if (DriverStation.isAutonomous()) {
-        //runAutoAnimation(autostate);
+        runAutoAnimation(autostate);
       } else if (DriverStation.isTeleop()) {
         runTeleopAnimation(animation);
       } else if (DriverStation.isTest()) {

@@ -20,12 +20,14 @@ public class TwoPiceAutoLeft extends SequentialCommandGroup {
   /** Creates a new TwoPiceAuto. */
   public TwoPiceAutoLeft() {
     addCommands(
-        new ResetElevator(),
         new EjectAutomationAuto(ElevatorConstance.highPoseCone),
         new ParallelCommandGroup(
             SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1 left", true , 4 , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
         SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2 left", false , 4 , 3),
-        new EjectAutomationAuto(ElevatorConstance.ConeMidPose));
+        new EjectAutomationAuto(ElevatorConstance.ConeMidPose),
+        new ParallelCommandGroup(
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 3 Left", false , 4 , 3),
+            new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
   }
 }

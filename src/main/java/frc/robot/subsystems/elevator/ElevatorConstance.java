@@ -14,8 +14,8 @@ public class ElevatorConstance {
             / gear) * 1.11111111111111111111;
 
     public static final double tolerance = 0.03;
-
-    public static final double globalOffset = 0.01;
+    
+    public static final double globalOffset = 0.03;
     public static final double offset = 0.0;
     public static final double maxPose = 1.61 + offset;
     public static final double minPose = offset;

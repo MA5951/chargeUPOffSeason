@@ -32,9 +32,9 @@ public class TwoPiceAutoRight extends SequentialCommandGroup {
         new ResetElevator(),
         new EjectAutomationAuto(ElevatorConstance.highPoseCone),
         new ParallelCommandGroup(
-            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1 Right", true , 4 , 3),
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1 Right", true , 4.5 , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
-        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2 Right", false , 4 , 3),
+        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2 Right", false , 4.5 , 3),
         new InstantCommand(() -> Intake.getInstance().setCubeState(false)),
         new ParallelDeadlineGroup(
             new WaitCommand(0.3),
@@ -43,6 +43,8 @@ public class TwoPiceAutoRight extends SequentialCommandGroup {
             new RunInternallyControlledSubsystem(
                 Elevator.getInstance(), ElevatorConstance.highPoseCone, true),
             new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
-        new EjectAutomationByTimer());
+        new EjectAutomationAuto(ElevatorConstance.highPoseCone),
+        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 3 Right", false , 4.96 , 3));
+
   }
 }
