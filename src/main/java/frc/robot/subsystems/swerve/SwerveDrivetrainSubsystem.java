@@ -455,9 +455,8 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     board.addNum("roll", getRoll());
     board.addNum("pitch", getPitch());
     board.addNum("Pipeline", RobotContainer.photonVision.getPipeline());
-    board.addNum("radians", getPose().getRotation().getRadians());
-    
 
+  
     field.setRobotPose(getPose());
 
     if (Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {
