@@ -22,7 +22,7 @@ public class TwoPiceAutoLeft extends SequentialCommandGroup {
     addCommands(
         new EjectAutomationAuto(ElevatorConstance.highPoseCone),
         new ParallelCommandGroup(
-            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1 left", true , 4 , 3),
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1", true , 4 , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
         SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2 left", false , 4 , 3),
         new EjectAutomationAuto(ElevatorConstance.ConeMidPose),
