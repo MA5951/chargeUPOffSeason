@@ -30,12 +30,11 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.leds.Leds.Animation;
-import frc.robot.subsystems.leds.Leds.GamePiece;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
-import frc.robot.commands.paths.CenterToClimb;
-import frc.robot.commands.paths.TwoPiceAutoLeft;
-import frc.robot.commands.paths.TwoPiceAutoRight;
+import frc.robot.commands.paths.ClimeCommunity;
+import frc.robot.commands.paths.ThreeGamePice;
+import frc.robot.commands.paths.TwoGamePice;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -214,6 +213,6 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return new TwoPiceAutoLeft();
+                return new ClimeCommunity();
         }
 }
