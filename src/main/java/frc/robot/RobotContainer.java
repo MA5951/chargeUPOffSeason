@@ -115,20 +115,15 @@ public class RobotContainer {
                                                 
                 ;
                 DRIVER_PS4_CONTROLLER.povUp().whileTrue(
-                                new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(SwerveConstants.shelfAngle)))
-                                .whileFalse(new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(null)));
+                        new MotorCommand(
+                                Elevator.getInstance(),
+                                -0.3, 0));
+                                                
 
                 DRIVER_PS4_CONTROLLER.povDown().whileTrue(
-                                new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(SwerveConstants.gridAngle)))
-                                .whileFalse(new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(null)));
+                        new MotorCommand(
+                                Elevator.getInstance(),
+                                0.3, 0));
 
                 DRIVER_PS4_CONTROLLER.triangle().whileTrue(
                                 new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset()));
