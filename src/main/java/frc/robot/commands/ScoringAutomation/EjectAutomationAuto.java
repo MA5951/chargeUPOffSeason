@@ -30,7 +30,7 @@ public class EjectAutomationAuto extends SequentialCommandGroup {
     addCommands(
         new InstantCommand(() -> Intake.getInstance().setCubeState(false)),
         new ParallelDeadlineGroup(
-            new WaitCommand(0.3),
+            new WaitCommand(0.1),
             new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, IntakeConstance.HoldConePower)),
         new ParallelDeadlineGroup(
             new RunInternallyControlledSubsystem(

@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    wasAuto = true;
+    System.out.println();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
@@ -129,10 +129,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     
-    SwerveDrivetrainSubsystem.getInstance().setOffsetangle(180);
+    SwerveDrivetrainSubsystem.getInstance().setOffsetAfterAuto();
+    Elevator.getInstance().resetPose(0);
     Elevator.getInstance().setSetPoint(ElevatorConstance.minPose);
-    
-    Elevator.getInstance().setSetPoint(Elevator.getInstance().getExtension());
 
     CommandScheduler.getInstance().setDefaultCommand(
         SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(

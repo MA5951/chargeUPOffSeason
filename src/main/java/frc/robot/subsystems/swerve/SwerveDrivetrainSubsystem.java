@@ -50,7 +50,18 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 
 public class SwerveDrivetrainSubsystem extends SubsystemBase {
+  
+  public enum Auto {
+    TwoGamePice,
+    ThreeGamePice,
+    ClimeCommunity,
+    Clime,
+    NONE
+  }
+  
   private static SwerveDrivetrainSubsystem swerve;
+
+  private Auto autoplayed;
 
   private PIDController CONTROLLER_X;
   private PIDController CONTROLLER_Y;
@@ -63,6 +74,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   public boolean isXYReversed = true;
 
   private double offsetAngle = 0;
+  private double startAngle =0;
 
   private double acc = 0;
   private double lastVelocity = 0;
@@ -438,6 +450,22 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   public void setOffsetangle(double offset) {
     offsetAngle = offset;
+  }
+
+  public void setAuto (Auto auto) {
+    autoplayed = auto;
+  }
+
+  public void setSatrtAngle() {
+    startAngle = getFusedHeading();
+  }
+
+  public void setOffsetAfterAuto() {
+    if (autoplayed != Auto.NONE) {
+      setOffsetangle(getFusedHeading() + 180);
+    } else {
+      setOffsetangle(0);
+    }
   }
 
   public static SwerveDrivetrainSubsystem getInstance() {

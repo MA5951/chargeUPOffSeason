@@ -19,7 +19,9 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
+import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem.Auto;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -28,16 +30,17 @@ public class TwoGamePice extends SequentialCommandGroup {
   /** Creates a new OnePiceAuto. */
   public TwoGamePice() {
     addCommands(
-        new ResetElevator(),     
+        new InstantCommand(() ->SwerveDrivetrainSubsystem.getInstance().setAuto(Auto.TwoGamePice)),    
+    ///new ResetElevator(),     
     new EjectAutomationAuto(ElevatorConstance.highPoseCone),
         new ParallelCommandGroup(
-            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1", true , 4.5 , 3),
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1", true , SwerveConstants.MAX_VELOCITY , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
-        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2", false , 4.5 , 3),
+        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2", false , SwerveConstants.MAX_VELOCITY , 3),
         new InstantCommand(() -> Intake.getInstance().setCubeState(false)),
         new ParallelDeadlineGroup(
-            new WaitCommand(0.3),
-            new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, IntakeConstance.HoldConePower)),
+            new WaitCommand(0.07),
+            new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
         new ParallelDeadlineGroup(
             new RunInternallyControlledSubsystem(
                 Elevator.getInstance(), ElevatorConstance.highPoseCone, true),
