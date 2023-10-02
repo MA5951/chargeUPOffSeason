@@ -30,13 +30,13 @@ public class SetElvator extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+        // new ParallelDeadlineGroup(
+        //     new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
+        //     new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)),
+         new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
         new ParallelDeadlineGroup(
-            new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
-            new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)),
-        new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
-        new ParallelDeadlineGroup(
-            new WaitUntilCommand(Elevator.getInstance()::atPoint),
-            new MotorCommand(Intake.getInstance(), SetElvator::getPower, 0))
+            new WaitUntilCommand(Elevator.getInstance()::atPoint))
+
 
     );
   }
