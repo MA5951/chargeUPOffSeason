@@ -32,6 +32,7 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.leds.Leds.Animation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
+import frc.robot.commands.paths.Clime;
 import frc.robot.commands.paths.ClimeCommunity;
 import frc.robot.commands.paths.ThreeGamePice;
 import frc.robot.commands.paths.TwoGamePice;
@@ -113,13 +114,7 @@ public class RobotContainer {
                                                                 () -> Elevator.getInstance().setSetPoint(
                                                                                 ElevatorConstance.minPose))));
                                                 
-                ;
-                DRIVER_PS4_CONTROLLER.povUp().whileTrue(
-                        new MotorCommand(
-                                Elevator.getInstance(),
-                                -0.3, 0));
-                                                
-
+                
                 DRIVER_PS4_CONTROLLER.povDown().whileTrue(
                         new MotorCommand(
                                 Elevator.getInstance(),
@@ -196,6 +191,11 @@ public class RobotContainer {
                                                 .andThen(new ElvatoreIntakeAutomation(IntakeConstance.IntakePowerForCone , ElevatorConstance.RampPose)))
                                 .whileFalse(
                                                 new SetElvator(ElevatorConstance.minPose));
+
+                OPERATOR_PS4_CONTROLLER.L2().whileTrue(
+                        new MotorCommand(
+                                Elevator.getInstance(),
+                                0.3, 0));
                 
         }
 
@@ -208,6 +208,6 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return new ClimeCommunity();
+                return new TwoGamePice();
         }
 }
