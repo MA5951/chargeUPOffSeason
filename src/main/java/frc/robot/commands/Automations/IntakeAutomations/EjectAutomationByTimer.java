@@ -11,6 +11,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 
 public class EjectAutomationByTimer extends SequentialCommandGroup{
+    
     public EjectAutomationByTimer() {
         addCommands(
             new ParallelDeadlineGroup(
