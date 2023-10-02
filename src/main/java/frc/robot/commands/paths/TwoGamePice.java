@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.subsystems.elevator.Elevator;
@@ -27,7 +28,8 @@ public class TwoGamePice extends SequentialCommandGroup {
   /** Creates a new OnePiceAuto. */
   public TwoGamePice() {
     addCommands(
-        new EjectAutomationAuto(ElevatorConstance.highPoseCone),
+        new ResetElevator(),     
+    new EjectAutomationAuto(ElevatorConstance.highPoseCone),
         new ParallelCommandGroup(
             SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1", true , 4.5 , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
@@ -40,8 +42,8 @@ public class TwoGamePice extends SequentialCommandGroup {
             new RunInternallyControlledSubsystem(
                 Elevator.getInstance(), ElevatorConstance.highPoseCone, true),
             new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
-        new EjectAutomationAuto(ElevatorConstance.highPoseCone),
-        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 3", false , 4.96 , 3));
+        new EjectAutomationAuto(ElevatorConstance.highPoseCone));
+        //SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 3", false , 4.96 , 3));
 
   }
 }

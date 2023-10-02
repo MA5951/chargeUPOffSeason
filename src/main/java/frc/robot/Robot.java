@@ -10,6 +10,7 @@ import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.swerve.DriveSwerveCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
 
   public static double scoringSetPointX = SwerveConstants.scoringSetPointXCone;
   public static double scoringSetPointY = SwerveConstants.scoringSetPointYCone;
+  private boolean wasAuto = false;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -96,6 +98,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    wasAuto = true;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
 
@@ -105,6 +108,8 @@ public class Robot extends TimedRobot {
     }
 
     Leds.getInstance().setAutostate(Autostate.NONE);
+    
+
 
   }
 
@@ -123,9 +128,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    SwerveDrivetrainSubsystem.getInstance().resetNavx();
-
+    
+    SwerveDrivetrainSubsystem.getInstance().setOffsetangle(180);
+    Elevator.getInstance().setSetPoint(ElevatorConstance.minPose);
+    
     Elevator.getInstance().setSetPoint(Elevator.getInstance().getExtension());
 
     CommandScheduler.getInstance().setDefaultCommand(

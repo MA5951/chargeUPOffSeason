@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.commands.swerve.AutoBalance;
 import frc.robot.commands.swerve.LockModules;
@@ -29,7 +30,8 @@ public class ClimeCommunity extends SequentialCommandGroup {
         public ClimeCommunity() {
 
                 addCommands(
-                                new EjectAutomationAuto(ElevatorConstance.highPoseCone),
+                new ResetElevator(),                
+                new EjectAutomationAuto(ElevatorConstance.highPoseCone),
                                 swerve.getAutonomousPathCommand("center to climb 1", true , 1 , 1),
                                 swerve.getAutonomousPathCommand("center to climb 2", false , 3 , 2),
                                 new WaitCommand(0.6),

@@ -436,6 +436,10 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     }
   }
 
+  public void setOffsetangle(double offset) {
+    offsetAngle = offset;
+  }
+
   public static SwerveDrivetrainSubsystem getInstance() {
     if (swerve == null) {
       swerve = new SwerveDrivetrainSubsystem();
@@ -451,7 +455,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
     lastVelocity = frontLeftModule.getDriveVelocity();
 
-    board.addNum("angle in degrees", getPose().getRotation().getDegrees());
+    board.addNum("angle in degrees", getFusedHeading());
     board.addNum("roll", getRoll());
     board.addNum("pitch", getPitch());
     board.addNum("Pipeline", RobotContainer.photonVision.getPipeline());

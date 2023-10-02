@@ -6,6 +6,8 @@ package frc.robot.commands.paths;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
+import frc.robot.commands.Automations.IntakeAutomations.EjectAutomationByTimer;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.subsystems.elevator.ElevatorConstance;
@@ -19,12 +21,13 @@ public class ThreeGamePice extends SequentialCommandGroup {
   /** Creates a new TwoPiceAuto. */
   public ThreeGamePice() {
     addCommands(
-        new EjectAutomationAuto(ElevatorConstance.highPoseCone),
+      new ResetElevator(),     
+    new EjectAutomationAuto(ElevatorConstance.highPoseCone),
         new ParallelCommandGroup(
-            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs 1 ", true , 4 , 3),
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs 1", true , 4 , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
         SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs 2", false , 4 , 3),
-        new EjectAutomationAuto(ElevatorConstance.ConeMidPose),
+        new EjectAutomationByTimer(),
         new ParallelCommandGroup(
             SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs 3", false , 4 , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
