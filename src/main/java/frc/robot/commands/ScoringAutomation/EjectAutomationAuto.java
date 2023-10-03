@@ -22,13 +22,15 @@ import frc.robot.subsystems.intake.IntakeConstance;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class EjectAutomationAuto extends SequentialCommandGroup {
   /** Creates a new EjectAutomationAuto. */
-  public EjectAutomationAuto(double scoring_pose) {
+  public EjectAutomationAuto(double scoring_pose ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    
+    
     addCommands(
         new InstantCommand(() -> Intake.getInstance().setCubeState(false)),
         new ParallelDeadlineGroup(
-            new WaitCommand(0.3),
+            new WaitCommand(0.1),
             new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, IntakeConstance.HoldConePower)),
         new ParallelDeadlineGroup(
             new RunInternallyControlledSubsystem(

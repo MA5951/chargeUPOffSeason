@@ -4,12 +4,9 @@
 
 package frc.robot.commands.Automations.ElevatorAutomations;
 
-import com.ma5951.utils.commands.MotorCommand;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.intake.Intake;
@@ -30,13 +27,13 @@ public class SetElvator extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+        // new ParallelDeadlineGroup(
+        //     new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
+        //     new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)),
+         new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
         new ParallelDeadlineGroup(
-            new WaitCommand(IntakeConstance.ElevatorEccalHoldeTime),
-            new MotorCommand(Intake.getInstance(), SetElvator::getPower, SetElvator::getPower)),
-        new InstantCommand(() -> Elevator.getInstance().setSetPoint(setPoint)),
-        new ParallelDeadlineGroup(
-            new WaitUntilCommand(Elevator.getInstance()::atPoint),
-            new MotorCommand(Intake.getInstance(), SetElvator::getPower, 0))
+            new WaitUntilCommand(Elevator.getInstance()::atPoint))
+
 
     );
   }

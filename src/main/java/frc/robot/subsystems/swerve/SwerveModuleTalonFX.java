@@ -12,7 +12,6 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
-/** Add your docs here. */
 public class SwerveModuleTalonFX extends SwerveModule{
 
     private final TalonFX driveMotor;

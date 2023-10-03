@@ -50,7 +50,17 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 
 public class SwerveDrivetrainSubsystem extends SubsystemBase {
+  
+  public enum Auto {
+    TwoGamePice,
+    ThreeGamePice,
+    ClimeCommunity,
+    Clime,
+    NONE
+  }
+  
   private static SwerveDrivetrainSubsystem swerve;
+
 
   private PIDController CONTROLLER_X;
   private PIDController CONTROLLER_Y;
@@ -63,6 +73,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   public boolean isXYReversed = true;
 
   private double offsetAngle = 0;
+  private double startAngle =0;
 
   private double acc = 0;
   private double lastVelocity = 0;
@@ -367,14 +378,14 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     resetOdometry(pose);
   }
 
-  public PathPlannerTrajectory getTrajectory(String pathName) {
+  public PathPlannerTrajectory getTrajectory(String pathName , double maxVelocityForAuto , double maxAccelerationForAuto) {
     return PathPlanner.loadPath(pathName, new PathConstraints(
-        SwerveConstants.MAX_VELOCITY, 3));// SwerveConstants.maxVelocity, SwerveConstants.maxAcceleration));
+        maxVelocityForAuto, maxAccelerationForAuto));
   }
 
   public Command getAutonomousPathCommand(
-      String pathName, boolean isFirst) {
-    PathPlannerTrajectory trajectory = getTrajectory(pathName);
+      String pathName, boolean isFirst, double maxVelocityForAuto , double maxAccelerationForAuto) {
+    PathPlannerTrajectory trajectory = getTrajectory(pathName , maxVelocityForAuto , maxAccelerationForAuto );
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
           if (isFirst) {
@@ -396,7 +407,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   public Command getAutonomousPathCommand(
       String pathName) {
-    return getAutonomousPathCommand(pathName, false);
+    return getAutonomousPathCommand(pathName, false , SwerveConstants.MAX_VELOCITY , 3 );
   }
 
   public void updateOdometry() {
@@ -436,6 +447,18 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     }
   }
 
+  public void setOffsetangle(double offset) {
+    offsetAngle = offset;
+  }
+
+  public void setSatrtAngle() {
+    startAngle = getFusedHeading();
+  }
+
+  public void setOffsetAfterAuto() {
+      setOffsetangle(startAngle + 180);
+  }
+
   public static SwerveDrivetrainSubsystem getInstance() {
     if (swerve == null) {
       swerve = new SwerveDrivetrainSubsystem();
@@ -451,13 +474,12 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
     lastVelocity = frontLeftModule.getDriveVelocity();
 
-    board.addNum("angle in degrees", getPose().getRotation().getDegrees());
+    board.addNum("angle in degrees", getFusedHeading());
     board.addNum("roll", getRoll());
     board.addNum("pitch", getPitch());
     board.addNum("Pipeline", RobotContainer.photonVision.getPipeline());
-    board.addNum("radians", getPose().getRotation().getRadians());
-    
 
+  
     field.setRobotPose(getPose());
 
     if (Elevator.getInstance().getSetPoint() > ElevatorConstance.minPose) {

@@ -28,6 +28,8 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
 
     private boolean cubeInIntake = false;
 
+
+
     private Intake() {
         intakeMotor = new CANSparkMax(PortMap.Intake.intakeMotorID, MotorType.kBrushless);
 
@@ -102,10 +104,12 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void periodic() {
         board.addBoolean("Is Cone in Intake", isConeIn());
         board.addBoolean("Is cube in Intake", isCubeIn());
+        
         if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent && ignoreSensor) {
             setConeState(true);
         }
 
+       
         if ((getSensor() || 
             (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent)) 
             && !ignoreSensor) {

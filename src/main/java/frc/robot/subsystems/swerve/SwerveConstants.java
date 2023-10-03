@@ -2,8 +2,8 @@ package frc.robot.subsystems.swerve;
 
 public class SwerveConstants {
         // swerve constants
-        public final static double WIDTH = 0.66; // TODO
-        public final static double LENGTH = 0.66; // TODO
+        public final static double WIDTH = 0.66;
+        public final static double LENGTH = 0.66;
         public final static double RADIUS = Math.sqrt(
                         Math.pow(WIDTH, 2) + Math.pow(LENGTH, 2)) / 2;
 
@@ -134,8 +134,7 @@ public class SwerveConstants {
         public final static double scoringSetPointXCube = -0.15;
         public final static double scoringSetPointYCube = 0;
 
-        public final static double shelfAngle = 
-        0;
+        public final static double shelfAngle = 0;
         public final static double gridAngle = Math.PI;
 
 }

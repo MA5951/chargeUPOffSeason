@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import com.ma5951.utils.PhotonVision;
+
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
 
   public static double scoringSetPointX = SwerveConstants.scoringSetPointXCone;
   public static double scoringSetPointY = SwerveConstants.scoringSetPointYCone;
+
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -103,8 +104,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
+    SwerveDrivetrainSubsystem.getInstance().setSatrtAngle();
     Leds.getInstance().setAutostate(Autostate.NONE);
+    
+
 
   }
 
@@ -123,10 +126,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    SwerveDrivetrainSubsystem.getInstance().resetNavx();
-
-    Elevator.getInstance().setSetPoint(Elevator.getInstance().getExtension());
+    
+    SwerveDrivetrainSubsystem.getInstance().setOffsetAfterAuto();
+    Elevator.getInstance().resetPose(0);
+    Elevator.getInstance().setSetPoint(ElevatorConstance.minPose);
 
     CommandScheduler.getInstance().setDefaultCommand(
         SwerveDrivetrainSubsystem.getInstance(), new DriveSwerveCommand(

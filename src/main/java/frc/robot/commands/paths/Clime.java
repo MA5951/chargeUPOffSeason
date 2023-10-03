@@ -19,7 +19,7 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 
 
-public class CenterToClimb extends SequentialCommandGroup {
+public class Clime extends SequentialCommandGroup {
 
         private static SwerveDrivetrainSubsystem swerve = SwerveDrivetrainSubsystem.getInstance();
 
@@ -27,16 +27,14 @@ public class CenterToClimb extends SequentialCommandGroup {
                 return Math.abs(swerve.getPitch()) > SwerveConstants.ANGLE_BEFORE_CLIMB;
         }
 
-        public CenterToClimb() {
+        public Clime() {
 
-                addCommands(
-                                new ResetElevator(),
-                                new EjectAutomationAuto(ElevatorConstance.highPoseCone),
-                                swerve.getAutonomousPathCommand("center to climb a", true),
-                                new WaitCommand(1),
+                addCommands(    
+                        new ResetElevator(),           
+                new EjectAutomationAuto(ElevatorConstance.highPoseCone),
                                 new ParallelDeadlineGroup(
-                                                new WaitUntilCommand(CenterToClimb::isAtClimbAngle),
-                                                swerve.getAutonomousPathCommand("center to climb 2", false)),
+                                                new WaitUntilCommand(Clime::isAtClimbAngle),
+                                                swerve.getAutonomousPathCommand("center to climb 1", true , 1 , 1)),
                                 new WaitCommand(SwerveConstants.TIME_TO_CLIMB).raceWith(
                                                 new AutoBalance()),
                                 new ParallelDeadlineGroup(

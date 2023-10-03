@@ -44,13 +44,9 @@ public class Leds extends SubsystemBase {
   private int firstHue = 0;
   private static Leds leds;
   private boolean on;
-  private GamePiece gamePiece;
   private Autostate autostate;
   private Animation animation;
   private double lastChange;
-  private boolean lastmodecahnge;
-  private boolean lastItem;
-
 
   public Leds() {
     led = new AddressableLED(PortMap.Led.ledPort);
@@ -244,7 +240,7 @@ public class Leds extends SubsystemBase {
       if (DriverStation.isDisabled()) {
         setAllianceColor();
       } else if (DriverStation.isAutonomous()) {
-        //runAutoAnimation(autostate);
+        runAutoAnimation(autostate);
       } else if (DriverStation.isTeleop()) {
         runTeleopAnimation(animation);
       } else if (DriverStation.isTest()) {

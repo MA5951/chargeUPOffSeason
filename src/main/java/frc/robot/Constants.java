@@ -24,17 +24,17 @@ public final class Constants {
         public static final Alliance alliance = Alliance.Red;
 
         public static class Camera {
-                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_X = alliance == Alliance.Blue ? -0.2 : 0.4; // TODO
+                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_X = alliance == Alliance.Blue ? -0.2 : 0.4;
 
-                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Y = alliance == Alliance.Blue ? 0.434 : 0.41; // TODO
+                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Y = alliance == Alliance.Blue ? 0.434 : 0.41;
 
-                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Z = alliance == Alliance.Blue ? 0.52 : 0.52; // TODO
+                public static final double CAMERA_DISTANCE_FROM_CENTER_IN_Z = alliance == Alliance.Blue ? 0.52 : 0.52;
 
-                public static final double CAMERA_ROLL = alliance == Alliance.Blue ? 0 : 0; // TODO
+                public static final double CAMERA_ROLL = alliance == Alliance.Blue ? 0 : 0; 
 
-                public static final double CAMERA_PITCH = alliance == Alliance.Blue ? 0 : 0; // TODO
+                public static final double CAMERA_PITCH = alliance == Alliance.Blue ? 0 : 0;
 
-                public static final double CAMERA_YAW = alliance == Alliance.Blue ? 0 : 0; // TODO
+                public static final double CAMERA_YAW = alliance == Alliance.Blue ? 0 : 0;
         }
 
         public static class ColorPresets {

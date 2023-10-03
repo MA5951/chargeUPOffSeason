@@ -30,11 +30,9 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.leds.Leds.Animation;
-import frc.robot.subsystems.leds.Leds.GamePiece;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
-import frc.robot.commands.paths.CenterToClimb;
-import frc.robot.commands.paths.TwoPiceAutoRight;
+import frc.robot.commands.paths.ClimeCommunity;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -113,22 +111,11 @@ public class RobotContainer {
                                                                 () -> Elevator.getInstance().setSetPoint(
                                                                                 ElevatorConstance.minPose))));
                                                 
-                ;
-                DRIVER_PS4_CONTROLLER.povUp().whileTrue(
-                                new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(SwerveConstants.shelfAngle)))
-                                .whileFalse(new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(null)));
-
+                
                 DRIVER_PS4_CONTROLLER.povDown().whileTrue(
-                                new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(SwerveConstants.gridAngle)))
-                                .whileFalse(new InstantCommand(
-                                                () -> SwerveDrivetrainSubsystem.getInstance()
-                                                                .setAngleAlign(null)));
+                        new MotorCommand(
+                                Elevator.getInstance(),
+                                0.3, 0));
 
                 DRIVER_PS4_CONTROLLER.triangle().whileTrue(
                                 new InstantCommand(() -> SwerveDrivetrainSubsystem.getInstance().updateOffset()));
@@ -201,6 +188,11 @@ public class RobotContainer {
                                                 .andThen(new ElvatoreIntakeAutomation(IntakeConstance.IntakePowerForCone , ElevatorConstance.RampPose)))
                                 .whileFalse(
                                                 new SetElvator(ElevatorConstance.minPose));
+
+                OPERATOR_PS4_CONTROLLER.L2().whileTrue(
+                        new MotorCommand(
+                                Elevator.getInstance(),
+                                0.3, 0));
                 
         }
 
@@ -213,6 +205,12 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An example command will be run in autonomous
-                return new CenterToClimb();
+                // *TODO*
+                // Clime
+                // ClimeCommunity
+                // ThreeGamePice
+                // TwoGamePice
+                
+                return new ClimeCommunity();
         }
 }
