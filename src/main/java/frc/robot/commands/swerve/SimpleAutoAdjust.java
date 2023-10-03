@@ -46,26 +46,28 @@ public class SimpleAutoAdjust extends CommandBase {
   public void execute() {
     double distance;
     
-    if (photonVision.getPipeline() == Constants.pipline.apriltag) {
-      distance = photonVision.getDistanceToTargetMeters();
+    if (photonVision.hasTarget()) {
+      if (photonVision.getPipeline() == Constants.pipline.apriltag) {
+        distance = photonVision.getDistanceToTargetMeters();
+        
+  
+      } else {
+        distance = photonVision.getDistanceToTargetMeters(
+            Constants.FieldConstants.reflectiveHight);
+  
+        
+      }
+      double angle = Math.toRadians(photonVision.getYaw());
+  
       
-
-    } else {
-      distance = photonVision.getDistanceToTargetMeters(
-          Constants.FieldConstants.reflectiveHight);
-
-      
+  
+      swerve.drive(
+          -pidX.calculate( 1 * distance * Math.cos(angle)),
+          pidY.calculate(distance * Math.sin(angle)),
+          SwerveDrivetrainSubsystem.getInstance().getThetaPID().calculate(
+              SwerveDrivetrainSubsystem.getInstance().getPose().getRotation().getRadians(), thetaSetPoint),
+          false);
     }
-    double angle = Math.toRadians(photonVision.getYaw());
-
-    
-
-    swerve.drive(
-        -pidX.calculate( 1 * distance * Math.cos(angle)),
-        pidY.calculate(distance * Math.sin(angle)),
-        SwerveDrivetrainSubsystem.getInstance().getThetaPID().calculate(
-            SwerveDrivetrainSubsystem.getInstance().getPose().getRotation().getRadians(), thetaSetPoint),
-        false);
 
   }
 

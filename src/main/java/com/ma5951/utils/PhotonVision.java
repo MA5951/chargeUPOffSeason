@@ -194,7 +194,7 @@ public class PhotonVision {
             return false;
         }else if ( getPipeline() == 0 && getTargetID() <= 8) {
             return true;
-        } else if ( getPipeline() == 1) {
+        } else if ( getPipeline() == 1 && result.hasTargets()) {
             return true;
         } else {
             return false;
