@@ -13,6 +13,7 @@ import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.subsystems.elevator.ElevatorConstance;
 import frc.robot.subsystems.intake.IntakeConstance;
+import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem.Auto;
 
@@ -24,15 +25,14 @@ public class ThreeGamePice extends SequentialCommandGroup {
   public ThreeGamePice() {
     addCommands(
       new InstantCommand(() ->SwerveDrivetrainSubsystem.getInstance().setAuto(Auto.ThreeGamePice)),  
-    new ResetElevator(),     
     new EjectAutomationAuto(ElevatorConstance.highPoseCone),
-        new ParallelCommandGroup(
-            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs 1", true , 4 , 3),
+    new ParallelCommandGroup(
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs1", true , SwerveConstants.MAX_VELOCITY , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
-        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs 2", false , 4 , 3),
-        new EjectAutomationByTimer(),
+        SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs2", false , SwerveConstants.MAX_VELOCITY , 3),
+        new EjectAutomationAuto(ElevatorConstance.lowPose),
         new ParallelCommandGroup(
-            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs 3", false , 4 , 3),
+            SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Three game pcs3", false , SwerveConstants.MAX_VELOCITY , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCube)));
   }
 }

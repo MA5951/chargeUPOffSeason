@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
+    SwerveDrivetrainSubsystem.getInstance().setSatrtAngle();
     Leds.getInstance().setAutostate(Autostate.NONE);
     
 

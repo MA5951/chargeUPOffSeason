@@ -461,11 +461,7 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   }
 
   public void setOffsetAfterAuto() {
-    if (autoplayed != Auto.NONE) {
-      setOffsetangle(getFusedHeading() + 180);
-    } else {
-      setOffsetangle(0);
-    }
+      setOffsetangle(startAngle + 180);
   }
 
   public static SwerveDrivetrainSubsystem getInstance() {
