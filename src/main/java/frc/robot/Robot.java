@@ -4,13 +4,12 @@
 
 package frc.robot;
 
-import com.ma5951.utils.PhotonVision;
+
 import com.ma5951.utils.commands.DefaultRunInternallyControlledSubsystem;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.swerve.DriveSwerveCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstance;
@@ -38,7 +37,7 @@ public class Robot extends TimedRobot {
 
   public static double scoringSetPointX = SwerveConstants.scoringSetPointXCone;
   public static double scoringSetPointY = SwerveConstants.scoringSetPointYCone;
-  private boolean wasAuto = false;
+
 
   /**
    * This function is run when the robot is first started up and should be used
