@@ -97,7 +97,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    System.out.println();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SwerveDrivetrainSubsystem.getInstance().resetNavx();
 

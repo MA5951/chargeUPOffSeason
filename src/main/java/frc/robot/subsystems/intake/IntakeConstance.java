@@ -15,6 +15,5 @@ public class IntakeConstance {
 
 
     public static final double HoldConePower = -0.2;
-    // The power to holde the cone while the elvator is accel **TODO**
 
 }

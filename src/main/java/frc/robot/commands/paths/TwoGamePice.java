@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.Automations.ElevatorAutomations.ResetElevator;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.commands.ScoringAutomation.EjectAutomationAuto;
 import frc.robot.subsystems.elevator.Elevator;
@@ -21,7 +20,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstance;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
-import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem.Auto;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -29,9 +27,7 @@ import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem.Auto;
 public class TwoGamePice extends SequentialCommandGroup {
   /** Creates a new OnePiceAuto. */
   public TwoGamePice() {
-    addCommands(
-        new InstantCommand(() ->SwerveDrivetrainSubsystem.getInstance().setAuto(Auto.TwoGamePice)),    
-    ///new ResetElevator(),     
+    addCommands(     
     new EjectAutomationAuto(ElevatorConstance.highPoseCone),
         new ParallelCommandGroup(
             SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1", true , SwerveConstants.MAX_VELOCITY , 3),

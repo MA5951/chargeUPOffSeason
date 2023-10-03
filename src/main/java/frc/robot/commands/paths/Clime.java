@@ -17,7 +17,6 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.leds.Leds.Autostate;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
-import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem.Auto;
 
 
 public class Clime extends SequentialCommandGroup {
@@ -30,8 +29,7 @@ public class Clime extends SequentialCommandGroup {
 
         public Clime() {
 
-                addCommands(
-                        new InstantCommand(() ->SwerveDrivetrainSubsystem.getInstance().setAuto(Auto.Clime)),    
+                addCommands(    
                         new ResetElevator(),           
                 new EjectAutomationAuto(ElevatorConstance.highPoseCone),
                                 new ParallelDeadlineGroup(

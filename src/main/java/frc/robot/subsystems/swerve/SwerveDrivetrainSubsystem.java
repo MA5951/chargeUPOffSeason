@@ -61,7 +61,6 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
   
   private static SwerveDrivetrainSubsystem swerve;
 
-  private Auto autoplayed;
 
   private PIDController CONTROLLER_X;
   private PIDController CONTROLLER_Y;
@@ -450,10 +449,6 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
 
   public void setOffsetangle(double offset) {
     offsetAngle = offset;
-  }
-
-  public void setAuto (Auto auto) {
-    autoplayed = auto;
   }
 
   public void setSatrtAngle() {

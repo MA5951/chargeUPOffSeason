@@ -128,7 +128,7 @@ public class Elevator extends SubsystemBase implements
       midhight = ElevatorConstance.CubeMidPose;
       highHight = ElevatorConstance.highPoseCube;
     } else {
-      highHight = ElevatorConstance.ConeMidPose;
+      midhight = ElevatorConstance.ConeMidPose; // Changed from high hight to mid higt
       highHight = ElevatorConstance.highPoseCone;
     }
   }
