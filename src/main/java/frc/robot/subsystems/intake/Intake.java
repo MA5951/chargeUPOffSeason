@@ -16,6 +16,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
 
     private static Intake intake;
 
+    
     private CANSparkMax intakeMotor;
     private DigitalInput sensor;
 
@@ -104,6 +105,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
     public void periodic() {
         board.addBoolean("Is Cone in Intake", isConeIn());
         board.addBoolean("Is cube in Intake", isCubeIn());
+        board.addNum("Current", getMotorCurrent());
         
         if (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent && ignoreSensor) {
             setConeState(true);
