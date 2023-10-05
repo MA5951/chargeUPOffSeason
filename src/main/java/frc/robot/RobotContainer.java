@@ -33,6 +33,7 @@ import frc.robot.subsystems.leds.Leds.Animation;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrainSubsystem;
 import frc.robot.commands.paths.ClimeCommunity;
+import frc.robot.commands.paths.TwoGamePice;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -141,6 +142,8 @@ public class RobotContainer {
                                 new MotorCommand(Intake.getInstance(), IntakeConstance.IntakePowerForCone, 0));
 
                 DRIVER_PS4_CONTROLLER.povLeft().whileTrue(new ResetElevator());
+
+                DRIVER_PS4_CONTROLLER.options().whileTrue(new InstantCommand(Intake.getInstance()::removeGamePieces));
 
                 DRIVER_PS4_CONTROLLER.cross().whileTrue(new SimpleAutoAdjust(
                                 Robot.scoringSetPointX, Robot.scoringSetPointY,
