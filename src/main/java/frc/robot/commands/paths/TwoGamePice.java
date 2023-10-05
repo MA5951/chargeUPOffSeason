@@ -33,16 +33,17 @@ public class TwoGamePice extends SequentialCommandGroup {
             SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 1", true , SwerveConstants.MAX_VELOCITY , 3),
             new RunIntakeAutomation(IntakeConstance.IntakePowerForCone)),
         SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 2", false , SwerveConstants.MAX_VELOCITY , 3),
-        new InstantCommand(() -> Intake.getInstance().setCubeState(false)),
-        new ParallelDeadlineGroup(
-            new WaitCommand(0.07),
-            new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
-        new ParallelDeadlineGroup(
-            new RunInternallyControlledSubsystem(
-                Elevator.getInstance(), ElevatorConstance.highPoseCone, true),
-            new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
-        new EjectAutomationAuto(ElevatorConstance.highPoseCone));
-        //SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 3", false , 4.96 , 3));
+        new InstantCommand(() -> Intake.getInstance().setCubeState(false)));
+        // new ParallelDeadlineGroup(
+        //     new WaitCommand(0.07),
+        //     new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
+        // new ParallelDeadlineGroup(
+        //     new RunInternallyControlledSubsystem(
+        //         Elevator.getInstance(), ElevatorConstance.highPoseCone, true),
+        //     new MotorCommand(Intake.getInstance(), IntakeConstance.HoldConePower, 0)),
+        // new EjectAutomationAuto(ElevatorConstance.highPoseCone));
+        
+        ////SwerveDrivetrainSubsystem.getInstance().getAutonomousPathCommand("Two game pcs 3", false , 4.96 , 3));
 
   }
 }
