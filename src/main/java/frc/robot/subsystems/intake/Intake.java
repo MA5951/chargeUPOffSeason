@@ -117,7 +117,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         }
 
        
-        if (getSensor()  && !ignoreCurrent && !ignoreSensor) {
+        if ((getSensor() || getMotorCurrent() > IntakeConstance.currentAmpThresholdCube )&& !ignoreCurrent && !ignoreSensor) {
             setCubeState(true);
         }
     }

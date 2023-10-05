@@ -478,7 +478,11 @@ public class SwerveDrivetrainSubsystem extends SubsystemBase {
     board.addNum("roll", getRoll());
     board.addNum("pitch", getPitch());
     board.addNum("Pipeline", RobotContainer.photonVision.getPipeline());
-
+    
+    board.addNum("Angle fl" , frontLeftModule.getPosition().angle.getDegrees() );
+    board.addNum("Angle fr" , frontRightModule.getPosition().angle.getDegrees() );
+    board.addNum("Angle rl" , rearLeftModule.getPosition().angle.getDegrees() );
+    board.addNum("Angle rr" , rearRightModule.getPosition().angle.getDegrees() );
   
     field.setRobotPose(getPose());
 
