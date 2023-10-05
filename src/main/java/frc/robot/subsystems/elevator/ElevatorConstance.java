@@ -16,7 +16,7 @@ public class ElevatorConstance {
     public static final double tolerance = 0.03;
     
     public static final double hightOffset = 0.03;
-    public static final double offset = 0.01;
+    public static final double offset = 0.055;
     public static final double maxPose = 1.61 + offset;
     public static final double minPose = offset;
 
