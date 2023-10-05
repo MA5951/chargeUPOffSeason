@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Automations.IntakeAutomations.RunIntakeAutomation;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.intake.Intake;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -19,7 +20,8 @@ public class ElvatoreIntakeAutomation extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new InstantCommand(() -> Elevator.getInstance().setSetPoint(hight))
+      //new InstantCommand(Intake.getInstance()::removeGamePieces),  
+    new InstantCommand(() -> Elevator.getInstance().setSetPoint(hight))
       .andThen(new RunIntakeAutomation(power))
     );
   }
