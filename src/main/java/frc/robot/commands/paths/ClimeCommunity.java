@@ -34,7 +34,7 @@ public class ClimeCommunity extends SequentialCommandGroup {
                 new EjectAutomationAuto(ElevatorConstance.highPoseCone + 0.03),
                                 swerve.getAutonomousPathCommand("center to climb 1", true , 1.5 , 1),
                                 swerve.getAutonomousPathCommand("center to climb 2", false , 3.8 , 2),
-                                new WaitCommand(0.25),
+                                new WaitCommand(0.6),
                                 new ParallelDeadlineGroup(
                                                 new WaitUntilCommand(ClimeCommunity::isAtClimbAngle),
                                                 swerve.getAutonomousPathCommand("center to climb 3", false , 3 , 2)),
