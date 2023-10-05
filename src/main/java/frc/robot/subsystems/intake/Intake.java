@@ -68,6 +68,11 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         setIgnoreSensor(true);
     }
 
+    public void removeGamePieces1() {
+        setConeState(false);
+        setCubeState(false);
+    }
+
     public boolean isCubeIn() {
         return cubeInIntake;
     }
@@ -112,9 +117,7 @@ public class Intake extends SubsystemBase implements MotorSubsystem{
         }
 
        
-        if ((getSensor() || 
-            (getMotorCurrent() > IntakeConstance.currentAmpThreshold && !ignoreCurrent)) 
-            && !ignoreSensor) {
+        if (getSensor()  && !ignoreCurrent && !ignoreSensor) {
             setCubeState(true);
         }
     }

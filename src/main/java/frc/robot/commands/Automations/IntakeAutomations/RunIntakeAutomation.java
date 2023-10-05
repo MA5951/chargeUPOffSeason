@@ -14,6 +14,7 @@ public class RunIntakeAutomation extends CommandBase{
     @Override
     public void initialize() {
         intakeAutomation.initialize();
+        Intake.getInstance().removeGamePieces1();
     }
 
     @Override
